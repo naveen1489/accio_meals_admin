@@ -1,0 +1,97 @@
+
+.modalBackdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* background: rgba(0, 0, 0, 0.5); */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modalContent {
+    background: white;
+    width: 25rem;
+    padding: 2rem;
+    border-radius: 0.1rem;
+    text-align: center;
+    position: relative;
+  }
+  
+  .iconWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: white;
+    border-radius: 50%;
+    width: 5rem;
+    height: 5rem;
+    box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.1);
+  }
+  
+  .deleteIcon {
+    color: var(--sec-color);
+    font-size: 3.125rem;
+  }
+  
+  .closeButton {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--sec-color);
+  }
+  
+  .modalText {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2.5rem;
+    font-family: "Open Sans", sans-serif;
+  }
+  
+  .buttonGroup {
+    display: flex;
+    justify-content: center;
+    gap: 0.7rem;
+    margin: auto;
+    margin-top: 3rem;
+  }
+  
+  .closeBtn,
+  .confirmBtn {
+    padding: 0.6rem 1rem;
+    border-radius: 0.6rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border: 0.3px solid var(--sec-color);
+    background: white;
+    color: var(--sec-color);
+  }
+  
+  .confirmBtn {
+    color: var(--sec-color);
+    background-color: rgba(227, 55, 69, 0.08);
+    border: 0.5px solid var(--sec-color);
+    padding: 0.6rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 400;
+    box-shadow: none;
+    border-radius: 0.6rem;
+  }
+  
+  .confirmBtn:hover {
+    background-color: rgba(227, 55, 69, 0.08) !important;
+    border: 0.5px solid var(--sec-color) !important;
+    color: var(--sec-color) !important;
+  }
+  
