@@ -2,6 +2,7 @@ import React from "react";
 import styles from "../../Styles/ConformationPopup.module.css";
 import { MdDelete } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 const ConformationPopup = ({
   icon,
@@ -22,19 +23,19 @@ const ConformationPopup = ({
       <div className={styles.modalBackdrop}>
         <div className={styles.modalContent}>
           <div className={styles.iconWrapper}>
-            <MdDelete className={styles.deleteIcon} />
+            {React.cloneElement(icon, { className: styles.deleteIcon })}
           </div>
           <button className={styles.closeButton} onClick={onClose}>
             <AiOutlineClose />
           </button>
-          <p className={styles.modalText}>You are about to delete a Partner</p>
+          <p className={styles.modalText}>{text}</p>
           <div className={styles.buttonGroup}>
-            <button className={styles.closeBtn} onClick={onClose}>
+           {leftBtn && <button className={styles.closeBtn} onClick={onClose}>
               Close
-            </button>
-            <button className={styles.confirmBtn} onClick={onConfirm}>
+            </button>}
+            {rightBtn && <button className={styles.confirmBtn} onClick={onConfirm}>
               Save Changes
-            </button>
+            </button>}
           </div>
         </div>
       </div>

@@ -7,6 +7,8 @@ import { AiOutlinePlus } from "react-icons/ai";
 import AddPartners from "./AddPartners";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
 import { Button } from "antd";
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { BsCheck2Square } from "react-icons/bs";
 
 const Partners = () => {
   const [addCategory, setaddCategory] = useState(false);
@@ -43,7 +45,14 @@ const Partners = () => {
             isPopupOpen={setOpenpopup}
           />
         )}
-        {openPopup && <ConformationPopup onClose={() => setOpenpopup(false)} />}
+        {openPopup && (
+          <ConformationPopup
+            onClose={() => setOpenpopup(false)}
+            icon={<BsCheck2Square />}
+            text={<>successfully saved a Change<span style={{color: '#F15A5C'}}>Partner</span></>}
+            leftBtn={true}
+          />
+        )}
       </div>
     </SidebarHeader>
   );

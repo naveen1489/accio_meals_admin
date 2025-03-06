@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import styles from "../../Styles/Category.module.css";
 import veg_icon from "../../assets/Category/veg.png";
 import { TbEye } from "react-icons/tb";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import ConformationPopup from "../../Component/Popup/ConformationPopup";
 
 const CategoryCard = () => {
+  const [openDeletepopup, setopendeletepopup] = useState(false);
+  
   return (
     <div className={styles.card}>
       <div className={styles.header}>
@@ -34,7 +37,7 @@ const CategoryCard = () => {
       <div className={styles.actions}>
         <TbEye className={styles.icon} />
         <BiEdit className={styles.icon} />
-        <RiDeleteBin6Line className={styles.icon} />
+        <RiDeleteBin6Line className={styles.icon} onClick={()=>setopendeletepopup(true)}/>
       </div>
 
       <div className={styles.details}>
@@ -47,6 +50,16 @@ const CategoryCard = () => {
           </p>
         </div>
       </div>
+
+      {openDeletepopup && (
+        <ConformationPopup
+          onClose={() => setopendeletepopup(false)}
+          icon={<RiDeleteBin6Line />}
+          text={<>You are about to delete a <span style={{color: '#F15A5C'}}>Category</span></>}
+          leftBtn={true}
+          rightBtn={true}
+        />
+      )}
     </div>
   );
 };

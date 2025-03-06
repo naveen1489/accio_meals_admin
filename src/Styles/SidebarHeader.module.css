@@ -95,7 +95,7 @@
   color: var(--text-color);
   text-align: center;
   font-family: Inter;
-  font-size: 0.95rem;
+  font-size: 14px;
   font-weight: 500;
   width: auto;
   height: 2.7rem;
@@ -136,7 +136,7 @@
 .collapsepages > ul > .activeSidebar {
   color: var(--sec-color);
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 14px;
   border-top: 1px solid #f0f0f0;
   border-right: 1px solid #f0f0f0;
   border-bottom: 1px solid #f0f0f0;
@@ -242,7 +242,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 20px;
+  padding-left: 2rem;
   height: 5.5rem;
   border-bottom: 1px solid #ddd;
   position: relative;
@@ -340,6 +340,10 @@
 
 .log_Out > svg:nth-child(1) {
   font-size: 1.1rem;
+}
+
+.log_Out > span:nth-child(2) {
+  font-size: 14px;
 }
 
 @media (max-width: 1024px) {

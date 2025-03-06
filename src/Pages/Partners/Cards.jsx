@@ -4,9 +4,11 @@ import { TbEye } from "react-icons/tb";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import ViewDetails from "./ViewDetails";
+import ConformationPopup from "../../Component/Popup/ConformationPopup";
 
 const PartnersCard = () => {
   const [viewPopup, setviewPopup] = useState(false);
+  const [openDeletepopup, setopendeletepopup] = useState(false);
 
   return (
     <div className={styles.card}>
@@ -38,7 +40,7 @@ const PartnersCard = () => {
       <div className={styles.actions}>
         <TbEye className={styles.icon} onClick={() => setviewPopup(true)} />
         <BiEdit className={styles.icon} />
-        <RiDeleteBin6Line className={styles.icon} />
+        <RiDeleteBin6Line className={styles.icon} onClick={()=>setopendeletepopup(true)}/>
       </div>
 
       <div className={styles.details}>
@@ -58,6 +60,16 @@ const PartnersCard = () => {
       </div>
 
       {viewPopup && <ViewDetails onClose={() => setviewPopup(false)} />}
+      {openDeletepopup && (
+        <ConformationPopup
+          onClose={() => setopendeletepopup(false)}
+          icon={<RiDeleteBin6Line />}
+          text={<>You are about to delete a <span style={{color: '#F15A5C'}}>Partner</span></>}
+          leftBtn={true}
+          rightBtn={true}
+        />
+      )}
+
     </div>
   );
 };

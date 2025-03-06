@@ -7,6 +7,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import CategoryCard from "./Cards";
 import AddCategory from "./AddCategory";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
+import { BsCheck2Square } from "react-icons/bs";
 
 const Category = () => {
   const [addCategory, setaddCategory] = useState(false);
@@ -43,7 +44,19 @@ const Category = () => {
             isPopupOpen={setOpenpopup}
           />
         )}
-        {openPopup && <ConformationPopup onClose={() => setOpenpopup(false)} />}
+        {openPopup && (
+          <ConformationPopup
+            onClose={() => setOpenpopup(false)}
+            icon={<BsCheck2Square />}
+            text={
+              <>
+                successfully saved a Change{" "}
+                <span style={{ color: "#F15A5C" }}>Category</span>
+              </>
+            }
+            leftBtn={true}
+          />
+        )}
       </div>
     </SidebarHeader>
   );
