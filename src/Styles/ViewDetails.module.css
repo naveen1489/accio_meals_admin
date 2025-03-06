@@ -74,150 +74,159 @@
 }
 
 .card {
-    display: flex;
-    justify-content: start;
-    align-items: start;
-    gap: 0.3rem;
-    width: 35rem;
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  gap: 0.3rem;
+  width: 35rem;
 }
 
 .actions {
-    display: flex;
-    justify-content: start;
-    align-items: start;
-    gap: 1rem; 
+  display: flex;
+  justify-content: start;
+  align-items: start;
+  gap: 1rem;
 }
 
 .actions svg {
-    font-size: 1.5rem;
+  font-size: 1.5rem;
 }
 
 .details {
-    margin-top: 15px;
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-  
-  .subscriber h1 {
-    font-size: 1.7rem;
-  }
-  
-  .details h3 {
-    margin-bottom: 0.5rem;
-    font-size: 1.2rem;
-    font-weight: 600;
-  }
-  
-  .details > div {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 0.8rem;
-  }
-  
-  .details > div > p:nth-child(1) {
-    font-size: 0.8rem;
-    font-weight: 400;
-    width: 5rem;
-  }
-  
-  .details > div > p:nth-child(3) {
-    color: #151515;
-    font-weight: 500;
-    font-size: 0.9rem;
-  }
-  
-  .upperDiv {
-    display:flex;
-    justify-content: space-between;
-    align-items: start;
-  }
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
 
-  .dates {
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-    gap: 0.5rem;
-  }
+.subscriber h1 {
+  font-size: 1.7rem;
+}
 
-  .dates > span:nth-child(1){
-    font-size: 0.9rem;
-    color: #444444;
-    font-weight: 400;
-  }
+.details h3 {
+  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
 
-  .dates > span:nth-child(2){
-    font-size: 1rem;
-    color: #000000;
-    font-weight: 500;
-  }
+.details > div {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 0.8rem;
+}
 
-  .calculation_btns {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-    gap: 2rem;
-    width: 20rem;
-    margin-top: 2rem;
-    height: 3rem;
-  }
+.details > div > p:nth-child(1) {
+  font-size: 0.8rem;
+  font-weight: 400;
+  width: 5rem;
+}
 
-  .calculation_btns button{
-    width: 8.5rem;
-    padding: 1.2rem;
-    border-radius: 0.4rem;
-  }
+.details > div > p:nth-child(3) {
+  color: #151515;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
 
-  .activeButton {
-    background-color: #e74c3c;
-    color: white;
-    font-weight: bold;
-    padding: 0.5rem 1rem; 
-    border-radius: 0.375rem;
-    font-size: 1rem;
-  }
-  
-  .inactiveButton {
-    background-color: white;
-    color: black;
-    font-weight: normal;
-    padding: 0.5rem 1rem;
-    border-radius: 0.375rem;
-    font-size: 1rem;
-  }
-  
-  .subscriberTable {
-    width: 100%;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    background-color: #f8fcf8; 
-    margin-top: 2rem;
-  }
-  
-  .customTable .ant-table {
-    background: transparent !important;
-  }
-  
-  .customTable .ant-table-thead > tr > th {
-    background-color: #e74c3c !important; 
-    color: white !important;
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 0.75rem;
-    text-align: left;
-  }
-  
-  .customTable .ant-table-tbody > tr > td {
-    background-color: #f8fcf8 !important; 
-    font-size: 1rem;
-    padding: 0.75rem;
-    text-align: left;
-  }
-  
-  .customTable .ant-table-tbody > tr:hover {
-    background-color: #f1f1f1 !important; 
-  }
+.upperDiv {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
 
-  
+.dates {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dates > span:nth-child(1) {
+  font-size: 0.9rem;
+  color: #444444;
+  font-weight: 400;
+}
+
+.dates > span:nth-child(2) {
+  font-size: 1rem;
+  color: #000000;
+  font-weight: 500;
+}
+
+.calculation_btns {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 2rem;
+  width: 20rem;
+  margin-top: 2rem;
+  height: 3rem;
+}
+
+.calculation_btns button {
+  width: 8.5rem;
+  padding: 1.2rem;
+  border-radius: 0.4rem;
+}
+
+.activeButton {
+  background-color: #e74c3c;
+  color: white;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}
+
+.inactiveButton {
+  background-color: white;
+  color: black;
+  font-weight: normal;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}
+
+.activeButton:hover {
+  background-color: #e74c3c !important;
+  color: white !important;
+  border: none !important;
+}
+
+.inactiveButton:hover {
+  background-color: white !important;
+  color: black !important;
+  border: 1px solid grey !important;
+}
+.subscriberTable {
+  width: 100%;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: #f8fcf8;
+  margin-top: 2rem;
+}
+
+.customTable .ant-table {
+  background: transparent !important;
+}
+
+.customTable .ant-table-thead > tr > th {
+  background-color: #e74c3c !important;
+  color: white !important;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.customTable .ant-table-tbody > tr > td {
+  background-color: #f8fcf8 !important;
+  font-size: 1rem;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.customTable .ant-table-tbody > tr:hover {
+  background-color: #f1f1f1 !important;
+}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../Styles/ViewDetails.module.css";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -8,8 +8,12 @@ import SubscriberTable from "./SubscriberTable";
 import RevenueData from "./RevenueData";
 
 const PartnerDetails = () => {
-  const [activeTab, setActiveTab] = useState("subscriber");
+  const [activeTab, setActiveTab] = useState("subscribers");
 
+  useEffect(() => {
+    setActiveTab("subscribers");
+  }, []);
+  
   return (
     <SidebarHeader
       headingText={"Partners"}
