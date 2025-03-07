@@ -5,10 +5,13 @@ import { TbEye } from "react-icons/tb";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
+import ViewDetails from "./ViewDetails";
 
 const CategoryCard = () => {
   const [openDeletepopup, setopendeletepopup] = useState(false);
-  
+  const [openViewPopup, setopenViewpopup] = useState(false);
+  const [openEditPopup, setopenEditPopup] = useState(false);
+
   return (
     <div className={styles.card}>
       <div className={styles.header}>
@@ -35,9 +38,12 @@ const CategoryCard = () => {
       </div>
 
       <div className={styles.actions}>
-        <TbEye className={styles.icon} />
-        <BiEdit className={styles.icon} />
-        <RiDeleteBin6Line className={styles.icon} onClick={()=>setopendeletepopup(true)}/>
+        <TbEye className={styles.icon} onClick={() => setopenViewpopup(true)} />
+        <BiEdit className={styles.icon} onClick={() => setopenEditPopup(true)} />
+        <RiDeleteBin6Line
+          className={styles.icon}
+          onClick={() => setopendeletepopup(true)}
+        />
       </div>
 
       <div className={styles.details}>
@@ -51,11 +57,19 @@ const CategoryCard = () => {
         </div>
       </div>
 
+      {openViewPopup && <ViewDetails onClose={() => setopenViewpopup(false)} />}
+      {openEditPopup && <ViewDetails onClose={() => setopenEditPopup(false)} />}
+        
       {openDeletepopup && (
         <ConformationPopup
           onClose={() => setopendeletepopup(false)}
           icon={<RiDeleteBin6Line />}
-          text={<>You are about to delete a <span style={{color: '#F15A5C'}}>Category</span></>}
+          text={
+            <>
+              You are about to delete a{" "}
+              <span style={{ color: "#F15A5C" }}>Category</span>
+            </>
+          }
           leftBtn={true}
           rightBtn={true}
         />
