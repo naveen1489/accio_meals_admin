@@ -248,10 +248,11 @@
   position: relative;
   overflow: auto;
   position: fixed;
-  width: calc(100% - 14.5rem);
+  width: calc(100% - 17.5rem);
   z-index: 1;
   color: #333;
   box-shadow: 0px 4px 4px 0px #00000014;
+  padding-right: 3rem;
 }
 
 .collapseHeader {
@@ -282,6 +283,35 @@
   width: 30px;
   height: 30px;
   object-fit: cover;
+}
+
+.notification_div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.notification_div > svg:nth-child(1) {
+  font-size: 1.4rem;
+}
+
+.notification_div > div:nth-child(2) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.notification_div > div:nth-child(2) > svg {
+  font-size: 1.5rem;
+}
+
+.notification_div > div:nth-child(2) >span{
+  color: #000000;
+  font-weight: 400;
+  font-family: Poppins;
+  font-size: 0.9rem;
 }
 
 .dashboard_profileContainer {

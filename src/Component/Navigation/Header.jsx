@@ -4,6 +4,8 @@ import styles from "../../Styles/SidebarHeader.module.css";
 import { useData } from "../../Context/DataProvider";
 import { MdMenu } from "react-icons/md";
 import { SidebarContext } from "../../Context/SidebarContext";
+import { HiOutlineBell } from "react-icons/hi";
+import { FaRegUserCircle } from "react-icons/fa";
 
 const Header = ({ heading, subTitle }) => {
   const { dashboardDetails, userDetails } = useData();
@@ -47,6 +49,11 @@ const Header = ({ heading, subTitle }) => {
         <span className={styles.headerText}>{heading}</span>
         <span>{subTitle}</span>
       </div>
+        
+        <div className={styles.notification_div}>
+          <HiOutlineBell />
+          <div><FaRegUserCircle />{userDetails?.name || "Hello Admin"}</div>
+        </div>
     </header>
   );
 };
