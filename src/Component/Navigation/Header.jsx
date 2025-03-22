@@ -8,12 +8,11 @@ import { HiOutlineBell } from "react-icons/hi";
 import { FaRegUserCircle } from "react-icons/fa";
 
 const Header = ({ heading, subTitle }) => {
-  const { dashboardDetails, userDetails } = useData();
+  const { adminName } = useData();
   //   const { showAlert } = useAlert();
   const location = useLocation();
   const navigate = useNavigate();
   const { collapseSidebar, setCollapseSidebar } = useContext(SidebarContext);
-  const userName = dashboardDetails?.profile?.name;
   const [mobile, setMobile] = useState(false);
 
   useEffect(() => {
@@ -52,7 +51,7 @@ const Header = ({ heading, subTitle }) => {
         
         <div className={styles.notification_div}>
           <HiOutlineBell />
-          <div><FaRegUserCircle />{userDetails?.name || "Hello Admin"}</div>
+          <div><FaRegUserCircle />{adminName || "Hello Admin"}</div>
         </div>
     </header>
   );

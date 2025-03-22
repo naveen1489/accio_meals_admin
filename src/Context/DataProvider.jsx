@@ -8,6 +8,7 @@ export default function DataProvider({ children }) {
   const hasCheckedLogin = useRef(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const [adminName, setadminName] = useState(() => localStorage.getItem("adminName") || "");
 
   const checkLogin = async () => {
     try {
@@ -41,6 +42,11 @@ export default function DataProvider({ children }) {
     verifyLogin();
   }, [isLoggedIn, location.pathname]);
 
+  useEffect(() => {
+    if (adminName) {
+      localStorage.setItem("adminName", adminName);
+    }
+  }, [adminName]);
 
   return (
     <DataContext.Provider
@@ -49,6 +55,8 @@ export default function DataProvider({ children }) {
         setIsLoggedIn,
         checkLogin,
         userDetails,
+        adminName,
+        setadminName,
       }}
     >
       {children}
