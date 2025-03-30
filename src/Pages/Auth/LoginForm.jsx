@@ -21,6 +21,7 @@ const LoginForm = () => {
       if (response.status == 200) {
         setadminName(username);
         localStorage.setItem("adminName", username); 
+        localStorage.setItem("token", response.data.token);
         showAlert(response.status == 200 ? "success" : "error", response.data.message);
         nav("/dashboard");
       } else {

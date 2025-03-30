@@ -3,11 +3,12 @@ import client from "./client";
 export const getRequest = async (endPoint) => {
   try {
     const res = await client.get(endPoint);
-    return res.data;
+    // return res.data;
+    return res.data ?? res;
   } catch (error) {
     const { response } = error;
     if (response?.data) {
-      return response.data;
+      return response;
     }
     return { error: error.message || error };
   }
@@ -16,7 +17,8 @@ export const getRequest = async (endPoint) => {
 export const postRequest = async (endPoint, data) => {
   try {
     const res = await client.post(endPoint, data);
-    return res;
+    // return res;
+    return res.data ?? res;
   } catch (error) {
     const { response } = error;
     if (response?.data) {
@@ -46,7 +48,7 @@ export const putRequest = async (endPoint, data) => {
   } catch (error) {
     const { response } = error;
     if (response?.data) {
-      return response.data;
+      return response;
     }
     return { error: error.message || error };
   }
@@ -55,11 +57,11 @@ export const putRequest = async (endPoint, data) => {
 export const deleteRequest = async (endPoint, data) => {
   try {
     const res = await client.delete(endPoint, data);
-    return res.data;
+    return res.data ?? res;
   } catch (error) {
     const { response } = error;
     if (response?.data) {
-      return response.data;
+      return response;
     }
     return { error: error.message || error };
   }

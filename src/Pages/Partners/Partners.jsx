@@ -35,7 +35,7 @@ const Partners = () => {
         </div>
 
         <div className={styles.cards_details}>
-          <PartnersCard /> <PartnersCard />
+          <PartnersCard /> 
         </div>
 
         {addCategory && (

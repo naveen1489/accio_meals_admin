@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { getPartners } from "../api/partners/getPartners";
 
 const DataContext = createContext();
 export default function DataProvider({ children }) {
@@ -9,6 +10,7 @@ export default function DataProvider({ children }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [adminName, setadminName] = useState(() => localStorage.getItem("adminName") || "");
+  const [restaurantData, setRestaurantData] = useState([]);
 
   const checkLogin = async () => {
     try {
@@ -48,6 +50,22 @@ export default function DataProvider({ children }) {
     }
   }, [adminName]);
 
+    const handleGetAllData = async () => {
+      try {
+        const response = await getPartners();
+        console.log("Fetched Data:", response);
+  
+        if (Array.isArray(response)) {
+          setRestaurantData([...response]);
+        } else {
+          console.log("Unexpected response format", response);
+        }
+      } catch (error) {
+        console.log("Error fetching data", error);
+      }
+    };
+  
+
   return (
     <DataContext.Provider
       value={{
@@ -57,6 +75,9 @@ export default function DataProvider({ children }) {
         userDetails,
         adminName,
         setadminName,
+        restaurantData,
+        setRestaurantData,
+        handleGetAllData,
       }}
     >
       {children}
