@@ -5,12 +5,13 @@ export const getPartners = async () => {
     return response;
 };
 
-
-export const editPartners = async (partnerId) => {
-    const response = await putRequest(`http://localhost:3000/api/restaurants/${partnerId}`);
+export const editPartners = async (partnerId, updatedData) => {
+    const response = await putRequest(
+        `http://localhost:3000/api/restaurants/${partnerId}`,
+        updatedData // Send the payload as the request body
+    );
     return response;
 };
-
 
 export const deletePartner = async (partnerId) => {
     const response = await deleteRequest(`http://localhost:3000/api/restaurants/${partnerId}`);

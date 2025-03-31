@@ -4,18 +4,29 @@ import { getPartners } from "../api/partners/getPartners";
 
 const DataContext = createContext();
 export default function DataProvider({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userDetails, setUserDetails] = useState({});
   const hasCheckedLogin = useRef(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const [adminName, setadminName] = useState(() => localStorage.getItem("adminName") || "");
+  const [adminName, setadminName] = useState(
+    () => localStorage.getItem("adminName") || ""
+  );
   const [restaurantData, setRestaurantData] = useState([]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   const checkLogin = async () => {
     try {
-        const response = "";
-    //   const response = await getUserDetails();
+      const response = "";
+      // const response = await getUserDetails();
       if (response?.status) {
         setIsLoggedIn(true);
         setUserDetails(response.data);
@@ -27,7 +38,6 @@ export default function DataProvider({ children }) {
     }
   };
 
-
   useEffect(() => {
     const verifyLogin = async () => {
       if (!hasCheckedLogin.current) {
@@ -35,7 +45,9 @@ export default function DataProvider({ children }) {
         await checkLogin();
         if (
           isLoggedIn &&
-          (location.pathname === "/" || location.pathname === "/login" || location.pathname === "/signup")
+          (location.pathname === "/" ||
+            location.pathname === "/login" ||
+            location.pathname === "/signup")
         ) {
           navigate("/dashboard");
         }
@@ -50,22 +62,22 @@ export default function DataProvider({ children }) {
     }
   }, [adminName]);
 
-    const handleGetAllData = async () => {
-      try {
-        const response = await getPartners();
-        console.log("Fetched Data:", response);
-  
-        if (Array.isArray(response)) {
-          setRestaurantData([...response]);
-        } else {
-          console.log("Unexpected response format", response);
-        }
-      } catch (error) {
-        console.log("Error fetching data", error);
-      }
-    };
-  
+  const handleGetAllData = async () => {
+    try {
+      const response = await getPartners();
+      console.log("Fetched Data:", response);
 
+      if (Array.isArray(response)) {
+        setRestaurantData([...response]);
+      } else {
+        console.log("Unexpected response format", response);
+      }
+    } catch (error) {
+      console.log("Error fetching data", error);
+    }
+  };
+
+  
   return (
     <DataContext.Provider
       value={{

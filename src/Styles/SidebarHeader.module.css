@@ -267,6 +267,7 @@
   position: fixed;
   width: calc(100% - 6.5rem);
   z-index: 1;
+  background: white;
 }
 
 .headerText {

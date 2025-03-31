@@ -1,7 +1,7 @@
 import { postRequest } from "../requestMethods";
 
 export const login = async (username, password) => {
-    const response = await postRequest("/api/users/login-admin", {
+    const response = await postRequest(`http://localhost:3000/api/users/login-admin`, {
       username: `${username.trim()}`,
       password: `${password.trim()}`,
     });

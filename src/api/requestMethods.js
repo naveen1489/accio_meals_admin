@@ -17,8 +17,9 @@ export const getRequest = async (endPoint) => {
 export const postRequest = async (endPoint, data) => {
   try {
     const res = await client.post(endPoint, data);
-    // return res;
-    return res.data ?? res;
+    // console.log('res form server', res);
+    return res;
+    // return res.data ?? res;
   } catch (error) {
     const { response } = error;
     if (response?.data) {
@@ -57,6 +58,7 @@ export const putRequest = async (endPoint, data) => {
 export const deleteRequest = async (endPoint, data) => {
   try {
     const res = await client.delete(endPoint, data);
+    console.log("res from delete server", res);
     return res.data ?? res;
   } catch (error) {
     const { response } = error;

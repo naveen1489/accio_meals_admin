@@ -31,15 +31,20 @@ const ConformationPopup = ({
       return;
     }
   
-    const response = await deletePartner(restaurantId.id);
-  
-    if (response.status === 200) {
-      showAlert("success", response.message);
-      await handleGetAllData();
-      onClose();
-    } else {
-      showAlert("error", response.message || 'Restaurant not found');
-      console.error("Failed to delete restaurant");
+    try {
+      const response = await deletePartner(restaurantId.id);   
+      if (response.status === 200) {
+        showAlert("success", response.message || "Restaurant deleted successfully");
+        handleGetAllData(); 
+        onClose(); 
+      } else {
+        showAlert("error", response.message || "Failed to delete restaurant");
+        console.error("Failed to delete restaurant");
+        onClose();
+      }
+    } catch (error) {
+      console.error("Error deleting restaurant:", error);
+      showAlert("error", error.response?.message || "An unexpected error occurred");
       onClose();
     }
   };

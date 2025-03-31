@@ -8,7 +8,7 @@ import ConformationPopup from "../../Component/Popup/ConformationPopup";
 import { getPartners } from "../../api/partners/getPartners";
 import { useData } from "../../Context/DataProvider";
 
-const PartnersCard = () => {
+const PartnersCard = ({ data }) => {
   const [viewPopup, setViewPopup] = useState(false);
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
   const { restaurantData, handleGetAllData } = useData();
@@ -33,7 +33,7 @@ const PartnersCard = () => {
 
   return (
     <>
-      {restaurantData.map((restaurant, index) => (
+      {(data?.length > 0 ? data : restaurantData).map((restaurant, index) => (
         <div key={index} className={styles.card}>
           <div className={styles.header}>
             <div className={styles.categoryInfo}>
@@ -116,7 +116,7 @@ const PartnersCard = () => {
         <ViewDetails
           onClose={() => setViewPopup(false)}
           restaurant={selectedRestaurant}
-          isEditable={isEditable}
+          isEditable={isEditable} 
         />
       )}
       {openDeletePopup && (

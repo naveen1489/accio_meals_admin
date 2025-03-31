@@ -58,70 +58,62 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
 
     const fullAddress = `${
       name === "addressLine1" ? value : formData.addressLine1
-    } 
-                        ${
-                          name === "addressLine2"
-                            ? value
-                            : formData.addressLine2
-                        }`.trim();
+    } ${name === "addressLine2" ? value : formData.addressLine2}`.trim();
 
-    if (fullAddress.length > 5) {
-      try {
-        const response = await axios.get(
-          `https://maps.googleapis.com/maps/api/geocode/json`,
-          {
-            params: {
-              address: fullAddress,
-              key: `${import.meta.env.VITE_APP_GOOGLE_API_KEY}`,
-            },
-          }
-        );
+    console.log("Full Address:", fullAddress);
 
-        if (response.data.results.length > 0) {
-          const result = response.data.results[0];
-          const location = result.geometry.location;
-          const addressComponents = result.address_components;
+    if (!fullAddress || fullAddress.length < 5) {
+      console.error("Invalid address provided.");
+      showAlert("error", "Please provide a valid address.");
+      return;
+    }
 
-          let city = "",
-            state = "",
-            country = "",
-            postalCode = "",
-            address1 = "",
-            address2 = "";
-
-          addressComponents.forEach((component) => {
-            if (component.types.includes("locality"))
-              city = component.long_name;
-            if (component.types.includes("administrative_area_level_1"))
-              state = component.long_name;
-            if (component.types.includes("country"))
-              country = component.long_name;
-            if (component.types.includes("postal_code"))
-              postalCode = component.long_name;
-            if (component.types.includes("street_number"))
-              address1 = component.long_name;
-            if (component.types.includes("route"))
-              address2 = component.long_name;
-          });
-
-          setFormData((prev) => ({
-            ...prev,
-            addressLine1: address1 || prev.addressLine1,
-            addressLine2: address2 || prev.addressLine2,
-            latitude: location.lat,
-            longitude: location.lng,
-            city,
-            state,
-            country,
-            postalCode,
-          }));
+    try {
+      const response = await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json`,
+        {
+          params: {
+            address: fullAddress,
+            key: `${import.meta.env.VITE_APP_GOOGLE_API_KEY}`,
+          },
         }
-      } catch (error) {
-        console.error(
-          "Geocoding API Error:",
-          error.response?.data || error.message
-        );
+      );
+
+      if (response.data.status === "OK" && response.data.results.length > 0) {
+        const result = response.data.results[0];
+        const location = result.geometry.location;
+        const addressComponents = result.address_components;
+
+        let city = "",
+          state = "",
+          country = "",
+          postalCode = "";
+
+        addressComponents.forEach((component) => {
+          if (component.types.includes("locality")) city = component.long_name;
+          if (component.types.includes("administrative_area_level_1"))
+            state = component.long_name;
+          if (component.types.includes("country")) country = component.long_name;
+          if (component.types.includes("postal_code"))
+            postalCode = component.long_name;
+        });
+
+        setFormData((prev) => ({
+          ...prev,
+          latitude: location.lat,
+          longitude: location.lng,
+          city,
+          state,
+          country,
+          postalCode,
+        }));
+      } else {
+        console.error("No results found for the given address.");
+        showAlert("error", "Unable to fetch location. Please check the address.");
       }
+    } catch (error) {
+      console.error("Geocoding API Error:", error.response?.data || error.message);
+      showAlert("error", "Failed to fetch location. Please try again.");
     }
   };
 
@@ -131,41 +123,49 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
   };
 
   const handleSave = async () => {
-    const postalCode = extractPostalCode(formData.addressLine1);
+    if (!formData.latitude || !formData.longitude) {
+        showAlert("error", "Please provide a valid address to fetch location coordinates.");
+        return;
+    }
 
     const payload = {
-      companyName: formData.companyName,
-      nameTitle: formData.nameTitle,
-      name: formData.name,
-      countryCode: formData.countryCode,
-      contactNumber: formData.contactNumber,
-      emailId: formData.emailId,
-      status: formData.status,
-      addressLine1: formData.addressLine1,
-      addressLine2: formData.addressLine2,
-      city: formData.city,
-      state: formData.state,
-      postalCode: postalCode,
-      country: formData.country,
-      latitude: formData.latitude,
-      longitude: formData.longitude,
+        companyName: formData.companyName,
+        nameTitle: formData.nameTitle,
+        name: formData.name,
+        countryCode: formData.countryCode,
+        contactNumber: formData.contactNumber,
+        emailId: formData.emailId,
+        status: formData.status,
+        addressLine1: formData.addressLine1,
+        addressLine2: formData.addressLine2,
+        city: formData.city,
+        state: formData.state,
+        postalCode: formData.postalCode,
+        country: formData.country,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
     };
 
     try {
-      const response = await addPartners(payload);
-      console.log('response', response)
-      if (response && response.status === 201) {
-        console.log("Attempting to show success alert");
-        showAlert("success", response.message || "Partner added successfully");
-        onClose();
-      } else {
-        showAlert("error", response.message || "Failed to add partner");
-      }
+        const response = await addPartners(payload);
+        console.log("Full Response:", response);
+
+        if (response && response.restaurant) {
+            showAlert("success", response.message || "Restaurant added successfully.");
+            onClose();
+        } else {
+            showAlert("error", "Failed to add partner. Please try again.");
+        }
     } catch (error) {
-      console.error("Error in handleSave:", error);
-      showAlert("error", error.response?.data?.message || "An unexpected error occurred");
+        console.error("Error in handleSave:", error);
+
+        if (error.response && error.response.status === 400) {
+            showAlert("error", error.response.data.message || "Bad Request");
+        } else {
+            showAlert("error", error.response?.data?.message || "An unexpected error occurred");
+        }
     }
-  };
+};
 
 
   return (
