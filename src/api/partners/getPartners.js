@@ -8,12 +8,14 @@ export const getPartners = async () => {
 export const editPartners = async (partnerId, updatedData) => {
     const response = await putRequest(
         `http://localhost:3000/api/restaurants/${partnerId}`,
-        updatedData // Send the payload as the request body
+        updatedData 
     );
     return response;
 };
 
 export const deletePartner = async (partnerId) => {
     const response = await deleteRequest(`http://localhost:3000/api/restaurants/${partnerId}`);
+    console.log('response from api', response);
+
     return response;
 };

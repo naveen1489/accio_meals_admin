@@ -1,23 +1,20 @@
-import React, { useEffect } from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useData } from "../Context/DataProvider";
 import { useAlert } from "../Context/AlertContext";
 
-const ProtectedRoutes = () => {
+const ProtectedRoute = ({ children }) => {
   const { isLoggedIn } = useData();
-  const { showAlert } = useAlert();
+  const {showAlert } = useAlert();
 
-  useEffect(() => {
-    if (!isLoggedIn) {
-      showAlert("error", "Please login to get access");
-    }
-  }, [isLoggedIn]);
-
+  if (isLoggedIn === null) {
+    return null; 
+  }
   if (!isLoggedIn) {
-    return <Navigate to="/" replace />;
+    showAlert("error", "Please login to get access !")
+    return <Navigate to="/" />;
   }
 
-  return <Outlet />;
+  return children;
 };
 
-export default ProtectedRoutes;
+export default ProtectedRoute;

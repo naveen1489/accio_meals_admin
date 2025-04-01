@@ -4,7 +4,11 @@ import { getPartners } from "../api/partners/getPartners";
 
 const DataContext = createContext();
 export default function DataProvider({ children }) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    const token = localStorage.getItem("token");
+    return token ? true : false; 
+  });
+  const [isLoading, setIsLoading] = useState(true); 
   const [userDetails, setUserDetails] = useState({});
   const hasCheckedLogin = useRef(false);
   const navigate = useNavigate();
@@ -16,25 +20,30 @@ export default function DataProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-    } else {
+    if (!token) {
       setIsLoggedIn(false);
     }
   }, []);
 
   const checkLogin = async () => {
     try {
-      const response = "";
-      // const response = await getUserDetails();
+      const token = localStorage.getItem("token");
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      const response = { status: true, data: { name: "Admin" } }; 
       if (response?.status) {
         setIsLoggedIn(true);
         setUserDetails(response.data);
       } else {
-        throw new Error("User not logged in");
+        throw new Error("Invalid token");
       }
     } catch (error) {
+      console.error("Login check failed:", error.message);
       setIsLoggedIn(false);
+    } finally {
+      setIsLoading(false); 
     }
   };
 
@@ -82,6 +91,7 @@ export default function DataProvider({ children }) {
     <DataContext.Provider
       value={{
         isLoggedIn,
+        isLoading, 
         setIsLoggedIn,
         checkLogin,
         userDetails,

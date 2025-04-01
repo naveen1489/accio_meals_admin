@@ -6,6 +6,7 @@ import Category from './Pages/Category/Category';
 import Partners from './Pages/Partners/Partners';
 import Help from './Pages/Help/Help';
 import PartnerDetails from './Pages/Partners/PartnerDetails';
+import ProtectedRoute from './Component/ProtectedRoutes';
 
 function App() {
 
@@ -13,11 +14,54 @@ function App() {
     <>
      <Routes>
       <Route path='/' element={<Login/>}/>
-      <Route path='/dashboard' element={<Dashboard/>}/>
-      <Route path='/category' element={<Category/>}/>
-      <Route path='/partners' element={<Partners/>}/>
-      <Route path='/view' element={<PartnerDetails/>}/>
-      <Route path='/help' element={<Help/>}/>
+      <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/category"
+            element={
+              <ProtectedRoute>
+                <Category />
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/partners"
+            element={
+              <ProtectedRoute>
+                <Partners />
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/view"
+            element={
+              <ProtectedRoute>
+                <PartnerDetails />
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/help"
+            element={
+              <ProtectedRoute>
+                <Help />
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
      </Routes>
     </>
   )

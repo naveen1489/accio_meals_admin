@@ -5,5 +5,5 @@ export const addPartners = async (partnerData) => {
     `http://localhost:3000/api/restaurants/add-partner`,
     partnerData
   );
-  return response.data; 
+  return response; 
 };

@@ -7,10 +7,12 @@ import { MdOutlineModeEdit } from "react-icons/md";
 import axios from "axios";
 import { addPartners } from "../../api/partners/addPartners";
 import { useAlert } from "../../Context/AlertContext";
+import { useData } from "../../Context/DataProvider";
 
 const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
   const { showAlert } = useAlert();
   const { Option } = Select;
+  const { handleGetAllData } = useData();
   const [formData, setFormData] = useState({
     companyName: "",
     nameTitle: "Mr.",
@@ -25,10 +27,9 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     state: "",
     postalCode: "",
     country: "",
-    latitude: null,  
-    longitude: null, 
-});
-
+    latitude: null,
+    longitude: null,
+  });
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
@@ -64,7 +65,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
 
     if (!fullAddress || fullAddress.length < 5) {
       console.error("Invalid address provided.");
-      showAlert("error", "Please provide a valid address.");
+      // showAlert("error", "Please provide a valid address.");
       return;
     }
 
@@ -93,7 +94,8 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
           if (component.types.includes("locality")) city = component.long_name;
           if (component.types.includes("administrative_area_level_1"))
             state = component.long_name;
-          if (component.types.includes("country")) country = component.long_name;
+          if (component.types.includes("country"))
+            country = component.long_name;
           if (component.types.includes("postal_code"))
             postalCode = component.long_name;
         });
@@ -109,10 +111,13 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
         }));
       } else {
         console.error("No results found for the given address.");
-        showAlert("error", "Unable to fetch location. Please check the address.");
+        // showAlert("error", "Unable to fetch location. Please check the address.");
       }
     } catch (error) {
-      console.error("Geocoding API Error:", error.response?.data || error.message);
+      console.error(
+        "Geocoding API Error:",
+        error.response?.data || error.message
+      );
       showAlert("error", "Failed to fetch location. Please try again.");
     }
   };
@@ -124,49 +129,60 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
 
   const handleSave = async () => {
     if (!formData.latitude || !formData.longitude) {
-        showAlert("error", "Please provide a valid address to fetch location coordinates.");
-        return;
+      showAlert(
+        "error",
+        "Please provide a valid address to fetch location coordinates."
+      );
+      return;
     }
 
     const payload = {
-        companyName: formData.companyName,
-        nameTitle: formData.nameTitle,
-        name: formData.name,
-        countryCode: formData.countryCode,
-        contactNumber: formData.contactNumber,
-        emailId: formData.emailId,
-        status: formData.status,
-        addressLine1: formData.addressLine1,
-        addressLine2: formData.addressLine2,
-        city: formData.city,
-        state: formData.state,
-        postalCode: formData.postalCode,
-        country: formData.country,
-        latitude: formData.latitude,
-        longitude: formData.longitude,
+      companyName: formData.companyName,
+      nameTitle: formData.nameTitle,
+      name: formData.name,
+      countryCode: formData.countryCode,
+      contactNumber: formData.contactNumber,
+      emailId: formData.emailId,
+      status: formData.status,
+      addressLine1: formData.addressLine1,
+      addressLine2: formData.addressLine2,
+      city: formData.city,
+      state: formData.state,
+      postalCode: formData.postalCode,
+      country: formData.country,
+      latitude: formData.latitude,
+      longitude: formData.longitude,
     };
 
     try {
-        const response = await addPartners(payload);
-        console.log("Full Response:", response);
+      const response = await addPartners(payload);
 
-        if (response && response.restaurant) {
-            showAlert("success", response.message || "Restaurant added successfully.");
-            onClose();
-        } else {
-            showAlert("error", "Failed to add partner. Please try again.");
-        }
+      if (response && response.status == 201) {
+        showAlert(
+          "success",
+          response.data.message || "Restaurant added successfully."
+        );
+        handleGetAllData();
+        onClose();
+      } else {
+        showAlert(
+          "error",
+          response.data.message || "Failed to add restaurant."
+        );
+      }
     } catch (error) {
-        console.error("Error in handleSave:", error);
+      console.error("Error in handleSave:", error);
 
-        if (error.response && error.response.status === 400) {
-            showAlert("error", error.response.data.message || "Bad Request");
-        } else {
-            showAlert("error", error.response?.data?.message || "An unexpected error occurred");
-        }
+      if (error.response && error.response.status === 400) {
+        showAlert("error", error.response.data.message || "Bad Request");
+      } else {
+        showAlert(
+          "error",
+          error.response?.data?.message || "An unexpected error occurred"
+        );
+      }
     }
-};
-
+  };
 
   return (
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>

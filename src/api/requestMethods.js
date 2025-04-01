@@ -17,7 +17,6 @@ export const getRequest = async (endPoint) => {
 export const postRequest = async (endPoint, data) => {
   try {
     const res = await client.post(endPoint, data);
-    // console.log('res form server', res);
     return res;
     // return res.data ?? res;
   } catch (error) {

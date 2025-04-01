@@ -17,15 +17,15 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await login(username, password);
-      if (response.token) {
+      if (response.status == 200) {
         setadminName(username);
         localStorage.setItem("adminName", username);
-        localStorage.setItem("token", response.token);
+        localStorage.setItem("token", response.data.token);
         setIsLoggedIn(true);
-        showAlert("success", response.message);
+        showAlert("success", response.data.message);
         nav("/dashboard");
       } else {
-        showAlert("error", response.message || "Login failed");
+        showAlert("error", response.data.message || "Login failed");
       }
     } catch (error) {
       console.error("Error: ", error);

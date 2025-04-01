@@ -32,13 +32,14 @@ const ConformationPopup = ({
     }
   
     try {
-      const response = await deletePartner(restaurantId.id);   
+      const response = await deletePartner(restaurantId.id); 
+      console.log('response form delete api', response);  
       if (response.status === 200) {
-        showAlert("success", response.message || "Restaurant deleted successfully");
+        showAlert("success", response.data.message);
         handleGetAllData(); 
         onClose(); 
       } else {
-        showAlert("error", response.message || "Failed to delete restaurant");
+        showAlert("error", response.data.message );
         console.error("Failed to delete restaurant");
         onClose();
       }
