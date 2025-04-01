@@ -3,8 +3,12 @@ import styles from "../../Styles/AddPartners.module.css";
 import { CloseOutlined } from "@ant-design/icons";
 import { Button, Input, message } from "antd";
 import { editPartners } from "../../api/partners/getPartners";
+import { useAlert } from "../../Context/AlertContext";
+import { useData } from "../../Context/DataProvider";
 
 const ViewDetails = ({ onClose, restaurant, isEditable }) => {
+  const {showAlert} = useAlert();
+  const {handleGetAllData} = useData();
   if (!restaurant) return null;
 
   // State to manage editable fields
@@ -13,32 +17,39 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
     name: restaurant.name || "",
     contactNumber: restaurant.contactNumber || "",
     emailId: restaurant.emailId || "",
-    address: `${restaurant.addressLine1 || ""}, ${restaurant.city || ""} - ${restaurant.postalCode || ""}`,
+    address: `${restaurant.addressLine1 || ""}, ${restaurant.city || ""} - ${
+      restaurant.postalCode || ""
+    }`,
   });
 
-  // Handle input changes
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // Save changes and call the API
   const handleSaveChanges = async () => {
     try {
-        const updatedData = {
-            companyName: formData.companyName,
-            name: formData.name,
-            contactNumber: formData.contactNumber,
-            emailId: formData.emailId,
-            addressLine1: formData.address.split(",")[0].trim(),
-            city: formData.address.split(",")[1]?.trim().split("-")[0]?.trim() || "",
-            postalCode: formData.address.split("-")[1]?.trim() || "",
-        };
+      const updatedData = {
+        companyName: formData.companyName,
+        name: formData.name,
+        contactNumber: formData.contactNumber,
+        emailId: formData.emailId,
+        addressLine1: formData.address.split(",")[0].trim(),
+        city:
+          formData.address.split(",")[1]?.trim().split("-")[0]?.trim() || "",
+        postalCode: formData.address.split("-")[1]?.trim() || "",
+      };
 
-        await editPartners(restaurant.id, updatedData);
-        message.success("Partner details updated successfully!");
-        onClose(); 
+      const response = await editPartners(restaurant.id, updatedData);
+      console.log("response from api", response);
+      if (response.status === 200) {
+        showAlert("success", response.data.message);
+        handleGetAllData();
+        onClose();
+      } else {
+        showAlert("error", response.data.message);
+      }
     } catch (error) {
-        message.error("Failed to update partner details.");
+      message.error("Failed to update partner details.");
     }
   };
 
@@ -63,7 +74,9 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
                 value={formData.companyName}
                 className={styles.inputField}
                 // readOnly={!isEditable}
-                onChange={(e) => handleInputChange("companyName", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("companyName", e.target.value)
+                }
               />
             </div>
 
@@ -87,7 +100,9 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
               value={formData.contactNumber}
               className={styles.inputField}
               // readOnly={!isEditable}
-              onChange={(e) => handleInputChange("contactNumber", e.target.value)}
+              onChange={(e) =>
+                handleInputChange("contactNumber", e.target.value)
+              }
             />
           </div>
           <div className={styles.inputGroup}>
@@ -113,7 +128,11 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
         {/* Conditionally render the Save Changes button */}
         {isEditable && (
           <div className={styles.modalFooter}>
-            <Button type="primary" className={styles.saveButton} onClick={handleSaveChanges}>
+            <Button
+              type="primary"
+              className={styles.saveButton}
+              onClick={handleSaveChanges}
+            >
               Save Changes
             </Button>
           </div>

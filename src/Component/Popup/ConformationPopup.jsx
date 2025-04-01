@@ -1,8 +1,6 @@
 import React from "react";
 import styles from "../../Styles/ConformationPopup.module.css";
-import { MdDelete } from "react-icons/md";
 import { AiOutlineClose } from "react-icons/ai";
-import { RiDeleteBin6Line } from "react-icons/ri";
 import { useAlert } from "../../Context/AlertContext";
 import { deletePartner } from "../../api/partners/getPartners";
 import { useData } from "../../Context/DataProvider";
@@ -27,13 +25,11 @@ const ConformationPopup = ({
 
   const handleDelete = async () => {
     if (!restaurantId || !restaurantId.id) { 
-      console.error("Invalid restaurantId", restaurantId);
       return;
     }
   
     try {
       const response = await deletePartner(restaurantId.id); 
-      console.log('response form delete api', response);  
       if (response.status === 200) {
         showAlert("success", response.data.message);
         handleGetAllData(); 

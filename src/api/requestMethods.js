@@ -18,7 +18,6 @@ export const postRequest = async (endPoint, data) => {
   try {
     const res = await client.post(endPoint, data);
     return res;
-    // return res.data ?? res;
   } catch (error) {
     const { response } = error;
     if (response?.data) {
@@ -31,7 +30,8 @@ export const postRequest = async (endPoint, data) => {
 export const patchRequest = async (endPoint, data) => {
   try {
     const res = await client.patch(endPoint, data);
-    return res.data;
+    console.log("response from server", res);
+    return res;
   } catch (error) {
     const { response } = error;
     if (response?.data) {
@@ -44,7 +44,7 @@ export const patchRequest = async (endPoint, data) => {
 export const putRequest = async (endPoint, data) => {
   try {
     const res = await client.put(endPoint, data);
-    return res.data;
+    return res;
   } catch (error) {
     const { response } = error;
     if (response?.data) {
@@ -57,8 +57,7 @@ export const putRequest = async (endPoint, data) => {
 export const deleteRequest = async (endPoint, data) => {
   try {
     const res = await client.delete(endPoint, data);
-    console.log("res from delete server", res);
-    return res.data ?? res;
+    return res; 
   } catch (error) {
     const { response } = error;
     if (response?.data) {

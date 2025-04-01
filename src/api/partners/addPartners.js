@@ -1,8 +1,10 @@
 import { postRequest } from "../requestMethods";
 
+const BASE_URL = import.meta.env.VITE_APP_HOST_URL; 
+
 export const addPartners = async (partnerData) => {
   const response = await postRequest(
-    `http://localhost:3000/api/restaurants/add-partner`,
+    `${BASE_URL}/api/restaurants/add-partner`, 
     partnerData
   );
   return response; 

@@ -9,6 +9,9 @@ import { addPartners } from "../../api/partners/addPartners";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
 
+const GOOGLE_MAPS_API_URL = import.meta.env.VITE_APP_GOOGLE_MAPS_API_URL; // Import the API URL from .env
+const GOOGLE_API_KEY = import.meta.env.VITE_APP_GOOGLE_API_KEY; // Import the API key from .env
+
 const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
   const { showAlert } = useAlert();
   const { Option } = Select;
@@ -70,15 +73,12 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     }
 
     try {
-      const response = await axios.get(
-        `https://maps.googleapis.com/maps/api/geocode/json`,
-        {
-          params: {
-            address: fullAddress,
-            key: `${import.meta.env.VITE_APP_GOOGLE_API_KEY}`,
-          },
-        }
-      );
+      const response = await axios.get(GOOGLE_MAPS_API_URL, {
+        params: {
+          address: fullAddress,
+          key: GOOGLE_API_KEY,
+        },
+      });
 
       if (response.data.status === "OK" && response.data.results.length > 0) {
         const result = response.data.results[0];
@@ -156,19 +156,12 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
 
     try {
       const response = await addPartners(payload);
-
       if (response && response.status == 201) {
-        showAlert(
-          "success",
-          response.data.message || "Restaurant added successfully."
-        );
+        showAlert("success", response.data.message);
         handleGetAllData();
         onClose();
       } else {
-        showAlert(
-          "error",
-          response.data.message || "Failed to add restaurant."
-        );
+        showAlert("error", response.data.message);
       }
     } catch (error) {
       console.error("Error in handleSave:", error);

@@ -1,20 +1,23 @@
 import { deleteRequest, getRequest, putRequest } from '../requestMethods';
 
+const BASE_URL = import.meta.env.VITE_APP_HOST_URL;
+
 export const getPartners = async () => {
-    const response = await getRequest('http://localhost:3000/api/restaurants');
+    const response = await getRequest(`${BASE_URL}/api/restaurants`);
     return response;
 };
 
 export const editPartners = async (partnerId, updatedData) => {
     const response = await putRequest(
-        `http://localhost:3000/api/restaurants/${partnerId}`,
+        `${BASE_URL}/api/restaurants/${partnerId}`,
         updatedData 
     );
+    console.log('response from the api function', response);
     return response;
 };
 
 export const deletePartner = async (partnerId) => {
-    const response = await deleteRequest(`http://localhost:3000/api/restaurants/${partnerId}`);
+    const response = await deleteRequest(`${BASE_URL}/api/restaurants/${partnerId}`);
     console.log('response from api', response);
 
     return response;
