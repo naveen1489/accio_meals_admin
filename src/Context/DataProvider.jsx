@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getPartners } from "../api/partners/getPartners";
+import { getCategory } from "../api/category/category";
 
 const DataContext = createContext();
 export default function DataProvider({ children }) {
@@ -17,6 +18,7 @@ export default function DataProvider({ children }) {
     () => localStorage.getItem("adminName") || ""
   );
   const [restaurantData, setRestaurantData] = useState([]);
+  const [categoryData, setCategoryData] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -71,11 +73,9 @@ export default function DataProvider({ children }) {
     }
   }, [adminName]);
 
-  const handleGetAllData = async () => {
+  const handleGetAllPartnersData = async () => {
     try {
       const response = await getPartners();
-      console.log("Fetched Data:", response);
-
       if (Array.isArray(response)) {
         setRestaurantData([...response]);
       } else {
@@ -86,7 +86,19 @@ export default function DataProvider({ children }) {
     }
   };
 
-  
+  const handleGetAllCategoryData = async () => {
+    try {
+      const response = await getCategory();
+      if (Array.isArray(response)) {
+        setCategoryData([...response]);
+      } else {
+        console.log("Unexpected response format", response);
+      }
+    } catch (error) {
+      console.log("Error fetching data", error);
+    }
+  };
+  console.log("categoryData", categoryData);
   return (
     <DataContext.Provider
       value={{
@@ -99,7 +111,10 @@ export default function DataProvider({ children }) {
         setadminName,
         restaurantData,
         setRestaurantData,
-        handleGetAllData,
+        categoryData,
+        setCategoryData,
+        handleGetAllPartnersData,
+        handleGetAllCategoryData,
       }}
     >
       {children}

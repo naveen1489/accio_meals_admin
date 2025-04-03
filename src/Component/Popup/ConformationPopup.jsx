@@ -4,18 +4,20 @@ import { AiOutlineClose } from "react-icons/ai";
 import { useAlert } from "../../Context/AlertContext";
 import { deletePartner } from "../../api/partners/getPartners";
 import { useData } from "../../Context/DataProvider";
+import { deleteCategory } from "../../api/category/category";
 
 const ConformationPopup = ({
   icon,
   text,
   onClose,
-  onConfirm,
   leftBtn,
   rightBtn,
   restaurantId,
+  route,
+  categoryData,
 }) => {
   const {showAlert } = useAlert();
-  const {handleGetAllData} = useData();
+  const {handleGetAllPartnersData, handleGetAllCategoryData} = useData();
 
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains(styles.modalBackdrop)) {
@@ -23,29 +25,80 @@ const ConformationPopup = ({
     }
   };
 
-  const handleDelete = async () => {
-    if (!restaurantId || !restaurantId.id) { 
-      return;
-    }
+  // const handleDelete = async () => {
+  //   console.log(categoryData?.id, restaurantId?.id, route);
+  //   try {
+  //     const config = {
+  //       category: {
+  //         deleteFunction: deleteCategory,
+  //         id: categoryData?.id,
+  //         errorMessage: "Failed to delete category",
+  //         refreshData: handleGetAllCategoryData
+  //       },
+  //       partner: {
+  //         deleteFunction: deletePartner,
+  //         id: restaurantId?.id,
+  //         errorMessage: "Failed to delete partner",
+  //         refreshData: handleGetAllPartnersData
+  //       }
+  //     };
+
+  //     const currentConfig = config[route];
+  //     if (!currentConfig || !currentConfig.id) {
+  //       console.error(`Invalid route or missing ID for route: ${route}`);
+  //       return;
+  //     }
+
+  //     const response = await currentConfig.deleteFunction(currentConfig.id);
+      
+  //     if (response.status === 200) {
+  //       showAlert("success", response.data.message);
+  //       currentConfig.refreshData();
+  //     } else {
+  //       showAlert("error", response.data.message);
+  //       console.error(currentConfig.errorMessage);
+  //     }
+  //   } catch (error) {
+  //     console.error(`Error deleting ${route}:`, error);
+  //     showAlert("error", error.response?.message || "An unexpected error occurred");
+  //   } finally {
+  //     onClose();
+  //   }
+  // };
   
-    try {
-      const response = await deletePartner(restaurantId.id); 
-      if (response.status === 200) {
-        showAlert("success", response.data.message);
-        handleGetAllData(); 
-        onClose(); 
-      } else {
-        showAlert("error", response.data.message );
-        console.error("Failed to delete restaurant");
+  const handleDelete = async () => {
+    if(route === "category") {  
+      try {
+        const response = await deleteCategory(categoryData?.id);
+        if (response.status === 200) {
+          showAlert("success", response.data.message);
+          handleGetAllCategoryData();
+        } else {
+          showAlert("error", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error deleting category:", error);
+      } finally {
         onClose();
       }
-    } catch (error) {
-      console.error("Error deleting restaurant:", error);
-      showAlert("error", error.response?.message || "An unexpected error occurred");
-      onClose();
-    }
+    }else if(route === "partners") {
+      try {
+        const response = await deletePartner(restaurantId?.id);
+        if (response.status === 200) {
+          showAlert("success", response.data.message);
+          handleGetAllPartnersData();
+        } else {
+          showAlert("error", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error deleting partner:", error);
+      } finally {
+        onClose();
+      }
+    }  
   };
-  
+
+
   return (
     <div className="overlay" onClick={handleOverlayClick}>
       <div className={styles.modalBackdrop}>

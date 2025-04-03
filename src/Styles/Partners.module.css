@@ -53,14 +53,14 @@
 }
 
 .cards_details {
-  /* border: 3px solid purple; */
   width: 100%;
-  margin: auto;
-  margin-top: 4rem;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  gap: 1.5rem;
   padding-left: 2rem;
+  max-width: 80%;
+  margin: auto;
+  margin-top: 4rem;
 }
 
 .card {

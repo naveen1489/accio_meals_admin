@@ -11,12 +11,12 @@ import { useData } from "../../Context/DataProvider";
 const PartnersCard = ({ data }) => {
   const [viewPopup, setViewPopup] = useState(false);
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
-  const { restaurantData, handleGetAllData } = useData();
+  const { restaurantData, handleGetAllPartnersData } = useData();
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
 
   useEffect(() => {
-    handleGetAllData();
+    handleGetAllPartnersData();
   }, []);
 
   const handleViewClick = (restaurant) => {
@@ -27,9 +27,9 @@ const PartnersCard = ({ data }) => {
 
   const handleEditClick = (restaurant) => {
     setSelectedRestaurant(restaurant);
-    setIsEditable(true); 
+    setIsEditable(true);
     setViewPopup(true);
-  }
+  };
 
   return (
     <>
@@ -67,7 +67,10 @@ const PartnersCard = ({ data }) => {
                   style={{
                     background:
                       restaurant.status == "Active" ? "green" : "#ffcc80",
-                      border: restaurant.status == "Active" ? "0.5px solid green" : "0.5px solid #ffcc80",
+                    border:
+                      restaurant.status == "Active"
+                        ? "0.5px solid green"
+                        : "0.5px solid #ffcc80",
                   }}
                 ></div>
               </div>
@@ -82,11 +85,14 @@ const PartnersCard = ({ data }) => {
               className={styles.icon}
               onClick={() => handleViewClick(restaurant)}
             />
-            <BiEdit className={styles.icon} onClick={() => handleEditClick(restaurant)}/>
+            <BiEdit
+              className={styles.icon}
+              onClick={() => handleEditClick(restaurant)}
+            />
             <RiDeleteBin6Line
               className={styles.icon}
               onClick={() => {
-                setSelectedRestaurant(restaurant);  
+                setSelectedRestaurant(restaurant);
                 setOpenDeletePopup(true);
               }}
             />
@@ -116,11 +122,12 @@ const PartnersCard = ({ data }) => {
         <ViewDetails
           onClose={() => setViewPopup(false)}
           restaurant={selectedRestaurant}
-          isEditable={isEditable} 
+          isEditable={isEditable}
         />
       )}
       {openDeletePopup && (
         <ConformationPopup
+          route={"partners"}
           restaurantId={selectedRestaurant}
           onClose={() => setOpenDeletePopup(false)}
           icon={<RiDeleteBin6Line />}

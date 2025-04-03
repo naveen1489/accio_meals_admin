@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../Styles/Category.module.css";
 import veg_icon from "../../assets/Category/veg.png";
 import { TbEye } from "react-icons/tb";
@@ -6,62 +6,118 @@ import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
 import ViewDetails from "./ViewDetails";
+import { useData } from "../../Context/DataProvider";
 
-const CategoryCard = () => {
+const CategoryCard = ({ data }) => {
   const [openDeletepopup, setopendeletepopup] = useState(false);
   const [openViewPopup, setopenViewpopup] = useState(false);
   const [openEditPopup, setopenEditPopup] = useState(false);
+  const { categoryData } = useData();
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [isEditable, setIsEditable] = useState(false);
+
+  const handleViewClick = (category) => {
+    setIsEditable(false);
+    setSelectedCategory(category);
+    setopenViewpopup(true);
+  };
+
+  const handleEditClick = (category) => {
+    setSelectedCategory(category);
+    setIsEditable(true);
+    setopenViewpopup(true);
+  };
 
   return (
-    <div className={styles.card}>
-      <div className={styles.header}>
-        <div className={styles.categoryInfo}>
-          <img
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU1yMxBVI-74dtHiEy0qHBtwrXEaLyhN-PWQ&s"
-            alt=""
-            style={{ width: "10rem", height: "10rem" }}
-          />
+    <>
+      {(data?.length > 0 ? data : categoryData).map((category, index) => (
+        <div className={styles.card} key={index}>
           <div>
-            <h2>Breakfast</h2>
-            <span className={styles.vegIndicator}>
-              <img src={veg_icon} alt="veg_icon" />
-              VEG
-            </span>
+            <div className={styles.header}>
+              <div className={styles.categoryInfo}>
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU1yMxBVI-74dtHiEy0qHBtwrXEaLyhN-PWQ&s"
+                  alt=""
+                  style={{ width: "10rem", height: "10rem" }}
+                />
+                <div>
+                  <h2>{category.categoryName}</h2>
+                  <span className={styles.vegIndicator}>
+                    <img src={veg_icon} alt="veg_icon" />
+                    {category.vegNonVeg}
+                  </span>
+                </div>
+              </div>
+              <div className={styles.status}>
+                <div
+                  style={{
+                    background:
+                      category.status == "Active" ? "#36973a2b" : "#fff3cd",
+                    border:
+                      category.status == "Active"
+                        ? "0.5px solid #36973a2b"
+                        : "0.5px solid #fff3cd",
+                  }}
+                >
+                  <div
+                    style={{
+                      background:
+                        category.status == "Active" ? "green" : "#ffcc80",
+                      border:
+                        category.status == "Active"
+                          ? "0.5px solid green"
+                          : "0.5px solid #ffcc80",
+                    }}
+                  ></div>
+                </div>{" "}
+                {category.status == "Active"
+                  ? "Active"
+                  : "Inactive" || "Status"}
+              </div>
+            </div>
+
+            <div className={styles.actions}>
+              <TbEye
+                className={styles.icon}
+                onClick={() => handleViewClick(category)}
+              />
+              <BiEdit
+                className={styles.icon}
+                onClick={() => handleEditClick(category)}
+              />
+              <RiDeleteBin6Line
+                className={styles.icon}
+                onClick={() => {
+                  setSelectedCategory(category);
+                  setopendeletepopup(true);
+                }}
+              />
+            </div>
+
+            <div className={styles.details}>
+              <h3>Category Details</h3>
+              <div>
+                <p>Description </p> <p>:</p>
+                <p>{category.description}</p>
+              </div>
+            </div>
           </div>
         </div>
-        <div className={styles.status}>
-          <div>
-            <div></div>
-          </div>{" "}
-          Active
-        </div>
-      </div>
+      ))}
 
-      <div className={styles.actions}>
-        <TbEye className={styles.icon} onClick={() => setopenViewpopup(true)} />
-        <BiEdit className={styles.icon} onClick={() => setopenEditPopup(true)} />
-        <RiDeleteBin6Line
-          className={styles.icon}
-          onClick={() => setopendeletepopup(true)}
+      {/* {openViewPopup && <ViewDetails onClose={() => setopenViewpopup(false)} />} */}
+      {openViewPopup && (
+        <ViewDetails
+          onClose={() => setopenViewpopup(false)}
+          category={selectedCategory}
+          isEditable={isEditable}
         />
-      </div>
+      )}
 
-      <div className={styles.details}>
-        <h3>Category Details</h3>
-        <div>
-          <p>Description </p> <p>:</p>
-          <p>
-            Lorem ipsum dolor sit Lorem ipsum dolor sit Lorem ipsum dolor sit
-            Lorem ipsum dolor sit!
-          </p>
-        </div>
-      </div>
-
-      {openViewPopup && <ViewDetails onClose={() => setopenViewpopup(false)} />}
-      {openEditPopup && <ViewDetails onClose={() => setopenEditPopup(false)} />}
-        
-      {openDeletepopup && (
+      {openDeletepopup && selectedCategory && (
         <ConformationPopup
+          categoryData={selectedCategory}
+          route={"category"}
           onClose={() => setopendeletepopup(false)}
           icon={<RiDeleteBin6Line />}
           text={
@@ -74,7 +130,7 @@ const CategoryCard = () => {
           rightBtn={true}
         />
       )}
-    </div>
+  </>
   );
 };
 

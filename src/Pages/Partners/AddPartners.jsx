@@ -9,13 +9,13 @@ import { addPartners } from "../../api/partners/addPartners";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
 
-const GOOGLE_MAPS_API_URL = import.meta.env.VITE_APP_GOOGLE_MAPS_API_URL; // Import the API URL from .env
-const GOOGLE_API_KEY = import.meta.env.VITE_APP_GOOGLE_API_KEY; // Import the API key from .env
+const GOOGLE_MAPS_API_URL = import.meta.env.VITE_APP_GOOGLE_MAPS_API_URL;
+const GOOGLE_API_KEY = import.meta.env.VITE_APP_GOOGLE_API_KEY; 
 
 const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
   const { showAlert } = useAlert();
   const { Option } = Select;
-  const { handleGetAllData } = useData();
+  const { handleGetAllPartnersData } = useData();
   const [formData, setFormData] = useState({
     companyName: "",
     nameTitle: "Mr.",
@@ -156,9 +156,9 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
 
     try {
       const response = await addPartners(payload);
-      if (response && response.status == 201) {
+      if (response && response.status == 200) {
         showAlert("success", response.data.message);
-        handleGetAllData();
+        handleGetAllPartnersData();
         onClose();
       } else {
         showAlert("error", response.data.message);

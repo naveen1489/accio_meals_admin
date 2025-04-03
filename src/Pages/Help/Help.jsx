@@ -5,7 +5,7 @@ import { FiSearch } from "react-icons/fi";
 import { Button } from "antd";
 import PartnersCard from "../Partners/Cards";
 import MenuDetails from "./MenuDetails";
-import { AiOutlinePlus } from "react-icons/ai";
+import { IoFilterSharp } from "react-icons/io5";
 
 const Help = () => {
   const [newCategory, setnewCategory] = useState(false);
@@ -27,7 +27,7 @@ const Help = () => {
             className={styles.category_button}
             onClick={() => setnewCategory(true)}
           >
-            <AiOutlinePlus /> New Request
+            <IoFilterSharp /> New Request
           </Button>
         </div>
 

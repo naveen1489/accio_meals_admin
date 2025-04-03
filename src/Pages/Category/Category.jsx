@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../Styles/Category.module.css";
 import SidebarHeader from "../../Component/Navigation/SidebarHeader";
 import { FiSearch } from "react-icons/fi";
@@ -8,11 +8,31 @@ import CategoryCard from "./Cards";
 import AddCategory from "./AddCategory";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
 import { BsCheck2Square } from "react-icons/bs";
+import { useData } from "../../Context/DataProvider";
 
 const Category = () => {
   const [addCategory, setaddCategory] = useState(false);
   const [openPopup, setOpenpopup] = useState(false);
+  const { categoryData, handleGetAllCategoryData } = useData();
+  const [searchData, setSearchData] = useState("");
 
+  useEffect(() => {
+    handleGetAllCategoryData();
+  }, []);
+
+  const handleSearch = (e) => {
+    setSearchData(e.target.value.toLowerCase());
+  };
+
+  // Filter restaurantData based on searchData
+  const filteredData = categoryData?.filter((item) => {
+    return (
+      item.categoryName.toLowerCase().includes(searchData) ||
+      item.description.toLowerCase().includes(searchData)
+    );
+  });
+
+  console.log("caregoryData", categoryData);
   return (
     <SidebarHeader
       headingText={"Category"}
@@ -21,7 +41,12 @@ const Category = () => {
       <div style={{ marginTop: "1rem" }}>
         <div className={styles.search_category}>
           <div>
-            <input type="text" placeholder="Search..." />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchData}
+              onChange={(e) => handleSearch(e)}
+            />
             <FiSearch />
           </div>
 
@@ -34,7 +59,7 @@ const Category = () => {
         </div>
 
         <div className={styles.cards_details}>
-          <CategoryCard /> <CategoryCard />
+          <CategoryCard data={filteredData}/> 
         </div>
 
         {addCategory && (

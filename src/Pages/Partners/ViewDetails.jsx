@@ -8,7 +8,7 @@ import { useData } from "../../Context/DataProvider";
 
 const ViewDetails = ({ onClose, restaurant, isEditable }) => {
   const {showAlert} = useAlert();
-  const {handleGetAllData} = useData();
+  const {handleGetAllPartnersData} = useData();
   if (!restaurant) return null;
 
   // State to manage editable fields
@@ -43,7 +43,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
       console.log("response from api", response);
       if (response.status === 200) {
         showAlert("success", response.data.message);
-        handleGetAllData();
+        handleGetAllPartnersData();
         onClose();
       } else {
         showAlert("error", response.data.message);

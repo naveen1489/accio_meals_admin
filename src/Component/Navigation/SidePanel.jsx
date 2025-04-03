@@ -10,8 +10,10 @@ import { useNavigate } from "react-router-dom";
 import { BsBarChart } from "react-icons/bs";
 import { PiSquaresFour } from "react-icons/pi";
 import { FiLogOut } from "react-icons/fi";
+import { useAlert } from "../../Context/AlertContext";
 
 const SidePanel = () => {
+  const {showAlert} = useAlert();
   const [activePage, setActivePage] = useState(() => {
     const pathname = window.location.pathname.split("/")[1];
     switch (pathname) {
@@ -43,6 +45,14 @@ const SidePanel = () => {
       setCollapseSidebar(true);
     }
   };
+
+  const handleLogout = () => {
+    showAlert("success", "Logout Successfully !");
+    localStorage.removeItem("adminName");
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
 
   return (
     <>
@@ -122,7 +132,7 @@ const SidePanel = () => {
               </div>
             </div>
 
-            <div className={styles.log_Out} onClick={() => navigate("/")}>
+            <div className={styles.log_Out} onClick={() => handleLogout()}>
               <FiLogOut />
               <span>Log out</span>
             </div>

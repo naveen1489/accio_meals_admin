@@ -12,13 +12,10 @@ export const editPartners = async (partnerId, updatedData) => {
         `${BASE_URL}/api/restaurants/${partnerId}`,
         updatedData 
     );
-    console.log('response from the api function', response);
     return response;
 };
 
 export const deletePartner = async (partnerId) => {
     const response = await deleteRequest(`${BASE_URL}/api/restaurants/${partnerId}`);
-    console.log('response from api', response);
-
     return response;
 };
