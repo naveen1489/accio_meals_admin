@@ -4,7 +4,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: #00000080;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -14,10 +14,9 @@
 .modalContainer {
   background: white;
   padding: 2rem;
-  padding-right: 4rem;
-  padding-bottom: 4rem;
-  width: 45rem;
-  height: 29rem;
+  width: 50rem;
+  max-height: 35rem;
+  overflow-y: auto;
   border-radius: 0.5rem;
   box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.2);
   position: relative;
@@ -34,40 +33,36 @@
   font-size: 1.5rem;
   font-weight: 600;
   color: var(--sec-color);
-  text-align: center;
-  width: 100%;
-  margin-top: 0rem;
 }
 
 .closeIcon {
-  font-size: 1rem;
+  font-size: 1.5rem;
   cursor: pointer;
+  color: var(--sec-color);
   position: absolute;
   top: 1rem;
   right: 1.3rem;
-  color: var(--sec-color);
 }
 
 .modalContent {
   display: flex;
   justify-content: space-between;
-  gap: 4rem;
+  gap: 2rem;
   align-items: center;
 }
 
 .leftSection {
-  flex: 1;
-  margin-top: 1rem;
+  flex: 2;
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  margin-top: 1rem;
 }
 
 .inputRow {
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
   gap: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .inputGroup {
@@ -77,24 +72,45 @@
 }
 
 .inputGroup label {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.5rem;
   font-size: 0.875rem;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--pri-black);
 }
 
+.inputGroup>div>div:nth-child(1) {
+  border: none !important;
+  outline: none;
+}
+
+.inputGroup>div>div:nth-child(1):focus{
+  border: none !important;
+  outline: none;
+}
+
 .inputField {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 0.25rem;
   width: 100%;
   height: 2.5rem;
   border-color: var(--pri-black);
 }
 
-.inputField > div:nth-child(1) {
+.inputField>div:nth-child(1) {
   border-color: var(--pri-black) !important;
+}
+
+.categoryRow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .statusSection {
   display: flex;
+  align-items: center;
+  gap: 1rem;
   flex-direction: column;
   align-items: start;
   justify-content: center;
@@ -102,14 +118,14 @@
 }
 
 .radioGroup {
-  /* margin-left: 0.5rem; */
   margin-top: 0.6rem;
 }
 
 .rightSection {
+  flex: 1;
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   background: #f5f5f5;
   width: 16rem;
   height: 10rem;
@@ -117,21 +133,29 @@
 }
 
 .uploadBox {
-  text-align: center;
+  width: 100%;
+  height: 10rem;
+  border: 2px dashed #ddd;
+  border-radius: 0.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
+  text-align: center;
 }
 
 .uploadContent {
+  text-align: center;
+  color: #888;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
   font-size: 0.875rem;
-  color: #888;
 }
 
-.uploadContent > p {
+.uploadContent>p {
   margin-top: 1rem;
   color: var(--pri-black);
   font-size: 0.8rem;
@@ -141,10 +165,64 @@
   gap: 0.2rem;
 }
 
+.tableSection {
+  margin-top: 2rem;
+  border: 1px solid #f5c2c7;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.tableSection table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tableSection th,
+.tableSection td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #f5c2c7;
+}
+
+.tableSection th:not(:first-child) {
+  background-color: #fff5f5;
+  color: #EE8A92;
+}
+
+.tableSection th:hover {
+  background-color: #fff5f5;
+  color: #EE8A92;
+  font-weight: bold;
+  text-align: center;
+}
+
+.tableSection td:first-child {
+  background-color: #fff5f5;
+  color: #EE8A92;
+  font-weight: bold;
+  text-align: left;
+}
+
+.tableSection td:first-child:hover {
+  background-color: #fff5f5;
+  color: #EE8A92;
+  font-weight: bold;
+  text-align: left;
+}
+
+.tableSection td:last-child {
+  text-align: center;
+  color: #333;
+}
+
+.tableSection tr:last-child td {
+  border-bottom: none;
+}
+
 .modalFooter {
+  margin-top: 1.5rem;
   display: flex;
-  justify-content: center;
-  margin-top: 3.5rem;
+  justify-content: flex-end;
   align-items: center;
 }
 

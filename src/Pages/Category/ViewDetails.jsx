@@ -15,6 +15,7 @@ const ViewDetails = ({ onClose, category }) => {
     setEditableCategory((prev) => ({ ...prev, [field]: value }));
   };
 
+  // console.log("category", category);
   const handleSaveChanges = async () => {
     try {
       const payload = {
@@ -123,8 +124,11 @@ const ViewDetails = ({ onClose, category }) => {
             <Input.TextArea
               className={styles.inputField}
               value={
-                editableCategory.itemCategories?.join(", ") ||
-                "No items available"
+                editableCategory.itemCategories
+                  ?.flatMap((itemCategory) =>
+                    itemCategory.items?.map((item) => item.itemName)
+                  )
+                  .join(", ") || "No items available"
               }
               onChange={(e) =>
                 handleInputChange(
