@@ -6,6 +6,7 @@ import { Button } from "antd";
 import PartnersCard from "../Partners/Cards";
 import MenuDetails from "./MenuDetails";
 import { IoFilterSharp } from "react-icons/io5";
+import HelpCards from "./Cards";
 
 const Help = () => {
   const [newCategory, setnewCategory] = useState(false);
@@ -32,7 +33,7 @@ const Help = () => {
         </div>
 
         <div className={styles.cards_details}>
-          <PartnersCard /> <PartnersCard />
+          <HelpCards/>
         </div>
 
         {newCategory && (

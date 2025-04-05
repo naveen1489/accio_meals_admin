@@ -8,7 +8,7 @@
   padding-right: 3rem;
 }
 
-.search_category > div:nth-child(1) {
+.search_category>div:nth-child(1) {
   border-radius: 12px;
   border: 0.5px solid #dedede;
   padding: 0rem 1rem 0rem 0rem;
@@ -19,14 +19,14 @@
   gap: 0.6rem;
 }
 
-.search_category > div:nth-child(1) input {
+.search_category>div:nth-child(1) input {
   line-height: 2.25rem;
   outline: none;
   border: 0px;
   padding-left: 1rem;
 }
 
-.search_category > div:nth-child(1) > svg:nth-child(2) {
+.search_category>div:nth-child(1)>svg:nth-child(2) {
   height: 1.3rem;
   width: 1.3rem;
   color: #2d264b;
@@ -101,11 +101,12 @@
   box-shadow: 0px 0px 3.9px 0px #00000040;
 }
 
-.categoryInfo > img:nth-child(1) {
+.categoryInfo>img:nth-child(1) {
   width: 5rem !important;
   height: 5rem !important;
   border-radius: 0.5rem;
 }
+
 .categoryInfo h2 {
   margin: 0;
   font-size: 1rem;
@@ -121,7 +122,7 @@
   color: #717171;
 }
 
-.categoryInfo > div:nth-child(2) {
+.categoryInfo>div:nth-child(2) {
   display: flex;
   flex-direction: column;
   justify-content: start;
@@ -136,6 +137,7 @@
   align-items: start;
   /* gap: 0.3rem; */
 }
+
 .status {
   display: flex;
   align-items: center;
@@ -145,7 +147,7 @@
   gap: 0.8rem;
 }
 
-.status > div:nth-child(1) {
+.status>div:nth-child(1) {
   width: 0.7rem;
   height: 0.7rem;
   border-radius: 50%;
@@ -156,7 +158,7 @@
   align-items: center;
 }
 
-.status > div:nth-child(1) > div {
+.status>div:nth-child(1)>div {
   border: 1px solid green;
   padding: 0.15rem;
   margin: 0px;
@@ -198,11 +200,10 @@
 }
 
 .modalContainer {
-  width: 50rem;
+  width: 30rem;
   background: white;
   border-radius: 1rem;
-  padding: 3rem;
-  padding-top: 2rem;
+  padding: 2rem;
 }
 
 .modalHeader {
@@ -228,21 +229,22 @@
 
 .modalContent {
   display: flex;
-  gap: 2rem;
+  /* gap: 2rem; */
   margin-top: 1.5rem;
 }
 
 .leftSection {
-  gap: 1rem;
+  /* gap: 1rem; */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: start;
+  width: 100%;
 }
 
 .subHeading {
   font-size: 1.4rem;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .formGroup {
@@ -297,21 +299,21 @@
   gap: 1rem;
 }
 
-.infoBox > div {
+.infoBox>div {
   display: flex;
   justify-content: start;
   align-items: center;
   gap: 0.8rem;
 }
 
-.infoBox > div > p:nth-child(1) {
+.infoBox>div>p:nth-child(1) {
   font-size: 0.8rem;
   font-weight: 400;
   width: 6rem;
   white-space: nowrap;
 }
 
-.infoBox > div > p:nth-child(3) {
+.infoBox>div>p:nth-child(3) {
   color: #151515;
   font-weight: 500;
   font-size: 0.9rem;
@@ -320,6 +322,9 @@
 .buttonGroup {
   display: flex;
   gap: 1rem;
+  justify-content: end;
+  width: 100%;
+  margin-top: 1rem;
 }
 
 .approveBtn {
@@ -332,7 +337,20 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  border: 1px solid 36973A2B;
+  border: 1px solid #36973A2B;
+}
+
+.approveBtn:hover {
+  background: #36973a2b !important;
+  color: #36973a !important;
+  font-size: 0.9rem;
+  padding: 1.2rem 1.8rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #36973A2B !important;
 }
 
 .rejectBtn {
@@ -346,6 +364,19 @@
   justify-content: center;
   align-items: center;
   border: 1px solid #e3374514;
+}
+
+.rejectBtn:hover {
+  background: #e3374514 !important;
+  color: #e33745 !important;
+  font-size: 0.9rem;
+  padding: 1.2rem 1.8rem;
+  border-radius: 0.5rem;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #e3374514 !important;
 }
 
 .inputGroup {
@@ -367,11 +398,52 @@
   border-color: var(--pri-black);
 }
 
-.inputField > div:nth-child(1) {
+.inputField>div:nth-child(1) {
   border-color: var(--pri-black) !important;
 }
 
 .formGroup textarea {
   width: 25rem;
   border-color: var(--pri-black);
+}
+
+.content_container {
+  height: 20rem;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.days {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  max-width: 27rem;
+  /* overflow: scroll; */
+}
+
+.dayButton {
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  border: 2px solid red;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.activeDay {
+  background-color: rgba(227, 55, 69, 1);
+  color: white;
+  border: none;
+  border-radius: 7.42px;
+  font-size: 0.75rem;
+}
+
+.inactiveDay {
+  background-color: white;
+  color: rgba(227, 55, 69, 1);
+  border: 0.74px solid rgba(227, 55, 69, 1);
+  border-radius: 7.42px;
+  font-size: 0.75rem;
 }
