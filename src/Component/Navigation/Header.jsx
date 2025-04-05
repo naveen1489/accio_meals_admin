@@ -6,7 +6,7 @@ import { MdMenu } from "react-icons/md";
 import { SidebarContext } from "../../Context/SidebarContext";
 import { HiOutlineBell } from "react-icons/hi";
 import { FaRegUserCircle } from "react-icons/fa";
-
+import NavNotification from "./NavNotification";
 const Header = ({ heading, subTitle }) => {
   const { adminName } = useData();
   //   const { showAlert } = useAlert();
@@ -50,7 +50,7 @@ const Header = ({ heading, subTitle }) => {
       </div>
         
         <div className={styles.notification_div}>
-          <HiOutlineBell />
+          <NavNotification />
           <div><FaRegUserCircle />{adminName || "Hello Admin"}</div>
         </div>
     </header>
