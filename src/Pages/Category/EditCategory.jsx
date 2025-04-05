@@ -2,11 +2,11 @@ import React, { useEffect, useState } from "react";
 import styles from "../../Styles/AddCategory.module.css";
 import { Button, Radio, Input, Select, message, Table } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
-import { addCategory } from "../../api/category/category";
+import { editCategory } from "../../api/category/category";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
 
-const AddCategory = ({ isOpen, onClose }) => {
+const EditCategory = ({ isOpen, onClose, category }) => {
   const [categoryName, setCategoryName] = useState("");
   const [vegType, setVegType] = useState("Veg");
   const [description, setDescription] = useState("");
@@ -17,13 +17,24 @@ const AddCategory = ({ isOpen, onClose }) => {
   const { showAlert } = useAlert();
   const { handleGetAllCategoryData } = useData();
 
+  // Load data from prop
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
+    if (category) {
+      setCategoryName(category.categoryName || "");
+      setVegType(category.vegNonVeg || "Veg");
+      setDescription(category.description || "");
+      setStatus(category.status || "active");
+      const parsedItemCategories = (category.itemCategories || []).map((cat) => ({
+        itemCategoryName: cat.itemCategoryName,
+        items: cat.items.map((item) => item.itemName).flatMap((i) => i.split(",")),
+      }));
+      setItemCategories(parsedItemCategories);
+      setCurrentCategory(parsedItemCategories[0]?.itemCategoryName || ""); // Set default value
     }
+  }, [category]);
 
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
     return () => {
       document.body.style.overflow = "auto";
     };
@@ -47,6 +58,7 @@ const AddCategory = ({ isOpen, onClose }) => {
 
     if (existingCategory) {
       existingCategory.items.push(currentItem);
+      setItemCategories([...itemCategories]);
     } else {
       setItemCategories([
         ...itemCategories,
@@ -59,14 +71,16 @@ const AddCategory = ({ isOpen, onClose }) => {
 
   const handleRemoveItem = (categoryName, item) => {
     setItemCategories((prevCategories) =>
-      prevCategories.map((cat) =>
-        cat.itemCategoryName === categoryName
-          ? {
-              ...cat,
-              items: cat.items.filter((i) => i !== item),
-            }
-          : cat
-      )
+      prevCategories
+        .map((cat) =>
+          cat.itemCategoryName === categoryName
+            ? {
+                ...cat,
+                items: cat.items.filter((i) => i !== item),
+              }
+            : cat
+        )
+        .filter((cat) => cat.items.length > 0) 
     );
   };
 
@@ -80,7 +94,7 @@ const AddCategory = ({ isOpen, onClose }) => {
     };
 
     try {
-      const response = await addCategory(payload);
+      const response = await editCategory(category.id, payload);
       if (response.status === 200) {
         showAlert("success", response.data.message);
         handleGetAllCategoryData();
@@ -89,7 +103,7 @@ const AddCategory = ({ isOpen, onClose }) => {
         showAlert("error", response.data.message);
       }
     } catch (error) {
-      message.error("An error occurred while adding the category.");
+      message.error("An error occurred while updating the category.");
     }
   };
 
@@ -123,12 +137,11 @@ const AddCategory = ({ isOpen, onClose }) => {
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>
       <div className={styles.modalContainer}>
         <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>Add Category</h2>
+          <h2 className={styles.modalTitle}>Edit Category</h2>
           <CloseOutlined className={styles.closeIcon} onClick={onClose} />
         </div>
         <div className={styles.modalContent_container}>
           <div className={styles.modalContent}>
-            {/* Left Section */}
             <div className={styles.leftSection}>
               <div className={styles.inputRow}>
                 <div className={styles.inputGroup}>
@@ -199,10 +212,7 @@ const AddCategory = ({ isOpen, onClose }) => {
                     onChange={(e) => setCurrentItem(e.target.value)}
                   />
                 </div>
-                <div
-                  style={{ marginTop: "1.5rem" }}
-                  className={styles.add_button}
-                >
+                <div style={{ marginTop: "1.5rem" }} className={styles.add_button}>
                   <Button onClick={handleAddItem}>Add</Button>
                 </div>
               </div>
@@ -222,7 +232,7 @@ const AddCategory = ({ isOpen, onClose }) => {
               className={styles.saveButton}
               onClick={handleSave}
             >
-              Save & Add Category
+              Save Changes
             </Button>
           </div>
         </div>
@@ -231,4 +241,4 @@ const AddCategory = ({ isOpen, onClose }) => {
   );
 };
 
-export default AddCategory;
+export default EditCategory;

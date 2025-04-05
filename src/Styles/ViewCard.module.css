@@ -59,6 +59,7 @@
     width: 8.5rem;
     height: 8.5rem;
     border-radius: 0.7rem;
+    display: none;
   }
   
   .modal_info > div:nth-child(1) img {
@@ -219,5 +220,59 @@
     background-color: rgba(227, 55, 69, 0.08) !important;
     border: 0.5px solid var(--sec-color) !important;
     color: var(--sec-color) !important;
+  }
+  
+  .tableSection {
+    margin-top: 2rem;
+    border: 1px solid #f5c2c7;
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .tableSection table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tableSection th,
+  .tableSection td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #f5c2c7;
+  }
+  
+  .tableSection th:not(:first-child) {
+    background-color: #fff5f5;
+    color: #EE8A92;
+  }
+  
+  .tableSection th:hover {
+    background-color: #fff5f5;
+    color: #EE8A92;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .tableSection td:first-child {
+    background-color: #fff5f5;
+    color: #EE8A92;
+    font-weight: bold;
+    text-align: left;
+  }
+  
+  .tableSection td:first-child:hover {
+    background-color: #fff5f5;
+    color: #EE8A92;
+    font-weight: bold;
+    text-align: left;
+  }
+  
+  .tableSection td:last-child {
+    text-align: center;
+    color: #333;
+  }
+  
+  .tableSection tr:last-child td {
+    border-bottom: none;
   }
   

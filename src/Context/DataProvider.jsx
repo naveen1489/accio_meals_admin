@@ -60,6 +60,8 @@ export default function DataProvider({ children }) {
             location.pathname === "/login" ||
             location.pathname === "/signup")
         ) {
+          await handleGetAllPartnersData(); 
+          await handleGetAllCategoryData();
           navigate("/dashboard");
         }
       }
@@ -98,7 +100,7 @@ export default function DataProvider({ children }) {
       console.log("Error fetching data", error);
     }
   };
-  console.log("categoryData", categoryData);
+
   return (
     <DataContext.Provider
       value={{

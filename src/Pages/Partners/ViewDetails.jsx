@@ -40,7 +40,6 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
       };
 
       const response = await editPartners(restaurant.id, updatedData);
-      console.log("response from api", response);
       if (response.status === 200) {
         showAlert("success", response.data.message);
         handleGetAllPartnersData();
@@ -55,7 +54,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
 
   return (
     <div className={styles.modalOverlay}>
-      <div className={styles.modalContainer} style={{ width: "30rem" }}>
+      <div className={styles.modalContainer} style={{ width: "30rem", height:"auto"}}>
         <div className={styles.modalHeader}>
           <CloseOutlined className={styles.closeIcon} onClick={onClose} />
         </div>
@@ -73,7 +72,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
               <Input
                 value={formData.companyName}
                 className={styles.inputField}
-                // readOnly={!isEditable}
+                readOnly={!isEditable}
                 onChange={(e) =>
                   handleInputChange("companyName", e.target.value)
                 }
@@ -85,7 +84,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
               <Input
                 value={formData.name}
                 className={styles.inputField}
-                // readOnly={!isEditable}
+                readOnly={!isEditable}
                 onChange={(e) => handleInputChange("name", e.target.value)}
               />
             </div>
@@ -99,7 +98,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
             <Input
               value={formData.contactNumber}
               className={styles.inputField}
-              // readOnly={!isEditable}
+              readOnly={!isEditable}
               onChange={(e) =>
                 handleInputChange("contactNumber", e.target.value)
               }
@@ -110,7 +109,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
             <Input
               value={formData.emailId}
               className={styles.inputField}
-              // readOnly={!isEditable}
+              readOnly={!isEditable}
               onChange={(e) => handleInputChange("emailId", e.target.value)}
             />
           </div>
@@ -119,7 +118,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
             <Input
               value={formData.address}
               className={styles.inputField}
-              // readOnly={!isEditable}
+              readOnly={!isEditable}
               onChange={(e) => handleInputChange("address", e.target.value)}
             />
           </div>

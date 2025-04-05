@@ -27,7 +27,7 @@ export const deleteCategory = async (categoryId) => {
   return response;
 };
 
-export const editCategoy = async (categoryId, updatedData) => {
+export const editCategory = async (categoryId, updatedData) => {
   const response = await putRequest(
     `${BASE_URL}/api/admin/categories/${categoryId}`,
     updatedData

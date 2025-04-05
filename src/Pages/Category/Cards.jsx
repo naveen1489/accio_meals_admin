@@ -7,6 +7,8 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
 import ViewDetails from "./ViewDetails";
 import { useData } from "../../Context/DataProvider";
+import EditCategory from "./EditCategory";
+import nonveg_icon from "../../assets/Category/nonVeg.png";
 
 const CategoryCard = ({ data }) => {
   const [openDeletepopup, setopendeletepopup] = useState(false);
@@ -25,7 +27,7 @@ const CategoryCard = ({ data }) => {
   const handleEditClick = (category) => {
     setSelectedCategory(category);
     setIsEditable(true);
-    setopenViewpopup(true);
+    setopenEditPopup(true);
   };
 
   return (
@@ -43,7 +45,7 @@ const CategoryCard = ({ data }) => {
                 <div>
                   <h2>{category.categoryName}</h2>
                   <span className={styles.vegIndicator}>
-                    <img src={veg_icon} alt="veg_icon" />
+                    <img src={category.vegNonVeg == "Veg" ? veg_icon : nonveg_icon} alt="veg_icon" />
                     {category.vegNonVeg}
                   </span>
                 </div>
@@ -52,7 +54,7 @@ const CategoryCard = ({ data }) => {
                 <div
                   style={{
                     background:
-                      category.status == "Active" ? "#36973a2b" : "#fff3cd",
+                      category.status == "active" ? "#36973a2b" : "#fff3cd",
                     border:
                       category.status == "Active"
                         ? "0.5px solid #36973a2b"
@@ -62,15 +64,15 @@ const CategoryCard = ({ data }) => {
                   <div
                     style={{
                       background:
-                        category.status == "Active" ? "green" : "#ffcc80",
+                        category.status == "active" ? "green" : "#ffcc80",
                       border:
-                        category.status == "Active"
+                        category.status == "active"
                           ? "0.5px solid green"
                           : "0.5px solid #ffcc80",
                     }}
                   ></div>
                 </div>{" "}
-                {category.status == "Active"
+                {category.status == "active"
                   ? "Active"
                   : "Inactive" || "Status"}
               </div>
@@ -114,6 +116,14 @@ const CategoryCard = ({ data }) => {
         />
       )}
 
+      {openEditPopup && (
+        <EditCategory
+          onClose={() => setopenEditPopup(false)}
+          category={selectedCategory}
+          isEditable={isEditable}
+        />
+      )}
+  
       {openDeletepopup && selectedCategory && (
         <ConformationPopup
           categoryData={selectedCategory}

@@ -1,44 +1,81 @@
 import React, { useState } from "react";
 import { CloseOutlined } from "@ant-design/icons";
-import { Button, Input } from "antd";
+import { Button, Input, Table } from "antd";
 import styles from "../../Styles/ViewCard.module.css";
-import { editCategoy } from "../../api/category/category";
+import { editCategory } from "../../api/category/category";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
 
-const ViewDetails = ({ onClose, category }) => {
+const ViewDetails = ({ onClose, category, isEditable }) => {
   const [editableCategory, setEditableCategory] = useState({ ...category });
-  const {showAlert} = useAlert();
-  const {handleGetAllCategoryData} = useData();
+  const { showAlert } = useAlert();
+  const { handleGetAllCategoryData } = useData();
 
   const handleInputChange = (field, value) => {
     setEditableCategory((prev) => ({ ...prev, [field]: value }));
   };
 
-  // console.log("category", category);
+  const handleRemoveItem = (categoryName, item) => {
+    setEditableCategory((prev) => ({
+      ...prev,
+      itemCategories: prev.itemCategories.map((cat) =>
+        cat.itemCategoryName === categoryName
+          ? { ...cat, items: cat.items.filter((i) => i.itemName !== item) }
+          : cat
+      ),
+    }));
+  };
+
   const handleSaveChanges = async () => {
     try {
       const payload = {
         categoryName: editableCategory.categoryName,
-        status: editableCategory.status,
-        createdAt: editableCategory.createdAt,
         vegNonVeg: editableCategory.vegNonVeg,
         description: editableCategory.description,
-        itemCategories: editableCategory.itemCategories,
+        status: editableCategory.status,
+        itemCategories: editableCategory.itemCategories.map((cat) => ({
+          itemCategoryName: cat.itemCategoryName,
+          items: cat.items.map((item) => item.itemName),
+        })),
       };
 
-      const response = await editCategoy(category.id, payload);
+      const response = await editCategory(category.id, payload);
       if (response.status === 200) {
         showAlert("success", response.data.message);
         handleGetAllCategoryData();
         onClose();
-      }else{
+      } else {
         showAlert("error", response.data.message);
       }
     } catch (error) {
       console.error("Error updating category:", error);
     }
   };
+
+  const columns = [
+    {
+      title: "Category",
+      dataIndex: "itemCategoryName",
+      key: "itemCategoryName",
+    },
+    {
+      title: "Items",
+      dataIndex: "items",
+      key: "items",
+      render: (items, record) =>
+        items.map((item, index) => (
+          <div key={index} style={{ display: "flex", alignItems: "center" }}>
+            <span>{item.itemName}</span>
+            {/* {isEditable && (
+              <CloseOutlined
+                style={{ marginLeft: "8px", color: "red", cursor: "pointer" }}
+                onClick={() => handleRemoveItem(record.itemCategoryName, item.itemName)}
+              />
+            )} */}
+          </div>
+        )),
+    },
+  ];
 
   return (
     <div className={styles.modalOverlay}>
@@ -57,7 +94,7 @@ const ViewDetails = ({ onClose, category }) => {
           <div>
             <div className={styles.inputGroup}>
               <div>
-                <label>Company Name</label>
+                <label>Category Name</label>
                 <Input
                   placeholder="Company Name"
                   className={styles.inputField}
@@ -65,6 +102,7 @@ const ViewDetails = ({ onClose, category }) => {
                   onChange={(e) =>
                     handleInputChange("categoryName", e.target.value)
                   }
+                  readOnly={!isEditable}
                 />
               </div>
 
@@ -75,6 +113,7 @@ const ViewDetails = ({ onClose, category }) => {
                   className={styles.inputField}
                   style={{ width: "7rem" }}
                   value={editableCategory.status || ""}
+                  readOnly={!isEditable}
                   onChange={(e) => handleInputChange("status", e.target.value)}
                 />
               </div>
@@ -85,6 +124,7 @@ const ViewDetails = ({ onClose, category }) => {
                 <label>Date</label>
                 <Input
                   type="date"
+                  readOnly={!isEditable}
                   className={styles.inputField}
                   value={editableCategory.createdAt?.split("T")[0] || ""}
                   onChange={(e) =>
@@ -97,6 +137,7 @@ const ViewDetails = ({ onClose, category }) => {
                 <label>Veg/Non-veg</label>
                 <Input
                   style={{ width: "7rem" }}
+                  readOnly={!isEditable}
                   placeholder="Veg/Non-veg"
                   className={styles.inputField}
                   value={editableCategory.vegNonVeg || ""}
@@ -116,39 +157,32 @@ const ViewDetails = ({ onClose, category }) => {
             <Input.TextArea
               className={styles.inputField}
               value={editableCategory.description || ""}
+              readOnly={!isEditable}
               onChange={(e) => handleInputChange("description", e.target.value)}
             />
           </div>
-          <div className={styles.inputGroup}>
-            <label>Items</label>
-            <Input.TextArea
-              className={styles.inputField}
-              value={
-                editableCategory.itemCategories
-                  ?.flatMap((itemCategory) =>
-                    itemCategory.items?.map((item) => item.itemName)
-                  )
-                  .join(", ") || "No items available"
-              }
-              onChange={(e) =>
-                handleInputChange(
-                  "itemCategories",
-                  e.target.value.split(",").map((item) => item.trim())
-                )
-              }
+          <div className={styles.tableSection}>
+            <Table
+              dataSource={editableCategory.itemCategories}
+              columns={columns}
+              rowKey="id"
+              pagination={false}
+              style={{width:"100%"}}
             />
           </div>
         </div>
 
-        <div className={styles.modalFooter}>
-          <Button
-            type="primary"
-            className={styles.saveButton}
-            onClick={handleSaveChanges}
-          >
-            Save Changes
-          </Button>
-        </div>
+        {isEditable && (
+          <div className={styles.modalFooter}>
+            <Button
+              type="primary"
+              className={styles.saveButton}
+              onClick={handleSaveChanges}
+            >
+              Save Changes
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

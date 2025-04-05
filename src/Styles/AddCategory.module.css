@@ -14,9 +14,9 @@
 .modalContainer {
   background: white;
   padding: 2rem;
-  width: 50rem;
+  width: 25rem;
   max-height: 35rem;
-  overflow-y: auto;
+  /* overflow-y: auto; */
   border-radius: 0.5rem;
   box-shadow: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.2);
   position: relative;
@@ -83,7 +83,7 @@
   outline: none;
 }
 
-.inputGroup>div>div:nth-child(1):focus{
+.inputGroup>div>div:nth-child(1):focus {
   border: none !important;
   outline: none;
 }
@@ -165,6 +165,11 @@
   gap: 0.2rem;
 }
 
+.modalContent_container {
+  overflow: scroll;
+  max-height: 30rem;
+}
+
 .tableSection {
   margin-top: 2rem;
   border: 1px solid #f5c2c7;
@@ -237,8 +242,20 @@
   border-radius: 0.75rem;
 }
 
-.saveButton:hover {
+.saveButton:hover,
+.add_button>button:hover {
   background-color: rgba(227, 55, 69, 0.08) !important;
   border: 0.5px solid var(--sec-color) !important;
   color: var(--sec-color) !important;
+}
+
+.add_button>button {
+  color: var(--sec-color);
+  background-color: rgba(227, 55, 69, 0.08);
+  border: 0.5px solid var(--sec-color);
+  padding: 1rem 1.3rem;
+  font-size: 14px;
+  font-weight: 400;
+  box-shadow: none;
+  border-radius: 0.75rem;
 }
