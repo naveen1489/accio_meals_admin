@@ -21,8 +21,31 @@ const HelpCards = ({ data }) => {
 
   const handleViewClick = (menu) => {
     setIsEditable(false);
-    setSelectedmenu(menu); 
+    setSelectedmenu(menu);
     setViewPopup(true);
+  };
+
+  const getStatusStyles = (status) => {
+    return {
+      background:
+        status == "Approved"
+          ? "#36973a2b"
+          : status == "Rejected"
+          ? "#f8d7da"
+          : "#fff3cd",
+      border:
+        status == "Approved"
+          ? "0.5px solid #36973a2b"
+          : status == "Rejected"
+          ? "0.5px solid #f8d7da"
+          : "0.5px solid #fff3cd",
+      mainBgColor:
+        status == "Approved"
+          ? "green"
+          : status == "Rejected"
+          ? "red"
+          : "#ffcc80",
+    };
   };
 
   return (
@@ -49,27 +72,21 @@ const HelpCards = ({ data }) => {
             <div className={styles.status}>
               <div
                 style={{
-                  background:
-                    menu.status == "Approved" ? "#36973a2b" : "#fff3cd",
-                  border:
-                    menu.status == "Approved"
-                      ? "0.5px solid #36973a2b"
-                      : "0.5px solid #fff3cd",
+                  background: getStatusStyles(menu.status).background,
+                  border: getStatusStyles(menu.status).border,
                 }}
               >
                 <div
                   style={{
-                    background:
-                      menu.status == "Approved" ? "green" : "#ffcc80",
-                    border:
-                      menu.status == "Approved"
-                        ? "0.5px solid green"
-                        : "0.5px solid #ffcc80",
+                    background: getStatusStyles(menu.status).mainBgColor,
+                    border: getStatusStyles(menu.status).border,
                   }}
                 ></div>
               </div>
               {menu.status == "Approved"
                 ? "Approved"
+                : menu.status == "Rejected"
+                ? "Rejected"
                 : "Pending"}
             </div>
           </div>

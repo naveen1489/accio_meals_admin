@@ -6,13 +6,15 @@ import { PiImageLight } from "react-icons/pi";
 import { RxCross2 } from "react-icons/rx";
 import { reviewMenuDetails } from "../../api/menu/getMenuDetails";
 import { useAlert } from "../../Context/AlertContext";
+import { useData } from "../../Context/DataProvider";
 
 const MenuDetails = ({ menu, onClose }) => {
   const [itemCategories, setItemCategories] = useState([]);
   const [activeDay, setActiveDay] = useState("");
   const [days, setDays] = useState([]);
   const [adminComment, setAdminComment] = useState("");
-  const {showAlert} = useAlert();
+  const { showAlert } = useAlert();
+  const { handleGetMenuDetails } = useData();
 
   useEffect(() => {
     const uniqueDays = [...new Set(menu.menuCategories.map((cat) => cat.day))];
@@ -75,12 +77,13 @@ const MenuDetails = ({ menu, onClose }) => {
     // console.log("Payload:", payload);
 
     const response = await reviewMenuDetails(payload);
-    if(response.status == 200)  {
+    if (response.status == 200) {
       // console.log("Response:", response);
-      showAlert('success', response.data.message);
+      showAlert("success", response.data.message);
+      handleGetMenuDetails();
       onClose();
-    }else{
-      showAlert('error', response.data.message);
+    } else {
+      showAlert("error", response.data.message);
     }
   };
 
@@ -175,22 +178,24 @@ const MenuDetails = ({ menu, onClose }) => {
               </div>
             </div>
 
-            <div className={styles.buttonGroup}>
-              <Button
-                className={styles.approveBtn}
-                icon={<CheckOutlined />}
-                onClick={() => handleReview("Approved")}
-              >
-                Approve
-              </Button>
-              <Button
-                className={styles.rejectBtn}
-                icon={<RxCross2 />}
-                onClick={() => handleReview("Rejected")}
-              >
-                Reject
-              </Button>
-            </div>
+            {(menu.status !== "Approved" && menu.status !== "Rejected") && (
+                <div className={styles.buttonGroup}>
+                  <Button
+                    className={styles.approveBtn}
+                    icon={<CheckOutlined />}
+                    onClick={() => handleReview("Approved")}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    className={styles.rejectBtn}
+                    icon={<RxCross2 />}
+                    onClick={() => handleReview("Rejected")}
+                  >
+                    Reject
+                  </Button>
+                </div>
+              )}
           </div>
         </div>
       </div>
