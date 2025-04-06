@@ -4,11 +4,15 @@ import { Input, Button, Upload, Table } from "antd";
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
 import { PiImageLight } from "react-icons/pi";
 import { RxCross2 } from "react-icons/rx";
+import { reviewMenuDetails } from "../../api/menu/getMenuDetails";
+import { useAlert } from "../../Context/AlertContext";
 
 const MenuDetails = ({ menu, onClose }) => {
   const [itemCategories, setItemCategories] = useState([]);
   const [activeDay, setActiveDay] = useState("");
   const [days, setDays] = useState([]);
+  const [adminComment, setAdminComment] = useState("");
+  const {showAlert} = useAlert();
 
   useEffect(() => {
     const uniqueDays = [...new Set(menu.menuCategories.map((cat) => cat.day))];
@@ -24,8 +28,8 @@ const MenuDetails = ({ menu, onClose }) => {
       .filter((cat) => cat.day === activeDay)
       .flatMap((cat) =>
         cat.menuItems.map((item) => ({
-          itemCategoryName: item.itemCategory, 
-          items: [item.itemName], 
+          itemCategoryName: item.itemCategory,
+          items: [item.itemName],
         }))
       );
     setItemCategories(filteredCategories);
@@ -56,14 +60,29 @@ const MenuDetails = ({ menu, onClose }) => {
         items.map((item, index) => (
           <div key={index} style={{ display: "flex", alignItems: "center" }}>
             <span>{item}</span>
-            <CloseOutlined
-              style={{ marginLeft: "8px", color: "red", cursor: "pointer" }}
-              onClick={() => handleRemoveItem(record.itemCategoryName, item)}
-            />
           </div>
         )),
     },
   ];
+
+  const handleReview = async (status) => {
+    const payload = {
+      menuId: menu.menuCategories[0]?.menuId,
+      restaurantId: menu.restaurantId,
+      status,
+      adminComment,
+    };
+    // console.log("Payload:", payload);
+
+    const response = await reviewMenuDetails(payload);
+    if(response.status == 200)  {
+      // console.log("Response:", response);
+      showAlert('success', response.data.message);
+      onClose();
+    }else{
+      showAlert('error', response.data.message);
+    }
+  };
 
   return (
     <div className={styles.modalOverlay}>
@@ -107,9 +126,11 @@ const MenuDetails = ({ menu, onClose }) => {
                 </div>
                 <div className={styles.inputGroup}>
                   <label>Price</label>
-                  <Input placeholder="Price" 
-                  className={styles.inputField} 
-                  value={menu.price || 0}/>
+                  <Input
+                    placeholder="Price"
+                    className={styles.inputField}
+                    value={menu.price || 0}
+                  />
                 </div>
               </div>
 
@@ -145,15 +166,28 @@ const MenuDetails = ({ menu, onClose }) => {
 
               <div className={styles.formGroup}>
                 <label>Add Comment</label>
-                <Input.TextArea placeholder="Demo Comment" rows={3} />
+                <Input.TextArea
+                  placeholder="Demo Comment"
+                  rows={3}
+                  value={adminComment}
+                  onChange={(e) => setAdminComment(e.target.value)}
+                />
               </div>
             </div>
 
             <div className={styles.buttonGroup}>
-              <Button className={styles.approveBtn} icon={<CheckOutlined />}>
+              <Button
+                className={styles.approveBtn}
+                icon={<CheckOutlined />}
+                onClick={() => handleReview("Approved")}
+              >
                 Approve
               </Button>
-              <Button className={styles.rejectBtn} icon={<RxCross2 />}>
+              <Button
+                className={styles.rejectBtn}
+                icon={<RxCross2 />}
+                onClick={() => handleReview("Rejected")}
+              >
                 Reject
               </Button>
             </div>

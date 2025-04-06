@@ -50,7 +50,7 @@ const HelpCards = ({ data }) => {
               <div
                 style={{
                   background:
-                    menu.status == "pending" ? "#36973a2b" : "#fff3cd",
+                    menu.status == "Approved" ? "#36973a2b" : "#fff3cd",
                   border:
                     menu.status == "pending"
                       ? "0.5px solid #36973a2b"
@@ -60,17 +60,17 @@ const HelpCards = ({ data }) => {
                 <div
                   style={{
                     background:
-                      menu.status == "pending" ? "green" : "#ffcc80",
+                      menu.status == "Approved" ? "green" : "#ffcc80",
                     border:
-                      menu.status == "pending"
+                      menu.status == "Approved"
                         ? "0.5px solid green"
                         : "0.5px solid #ffcc80",
                   }}
                 ></div>
               </div>
-              {menu.status == "pending"
-                ? "Pending"
-                : "Pending" || "Approved"}
+              {menu.status == "Approved"
+                ? "Approved"
+                : "Approved" || "Pending"}
             </div>
           </div>
 
