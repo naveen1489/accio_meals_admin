@@ -52,7 +52,7 @@ const HelpCards = ({ data }) => {
                   background:
                     menu.status == "Approved" ? "#36973a2b" : "#fff3cd",
                   border:
-                    menu.status == "pending"
+                    menu.status == "Approved"
                       ? "0.5px solid #36973a2b"
                       : "0.5px solid #fff3cd",
                 }}
@@ -70,7 +70,7 @@ const HelpCards = ({ data }) => {
               </div>
               {menu.status == "Approved"
                 ? "Approved"
-                : "Approved" || "Pending"}
+                : "Pending"}
             </div>
           </div>
 
