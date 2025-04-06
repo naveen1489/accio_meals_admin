@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { getPartners } from "../api/partners/getPartners";
 import { getCategory } from "../api/category/category";
-import { getmenuDetails } from "../api/menu/getMenuDetails";
+import { getallMenuDetails } from "../api/menu/getMenuDetails";
 
 const DataContext = createContext();
 export default function DataProvider({ children }) {
@@ -21,7 +21,6 @@ export default function DataProvider({ children }) {
   const [restaurantData, setRestaurantData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const [menuDetails, setmenuDetails] = useState([]);
-
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -107,10 +106,10 @@ export default function DataProvider({ children }) {
 
   const handleGetMenuDetails = async () => {
     try {
-      const response = await getmenuDetails('afc9042f-a9fa-4b67-ae7c-9ddf1e0905f1');
+      const response = await getallMenuDetails();
       console.log("Menu Details Response:", response);
-      if (Array.isArray(response)) {
-        setmenuDetails([...response]);
+      if (response && Array.isArray(response.menus)) {
+        setmenuDetails([...response.menus]); 
       } else {
         console.log("Unexpected response format", response);
       }
@@ -118,6 +117,7 @@ export default function DataProvider({ children }) {
       console.log("Error fetching menu details", error);
     }
   };
+
 
   return (
     <DataContext.Provider
