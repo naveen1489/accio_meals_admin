@@ -32,7 +32,7 @@ const Category = () => {
     );
   });
 
-  console.log("caregoryData", categoryData);
+  // console.log("caregoryData", categoryData);
   return (
     <SidebarHeader
       headingText={"Category"}
