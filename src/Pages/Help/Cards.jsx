@@ -53,7 +53,7 @@ const HelpCards = ({ data, filter }) => {
     return menu.status === filter.charAt(0).toUpperCase() + filter.slice(1);
   });
 
-  // console.log("Filtered Data:", filteredData);
+  console.log("Filtered Data:", filteredData);
   return (
     <>
       {filteredData?.length > 0 ? (
