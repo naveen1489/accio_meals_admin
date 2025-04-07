@@ -58,7 +58,16 @@ const Graph = ({ dashboardData }) => {
     },
     scales: {
       x: { grid: { display: false } },
-      y: { grid: { display: true }, beginAtZero: true },
+      y: {
+        grid: { display: true },
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          callback: function (value) {
+            return value; 
+          },
+        },
+      },
     },
   };
 
