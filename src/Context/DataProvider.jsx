@@ -23,6 +23,7 @@ export default function DataProvider({ children }) {
   const [categoryData, setCategoryData] = useState([]);
   const [menuDetails, setmenuDetails] = useState([]);
   const [notificationData, setNotificationData] = useState([]);
+  const [notificationCount, setNotificationCount] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -123,10 +124,14 @@ export default function DataProvider({ children }) {
   const handleGetAllNotificationList = async () => {
       try {
         const response = await getNotification();
-        if (Array.isArray(response)) {
-          setNotificationData([...response]);
+        if (Array.isArray(response.notifications)) {
+          console.log("Notification Response:", response);
+          setNotificationData([...response.notifications]);
         } else {
           console.log("Unexpected response format", response);
+        }
+        if(Array.isArray(response.notificationsCount)){
+          setNotificationCount([...response.notificationsCount]);
         }
       } catch (error) {
         console.log("Error fetching data", error);
@@ -150,6 +155,9 @@ export default function DataProvider({ children }) {
         setCategoryData,
         menuDetails,
         notificationData,
+        setNotificationCount,
+        notificationCount,
+
         setNotificationData,
         handleGetAllNotificationList,
         setmenuDetails,

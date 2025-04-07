@@ -5,6 +5,7 @@ import { useData } from "../../Context/DataProvider";
 import { updateNotification } from "../../api/notification/index";
 const NavNotification = () => {
   const { notificationData, handleGetAllNotificationList } = useData();
+  const { notificationCount} = useData();
   useEffect(() => {
       handleGetAllNotificationList();
   }, []);
@@ -12,9 +13,9 @@ const NavNotification = () => {
   const handleClick = (NotificationId) => {
     const helpUrl = `/help`;
     updateNotification(NotificationId);
-    //window.location.href = helpUrl;
+    window.location.href = helpUrl;
   };
-  
+  console.log(notificationData, "notificationData");
   const notificationList = (
     <div style={{ width: 300 }}>
       <div style={{ padding: '10px 16px', borderBottom: '1px solid #f0f0f0', fontWeight: '600' }}>
@@ -46,7 +47,7 @@ const NavNotification = () => {
       overlayInnerStyle={{ padding: 0 }}
     >
       <div style={{ padding: '0 16px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
-        <Badge count={notificationData.length}>
+        <Badge count={notificationCount.length}>
           <BellOutlined style={{ fontSize: 20 }} />
         </Badge>
       </div>
