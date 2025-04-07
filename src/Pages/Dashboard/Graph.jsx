@@ -21,8 +21,13 @@ ChartJS.register(
 );
 
 const Graph = ({ dashboardData }) => {
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("en-US", { day: "2-digit", month: "short" }).format(date);
+  };
+
   const subscriberData = {
-    labels: dashboardData?.dayWiseSubscribers?.map((item) => item.date) || [],
+    labels: dashboardData?.dayWiseSubscribers?.map((item) => formatDate(item.date)) || [],
     datasets: [
       {
         label: "Subscribers",
@@ -34,7 +39,7 @@ const Graph = ({ dashboardData }) => {
   };
 
   const partnerData = {
-    labels: dashboardData?.dayWisePartners?.map((item) => item.date) || [],
+    labels: dashboardData?.dayWisePartners?.map((item) => formatDate(item.date)) || [],
     datasets: [
       {
         label: "Partners",
