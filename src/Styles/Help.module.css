@@ -479,3 +479,12 @@
   border-radius: 7.42px;
   font-size: 0.75rem;
 }
+
+.uploadedImage {
+  width: 100%;
+  height: auto;
+  max-width: 5rem;
+  height: 4.5rem;
+  border-radius: 8px;
+  object-fit: cover;
+}

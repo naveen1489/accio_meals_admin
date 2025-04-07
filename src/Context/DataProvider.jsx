@@ -4,14 +4,15 @@ import { getPartners } from "../api/partners/getPartners";
 import { getCategory } from "../api/category/category";
 import { getallMenuDetails } from "../api/menu/getMenuDetails";
 import { getNotification } from "../api/notification/index";
+import { getDashboardData } from "../api/dashboard/getData";
 
 const DataContext = createContext();
 export default function DataProvider({ children }) {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     const token = localStorage.getItem("token");
-    return token ? true : false; 
+    return token ? true : false;
   });
-  const [isLoading, setIsLoading] = useState(true); 
+  const [isLoading, setIsLoading] = useState(true);
   const [userDetails, setUserDetails] = useState({});
   const hasCheckedLogin = useRef(false);
   const navigate = useNavigate();
@@ -24,6 +25,8 @@ export default function DataProvider({ children }) {
   const [menuDetails, setmenuDetails] = useState([]);
   const [notificationData, setNotificationData] = useState([]);
   const [notificationCount, setNotificationCount] = useState([]);
+  const [dashboardData, setDashboardData] = useState([]);
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -39,7 +42,7 @@ export default function DataProvider({ children }) {
         throw new Error("No token found");
       }
 
-      const response = { status: true, data: { name: "Admin" } }; 
+      const response = { status: true, data: { name: "Admin" } };
       if (response?.status) {
         setIsLoggedIn(true);
         setUserDetails(response.data);
@@ -50,7 +53,7 @@ export default function DataProvider({ children }) {
       console.error("Login check failed:", error.message);
       setIsLoggedIn(false);
     } finally {
-      setIsLoading(false); 
+      setIsLoading(false);
     }
   };
 
@@ -65,7 +68,8 @@ export default function DataProvider({ children }) {
             location.pathname === "/login" ||
             location.pathname === "/signup")
         ) {
-          await handleGetAllPartnersData(); 
+          await handleDashboardData();
+          await handleGetAllPartnersData();
           await handleGetAllCategoryData();
           await handleGetMenuDetails();
           navigate("/dashboard");
@@ -80,6 +84,20 @@ export default function DataProvider({ children }) {
       localStorage.setItem("adminName", adminName);
     }
   }, [adminName]);
+
+  const handleDashboardData = async () => {
+    try {
+      const response = await getDashboardData();
+      if (response && typeof response === "object") {
+        setDashboardData(response); 
+      } else {
+        console.log("Unexpected response format", response);
+      }
+    } catch (error) {
+      console.log("Error fetching dashboard data", error);
+    }
+  };
+
 
   const handleGetAllPartnersData = async () => {
     try {
@@ -111,7 +129,7 @@ export default function DataProvider({ children }) {
     try {
       const response = await getallMenuDetails();
       if (response && Array.isArray(response.menus)) {
-        setmenuDetails([...response.menus]); 
+        setmenuDetails([...response.menus]);
       } else {
         console.log("Unexpected response format", response);
       }
@@ -121,27 +139,26 @@ export default function DataProvider({ children }) {
   };
 
   const handleGetAllNotificationList = async () => {
-      try {
-        const response = await getNotification();
-        if (Array.isArray(response.notifications)) {
-          setNotificationData([...response.notifications]);
-        } else {
-          console.log("Unexpected response format", response);
-        }
-        if(Array.isArray(response.notificationsCount)){
-          setNotificationCount([...response.notificationsCount]);
-        }
-      } catch (error) {
-        console.log("Error fetching data", error);
+    try {
+      const response = await getNotification();
+      if (Array.isArray(response.notifications)) {
+        setNotificationData([...response.notifications]);
+      } else {
+        console.log("Unexpected response format", response);
       }
-    };
-
+      if (Array.isArray(response.notificationsCount)) {
+        setNotificationCount([...response.notificationsCount]);
+      }
+    } catch (error) {
+      console.log("Error fetching data", error);
+    }
+  };
 
   return (
     <DataContext.Provider
       value={{
         isLoggedIn,
-        isLoading, 
+        isLoading,
         setIsLoggedIn,
         checkLogin,
         userDetails,
@@ -161,6 +178,9 @@ export default function DataProvider({ children }) {
         handleGetAllPartnersData,
         handleGetAllCategoryData,
         handleGetMenuDetails,
+        handleDashboardData,
+        dashboardData,
+        setDashboardData,
       }}
     >
       {children}

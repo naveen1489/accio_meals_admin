@@ -41,10 +41,6 @@ const MenuDetails = ({ menu, onClose }) => {
     setActiveDay(day);
   };
 
-  const handleRemoveItem = (categoryName, itemName) => {
-    console.log(`Remove item: ${itemName} from category: ${categoryName}`);
-  };
-
   const columns = [
     {
       title: "Category",
@@ -139,9 +135,16 @@ const MenuDetails = ({ menu, onClose }) => {
 
               <div className={styles.formGroup}>
                 <label>Uploaded Image</label>
-                <Upload className={styles.uploadBox}>
-                  <PiImageLight />
-                </Upload>
+                <div className={styles.imageContainer}>
+                  <img
+                    src={
+                      menu?.imageUrl ||
+                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU1yMxBVI-74dtHiEy0qHBtwrXEaLyhN-PWQ&s"
+                    }
+                    alt="Menu Item"
+                    className={styles.uploadedImage}
+                  />
+                </div>
               </div>
 
               <div className={styles.days}>

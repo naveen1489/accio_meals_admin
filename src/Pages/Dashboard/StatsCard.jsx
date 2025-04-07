@@ -4,13 +4,25 @@ import { HiOutlineUsers } from "react-icons/hi";
 import { LuBriefcaseBusiness } from "react-icons/lu";
 import { ImCreditCard } from "react-icons/im";
 
-const statsData = [
-  { number: "89,935", text: "Total Partners", icon: <HiOutlineUsers /> },
-  { number: "23,283.5", text: "Total Subscribers", icon: <LuBriefcaseBusiness />},
-  { number: "46,827", text: "Revenue till date", icon: <ImCreditCard /> },
-];
+const StatsCard = ({ dashboardData }) => {
+  const statsData = [
+    {
+      number: dashboardData?.totalPartners || "0",
+      text: "Total Partners",
+      icon: <HiOutlineUsers />,
+    },
+    {
+      number: dashboardData?.totalSubscribers || "0",
+      text: "Total Subscribers",
+      icon: <LuBriefcaseBusiness />,
+    },
+    {
+      number: dashboardData?.totalRevenue || "0",
+      text: "Revenue till date",
+      icon: <ImCreditCard />,
+    },
+  ];
 
-const StatsCard = () => {
   return (
     <div className={styles.statsContainer}>
       {statsData.map((item, index) => (
