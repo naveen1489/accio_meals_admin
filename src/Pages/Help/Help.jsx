@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import styles from "../../Styles/Help.module.css";
 import SidebarHeader from "../../Component/Navigation/SidebarHeader";
 import { FiSearch } from "react-icons/fi";
-import { Button } from "antd";
-import PartnersCard from "../Partners/Cards";
+import { Button, Dropdown, Menu } from "antd"; 
 import MenuDetails from "./MenuDetails";
 import { IoFilterSharp } from "react-icons/io5";
 import HelpCards from "./Cards";
@@ -11,6 +10,20 @@ import HelpCards from "./Cards";
 const Help = () => {
   const [newCategory, setnewCategory] = useState(false);
   const [openPopup, setOpenpopup] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState("all"); 
+
+  const handleMenuClick = (e) => {
+    setSelectedFilter(e.key); 
+  };
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="all">All</Menu.Item>
+      <Menu.Item key="pending">Pending</Menu.Item>
+      <Menu.Item key="approved">Approved</Menu.Item>
+      <Menu.Item key="rejected">Rejected</Menu.Item>
+    </Menu>
+  );
 
   return (
     <SidebarHeader
@@ -24,16 +37,15 @@ const Help = () => {
             <FiSearch />
           </div>
 
-          <Button
-            className={styles.category_button}
-            onClick={() => setnewCategory(true)}
-          >
-            <IoFilterSharp /> New Request
-          </Button>
+          <Dropdown overlay={menu} trigger={['click']}>
+            <Button className={styles.category_button}>
+              <IoFilterSharp /> Filter
+            </Button>
+          </Dropdown>
         </div>
 
         <div className={styles.cards_details}>
-          <HelpCards/>
+          <HelpCards filter={selectedFilter} />
         </div>
 
         {newCategory && (
@@ -43,7 +55,6 @@ const Help = () => {
             isPopupOpen={setOpenpopup}
           />
         )}
-        {/* {openPopup && <MenuDetails onClose={() => setOpenpopup(false)} />} */}
       </div>
     </SidebarHeader>
   );

@@ -110,7 +110,6 @@ export default function DataProvider({ children }) {
   const handleGetMenuDetails = async () => {
     try {
       const response = await getallMenuDetails();
-      console.log("Menu Details Response:", response);
       if (response && Array.isArray(response.menus)) {
         setmenuDetails([...response.menus]); 
       } else {
@@ -125,7 +124,6 @@ export default function DataProvider({ children }) {
       try {
         const response = await getNotification();
         if (Array.isArray(response.notifications)) {
-          console.log("Notification Response:", response);
           setNotificationData([...response.notifications]);
         } else {
           console.log("Unexpected response format", response);
@@ -157,7 +155,6 @@ export default function DataProvider({ children }) {
         notificationData,
         setNotificationCount,
         notificationCount,
-
         setNotificationData,
         handleGetAllNotificationList,
         setmenuDetails,

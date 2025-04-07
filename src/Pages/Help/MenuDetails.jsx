@@ -17,7 +17,7 @@ const MenuDetails = ({ menu, onClose }) => {
   const { handleGetMenuDetails } = useData();
 
   useEffect(() => {
-    const uniqueDays = [...new Set(menu.menuCategories.map((cat) => cat.day))];
+    const uniqueDays = [...new Set(menu?.menuCategories.map((cat) => cat.day))];
     setDays(uniqueDays);
 
     if (uniqueDays.length > 0) {
@@ -26,7 +26,7 @@ const MenuDetails = ({ menu, onClose }) => {
   }, [menu]);
 
   useEffect(() => {
-    const filteredCategories = menu.menuCategories
+    const filteredCategories = menu?.menuCategories
       .filter((cat) => cat.day === activeDay)
       .flatMap((cat) =>
         cat.menuItems.map((item) => ({
@@ -69,8 +69,8 @@ const MenuDetails = ({ menu, onClose }) => {
 
   const handleReview = async (status) => {
     const payload = {
-      menuId: menu.menuCategories[0]?.menuId,
-      restaurantId: menu.restaurantId,
+      menuId: menu?.menuCategories[0]?.menuId,
+      restaurantId: menu?.restaurantId,
       status,
       adminComment,
     };
@@ -116,7 +116,7 @@ const MenuDetails = ({ menu, onClose }) => {
                   <Input
                     placeholder="Item Category"
                     className={styles.inputField}
-                    value={menu.menuCategories[0]?.categoryName}
+                    value={menu?.menuCategories[0]?.categoryName}
                   />
                 </div>
                 <div className={styles.inputGroup}>
@@ -132,7 +132,7 @@ const MenuDetails = ({ menu, onClose }) => {
                   <Input
                     placeholder="Price"
                     className={styles.inputField}
-                    value={menu.price || 0}
+                    value={menu?.price || 0}
                   />
                 </div>
               </div>
@@ -178,7 +178,7 @@ const MenuDetails = ({ menu, onClose }) => {
               </div>
             </div>
 
-            {(menu.status !== "Approved" && menu.status !== "Rejected") && (
+            {(menu?.status !== "Approved" && menu?.status !== "Rejected") && (
                 <div className={styles.buttonGroup}>
                   <Button
                     className={styles.approveBtn}

@@ -248,3 +248,17 @@
   align-items: center;
   gap: 0.5rem;
 }
+
+.noData {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60rem;
+  height: 100%;
+}
+
+.noData>img {
+  width: 15rem;
+  height: 15rem;
+}
