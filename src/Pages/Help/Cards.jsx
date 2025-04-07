@@ -19,7 +19,7 @@ const HelpCards = ({ data }) => {
     //const SenderId = localStorage.getItem("SenderId");
     //const SenderId = localStorage.removeItem("SenderId");
     handleGetMenuDetails();
-  }, [menu]);
+  }, []);
 
   const handleViewClick = (menu) => {
     setIsEditable(false);
