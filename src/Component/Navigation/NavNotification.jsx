@@ -10,9 +10,10 @@ const NavNotification = () => {
       handleGetAllNotificationList();
   }, []);
 
-  const handleClick = (NotificationId) => {
+  const handleClick = (NotificationId,SenderId) => {
     const helpUrl = `/help`;
     updateNotification(NotificationId);
+    localStorage.setItem('SenderId', SenderId);
     window.location.href = helpUrl;
   };
   console.log(notificationData, "notificationData");
@@ -23,7 +24,7 @@ const NavNotification = () => {
       </div>
       <div style={{ maxHeight: 300, overflowY: 'auto' }}>
         {notificationData.map((item) => (
-          <div key={item.NotificationId} style={{ display: 'flex', padding: '12px 16px', borderBottom: '1px solid #f0f0f0' }} onClick={() => handleClick(item.NotificationId)}>
+          <div key={item.NotificationId} style={{ display: 'flex', padding: '12px 16px', borderBottom: '1px solid #f0f0f0' }} onClick={() => handleClick(item.NotificationId,item.SenderId)}>
             <Avatar style={{ marginRight: 12 }}>
               {item.Status.charAt(0).toUpperCase()}
             </Avatar>

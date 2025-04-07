@@ -16,8 +16,10 @@ const HelpCards = ({ data }) => {
 
   console.log("menuDetails", menuDetails);
   useEffect(() => {
+    //const SenderId = localStorage.getItem("SenderId");
+    //const SenderId = localStorage.removeItem("SenderId");
     handleGetMenuDetails();
-  }, []);
+  }, [menu]);
 
   const handleViewClick = (menu) => {
     setIsEditable(false);
