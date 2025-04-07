@@ -2,11 +2,18 @@ import React, { useEffect,useState } from 'react';
 import { Badge, Avatar, Popover } from 'antd';
 import { BellOutlined } from '@ant-design/icons';
 import { useData } from "../../Context/DataProvider";
+import { updateNotification } from "../../api/notification/index";
 const NavNotification = () => {
   const { notificationData, handleGetAllNotificationList } = useData();
   useEffect(() => {
       handleGetAllNotificationList();
   }, []);
+
+  const handleClick = (NotificationId) => {
+    const helpUrl = `/help`;
+    updateNotification(NotificationId);
+    //window.location.href = helpUrl;
+  };
   
   const notificationList = (
     <div style={{ width: 300 }}>
@@ -15,7 +22,7 @@ const NavNotification = () => {
       </div>
       <div style={{ maxHeight: 300, overflowY: 'auto' }}>
         {notificationData.map((item) => (
-          <div key={item.NotificationId} style={{ display: 'flex', padding: '12px 16px', borderBottom: '1px solid #f0f0f0' }}>
+          <div key={item.NotificationId} style={{ display: 'flex', padding: '12px 16px', borderBottom: '1px solid #f0f0f0' }} onClick={() => handleClick(item.NotificationId)}>
             <Avatar style={{ marginRight: 12 }}>
               {item.Status.charAt(0).toUpperCase()}
             </Avatar>
