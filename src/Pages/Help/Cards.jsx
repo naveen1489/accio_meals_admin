@@ -16,11 +16,25 @@ const HelpCards = ({ data }) => {
 
   console.log("menuDetails", menuDetails);
   useEffect(() => {
-    //const SenderId = localStorage.getItem("SenderId");
-    //const SenderId = localStorage.removeItem("SenderId");
     handleGetMenuDetails();
   }, []);
-
+  useEffect(() => {
+    const SenderId = localStorage.getItem("SenderId");
+    if (SenderId) {
+      const filteredMenu = menuDetails.filter(
+        (menu) => menu.restaurantId == SenderId
+      );
+  
+      if (filteredMenu.length > 0) {
+        setIsEditable(false);
+        setSelectedmenu(filteredMenu[0]); // show the first matching menu
+        setViewPopup(true);
+        localStorage.removeItem("SenderId");
+      }
+    }
+    
+  }, [menuDetails]);
+  //console.log("menuDetails", menuDetails);
   const handleViewClick = (menu) => {
     setIsEditable(false);
     setSelectedmenu(menu);
