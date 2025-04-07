@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getPartners } from "../api/partners/getPartners";
 import { getCategory } from "../api/category/category";
 import { getallMenuDetails } from "../api/menu/getMenuDetails";
+import { getNotification } from "../api/notification/index";
 
 const DataContext = createContext();
 export default function DataProvider({ children }) {
@@ -21,6 +22,7 @@ export default function DataProvider({ children }) {
   const [restaurantData, setRestaurantData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const [menuDetails, setmenuDetails] = useState([]);
+  const [notificationData, setNotificationData] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -118,6 +120,19 @@ export default function DataProvider({ children }) {
     }
   };
 
+  const handleGetAllNotificationList = async () => {
+      try {
+        const response = await getNotification();
+        if (Array.isArray(response)) {
+          setNotificationData([...response]);
+        } else {
+          console.log("Unexpected response format", response);
+        }
+      } catch (error) {
+        console.log("Error fetching data", error);
+      }
+    };
+
 
   return (
     <DataContext.Provider
@@ -134,6 +149,9 @@ export default function DataProvider({ children }) {
         categoryData,
         setCategoryData,
         menuDetails,
+        notificationData,
+        setNotificationData,
+        handleGetAllNotificationList,
         setmenuDetails,
         handleGetAllPartnersData,
         handleGetAllCategoryData,
