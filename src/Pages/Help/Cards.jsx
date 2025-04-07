@@ -8,7 +8,7 @@ import { Button } from "antd";
 import { FiEye } from "react-icons/fi";
 import noDataFound from "../../assets/Auth/noDataFound.png";
 
-const HelpCards = ({ data, filter }) => {
+const HelpCards = ({ data, filter, searchText }) => {
   const [viewPopup, setViewPopup] = useState(false);
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
   const { menuDetails, handleGetMenuDetails } = useData();
@@ -27,7 +27,7 @@ const HelpCards = ({ data, filter }) => {
   
       if (filteredMenu.length > 0) {
         setIsEditable(false);
-        setSelectedmenu(filteredMenu[0]); // show the first matching menu
+        setSelectedmenu(filteredMenu[0]);
         setViewPopup(true);
         localStorage.removeItem("SenderId");
       }
@@ -64,10 +64,20 @@ const HelpCards = ({ data, filter }) => {
     };
   };
 
-  const filteredData = (data?.length > 0 ? data : menuDetails)?.filter((menu) => {
-    if (filter === "all") return true;
-    return menu.status === filter.charAt(0).toUpperCase() + filter.slice(1);
-  });
+  const filteredData = (data?.length > 0 ? data : menuDetails)
+    ?.filter((menu) => {
+      if (filter === "all") return true;
+      return menu.status === filter.charAt(0).toUpperCase() + filter.slice(1);
+    })
+    .filter((menu) => {
+      const nameMatch = menu.restaurant?.name
+        ?.toLowerCase()
+        .includes(searchText.toLowerCase());
+      const companyNameMatch = menu.restaurant?.companyName
+        ?.toLowerCase()
+        .includes(searchText.toLowerCase());
+      return nameMatch || companyNameMatch;
+    });
 
   console.log("Filtered Data:", filteredData);
   return (
@@ -83,8 +93,8 @@ const HelpCards = ({ data, filter }) => {
                   style={{ width: "10rem", height: "10rem" }}
                 />
                 <div>
-                  <h2>{menu.menuName || "Menu Name"}</h2>
-                  <h2>{menu.name || "Restaurant Name"}</h2>
+                  <h2>{menu.restaurant?.companyName || "Comapany Name"}</h2>
+                  <h2>{menu.restaurant?.name || "Owner Name"}</h2>
                 </div>
               </div>
               <div className={styles.status}>
@@ -124,17 +134,17 @@ const HelpCards = ({ data, filter }) => {
               <h3>Personal Details</h3>
               <div>
                 <p>Address</p> <p>:</p>
-                <p>{`${menu.addressLine1 || ""} ${
-                  menu.city || "Address not found"
-                } - ${menu.postalCode || "postalCode not found"}`}</p>
+                <p>{`${menu.restaurant?.addressLine1 || ""} ${
+                  menu.restaurant?.city || "Address not found"
+                } - ${menu.restaurant?.postalCode || "postalCode not found"}`}</p>
               </div>
               <div>
                 <p>Email ID</p> <p>:</p>
-                <p>{menu.emailId || "Email not available"}</p>
+                <p>{menu.restaurant?.emailId || "Email not available"}</p>
               </div>
               <div>
                 <p>Contact No</p> <p>:</p>
-                <p>{menu.contactNumber || "Contact not available"}</p>
+                <p>{menu.restaurant?.contactNumber || "Contact not available"}</p>
               </div>
             </div>
           </div>

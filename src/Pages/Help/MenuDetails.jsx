@@ -170,16 +170,47 @@ const MenuDetails = ({ menu, onClose }) => {
               <div className={styles.formGroup}>
                 <label>Add Comment</label>
                 <Input.TextArea
-                  placeholder="Demo Comment"
+                  placeholder="Write your reviews here"
                   rows={3}
-                  value={adminComment}
-                  onChange={(e) => setAdminComment(e.target.value)}
+                  value={
+                    menu?.status === "Approved" || menu?.status === "Rejected"
+                      ? menu?.menuReviews?.[0]?.adminComment || ""
+                      : adminComment
+                  }
+                  onChange={(e) => {
+                    if (
+                      menu?.status !== "Approved" &&
+                      menu?.status !== "Rejected"
+                    ) {
+                      setAdminComment(e.target.value);
+                    }
+                  }}
+                  readOnly={
+                    menu?.status === "Approved" || menu?.status === "Rejected"
+                  }
                 />
               </div>
             </div>
 
-            {(menu?.status !== "Approved" && menu?.status !== "Rejected") && (
-                <div className={styles.buttonGroup}>
+            <div className={styles.buttonGroup}>
+              {menu?.status === "Approved" ? (
+                <Button
+                  className={styles.approveBtn}
+                  icon={<CheckOutlined />}
+                  disabled
+                >
+                  Approved
+                </Button>
+              ) : menu?.status === "Rejected" ? (
+                <Button
+                  className={styles.rejectBtn}
+                  icon={<RxCross2 />}
+                  disabled
+                >
+                  Rejected
+                </Button>
+              ) : (
+                <>
                   <Button
                     className={styles.approveBtn}
                     icon={<CheckOutlined />}
@@ -194,8 +225,9 @@ const MenuDetails = ({ menu, onClose }) => {
                   >
                     Reject
                   </Button>
-                </div>
+                </>
               )}
+            </div>
           </div>
         </div>
       </div>

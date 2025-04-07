@@ -43,6 +43,7 @@
   font-size: 14px;
   font-weight: 400;
   box-shadow: none;
+  width: 8rem;
   border-radius: 0.75rem;
 }
 
@@ -50,6 +51,11 @@
   background-color: rgba(227, 55, 69, 0.08) !important;
   border: 0.5px solid var(--sec-color) !important;
   color: var(--sec-color) !important;
+}
+
+.category_button svg {
+  min-width: 1rem;
+  min-height: 1rem;
 }
 
 .cards_details {
@@ -353,6 +359,19 @@
   border: 1px solid #36973A2B !important;
 }
 
+.buttonGroup>button:nth-child(1){
+  background: #36973a2b;
+  color: #36973a;
+  font-size: 0.9rem;
+  padding: 1.2rem 1.8rem;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #36973A2B;
+}
+
 .rejectBtn {
   background: #e3374514;
   color: #e33745;
@@ -367,6 +386,19 @@
 }
 
 .rejectBtn:hover {
+  background: #e3374514 !important;
+  color: #e33745 !important;
+  font-size: 0.9rem;
+  padding: 1.2rem 1.8rem;
+  border-radius: 0.5rem;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #e3374514 !important;
+}
+
+.buttonGroup>button:nth-child(2){
   background: #e3374514 !important;
   color: #e33745 !important;
   font-size: 0.9rem;

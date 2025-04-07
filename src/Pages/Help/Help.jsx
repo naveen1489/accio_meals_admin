@@ -11,6 +11,7 @@ const Help = () => {
   const [newCategory, setnewCategory] = useState(false);
   const [openPopup, setOpenpopup] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("all"); 
+  const [searchText, setSearchText] = useState("");
 
   const handleMenuClick = (e) => {
     setSelectedFilter(e.key); 
@@ -33,19 +34,24 @@ const Help = () => {
       <div style={{ marginTop: "1rem" }}>
         <div className={styles.search_category}>
           <div>
-            <input type="text" placeholder="Search..." />
+            <input
+              type="text"
+              placeholder="Search..."
+              value={searchText}
+              onChange={(e) => setSearchText(e.target.value)}
+            />
             <FiSearch />
           </div>
 
           <Dropdown overlay={menu} trigger={['click']}>
             <Button className={styles.category_button}>
-              <IoFilterSharp /> Filter
+              <IoFilterSharp /> {selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)}
             </Button>
           </Dropdown>
         </div>
 
         <div className={styles.cards_details}>
-          <HelpCards filter={selectedFilter} />
+          <HelpCards filter={selectedFilter} searchText={searchText} /> 
         </div>
 
         {newCategory && (
