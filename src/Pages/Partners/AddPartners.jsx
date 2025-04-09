@@ -8,7 +8,7 @@ import axios from "axios";
 import { addPartners } from "../../api/partners/addPartners";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
-import imageCompression from "browser-image-compression"; // Import the library
+import imageCompression from "browser-image-compression";
 
 const GOOGLE_MAPS_API_URL = import.meta.env.VITE_APP_GOOGLE_MAPS_API_URL;
 const GOOGLE_API_KEY = import.meta.env.VITE_APP_GOOGLE_API_KEY; 
@@ -70,7 +70,6 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
 
     if (!fullAddress || fullAddress.length < 5) {
       console.error("Invalid address provided.");
-      // showAlert("error", "Please provide a valid address.");
       return;
     }
 
@@ -129,41 +128,41 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     return postalCodeMatch ? postalCodeMatch[0] : "";
   };
 
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; 
 
   const handleImageUpload = async (file) => {
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; 
     const options = {
-      maxSizeMB: 1, // Compress to 1MB or less
-      maxWidthOrHeight: 1024, // Resize to a maximum of 1024px width/height
-      useWebWorker: true, // Use web workers for better performance
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1024, 
+      useWebWorker: true, 
     };
   
     try {
       if (file.size > MAX_FILE_SIZE) {
         showAlert("error", "File size exceeds the 5MB limit.");
-        return false; // Prevent upload
+        return false; 
       }
   
-      const compressedFile = await imageCompression(file, options); // Compress the image
+      const compressedFile = await imageCompression(file, options); 
       const reader = new FileReader();
   
       reader.onload = () => {
         setFormData((prev) => ({ ...prev, imageUrl: reader.result }));
-        showAlert("success", "Image uploaded and compressed successfully!");
+        showAlert("success", "Image uploaded!");
       };
   
       reader.onerror = () => {
         showAlert("error", "Failed to upload image. Please try again.");
       };
   
-      reader.readAsDataURL(compressedFile); // Read the compressed file
+      reader.readAsDataURL(compressedFile);
     } catch (error) {
       console.error("Image compression error:", error);
       showAlert("error", "Failed to compress image. Please try again.");
     }
   
-    return false; // Prevent default upload behavior
+    return false; 
   };
   
   const handleSave = async () => {
@@ -321,7 +320,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
           <div className={styles.rightSection}>
             <Upload
               className={styles.uploadBox}
-              beforeUpload={handleImageUpload} // Compress image before upload
+              beforeUpload={handleImageUpload} 
               showUploadList={false}
             >
               {formData.imageUrl ? (

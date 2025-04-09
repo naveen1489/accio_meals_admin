@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import styles from "../../Styles/AddPartners.module.css";
 import { CloseOutlined } from "@ant-design/icons";
-import { Button, Input, message } from "antd";
+import { Button, Input, message, Upload } from "antd";
 import { editPartners } from "../../api/partners/getPartners";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
+import imageCompression from "browser-image-compression";
 
 const ViewDetails = ({ onClose, restaurant, isEditable }) => {
-  const {showAlert} = useAlert();
-  const {handleGetAllPartnersData} = useData();
+  const { showAlert } = useAlert();
+  const { handleGetAllPartnersData } = useData();
   if (!restaurant) return null;
 
   // State to manage editable fields
@@ -20,10 +21,40 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
     address: `${restaurant.addressLine1 || ""}, ${restaurant.city || ""} - ${
       restaurant.postalCode || ""
     }`,
+    imageUrl: restaurant.imageUrl || "",
   });
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleImageUpload = async (file) => {
+    const options = {
+      maxSizeMB: 1,
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
+    };
+
+    try {
+      const compressedFile = await imageCompression(file, options);
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        setFormData((prev) => ({ ...prev, imageUrl: reader.result }));
+        showAlert("success", "Image uploaded!");
+      };
+
+      reader.onerror = () => {
+        showAlert("error", "Failed to upload image. Please try again.");
+      };
+
+      reader.readAsDataURL(compressedFile);
+    } catch (error) {
+      console.error("Image compression error:", error);
+      showAlert("error", "Failed to compress image. Please try again.");
+    }
+
+    return false; 
   };
 
   const handleSaveChanges = async () => {
@@ -37,6 +68,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
         city:
           formData.address.split(",")[1]?.trim().split("-")[0]?.trim() || "",
         postalCode: formData.address.split("-")[1]?.trim() || "",
+        imageUrl: formData.imageUrl,
       };
 
       const response = await editPartners(restaurant.id, updatedData);
@@ -52,20 +84,35 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
     }
   };
 
-
   return (
     <div className={styles.modalOverlay}>
-      <div className={styles.modalContainer} style={{ width: "30rem", height:"auto"}}>
+      <div className={styles.modalContainer} style={{ width: "30rem", height: "auto" }}>
         <div className={styles.modalHeader}>
           <CloseOutlined className={styles.closeIcon} onClick={onClose} />
         </div>
 
         <div className={styles.modal_info}>
           <div>
-            <img
-              src={restaurant.imageUrl}
-              alt="Restaurant"
-            />
+            <Upload
+              beforeUpload={handleImageUpload}
+              showUploadList={false}
+              className={styles.uploadBox}
+            >
+              {formData.imageUrl ? (
+                <img
+                  src={formData.imageUrl}
+                  alt="Restaurant"
+                  style={{
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                  }}
+                />
+              ) : (
+                <div className={styles.uploadContent}>
+                  <p>Click to upload image</p>
+                </div>
+              )}
+            </Upload>
           </div>
           <div>
             <div className={styles.inputGroup}>
@@ -125,7 +172,6 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
           </div>
         </div>
 
-        {/* Conditionally render the Save Changes button */}
         {isEditable && (
           <div className={styles.modalFooter}>
             <Button

@@ -13,7 +13,7 @@ const PartnerDetails = () => {
   useEffect(() => {
     setActiveTab("subscribers");
   }, []);
-  
+
   return (
     <SidebarHeader
       headingText={"Partners"}
@@ -79,22 +79,30 @@ const PartnerDetails = () => {
         </div>
 
         <div className={styles.calculation_btns}>
-        <Button
-          className={activeTab === "subscribers" ? styles.activeButton : styles.inactiveButton}
-          onClick={() => setActiveTab("subscribers")}
-        >
-          Total Subscriber
-        </Button>
-        <Button
-          className={activeTab === "revenue" ? styles.activeButton : styles.inactiveButton}
-          onClick={() => setActiveTab("revenue")}
-        >
-          Total Revenue
-        </Button>
-      </div>
+          <Button
+            className={
+              activeTab === "subscribers"
+                ? styles.activeButton
+                : styles.inactiveButton
+            }
+            onClick={() => setActiveTab("subscribers")}
+          >
+            Total Subscriber
+          </Button>
+          <Button
+            className={
+              activeTab === "revenue"
+                ? styles.activeButton
+                : styles.inactiveButton
+            }
+            onClick={() => setActiveTab("revenue")}
+          >
+            Total Revenue
+          </Button>
+        </div>
 
-      {activeTab === "subscribers" && <SubscriberTable />}
-      {activeTab === "revenue" && <RevenueData />}
+        {activeTab === "subscribers" && <SubscriberTable />}
+        {activeTab === "revenue" && <RevenueData />}
       </div>
     </SidebarHeader>
   );
