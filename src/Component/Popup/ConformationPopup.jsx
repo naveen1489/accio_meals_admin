@@ -25,7 +25,6 @@ const ConformationPopup = ({
     }
   };
 
-  console.log('restaurntaid', categoryData.id);
   // const handleDelete = async () => {
   //   console.log(categoryData?.id, restaurantId?.id, route);
   //   try {
