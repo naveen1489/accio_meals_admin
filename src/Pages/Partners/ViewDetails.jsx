@@ -52,6 +52,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
     }
   };
 
+
   return (
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer} style={{ width: "30rem", height:"auto"}}>
@@ -62,7 +63,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
         <div className={styles.modal_info}>
           <div>
             <img
-              src="https://c8.alamy.com/comp/2G39YFY/indian-female-purchasing-items-at-confectionary-store-at-chaudi-canacona-bus-stand-goa-india-2G39YFY.jpg"
+              src={restaurant.imageUrl}
               alt="Restaurant"
             />
           </div>

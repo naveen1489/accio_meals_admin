@@ -5,7 +5,6 @@ import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import ViewDetails from "./ViewDetails";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
-import { getPartners } from "../../api/partners/getPartners";
 import { useData } from "../../Context/DataProvider";
 
 const PartnersCard = ({ data }) => {
@@ -38,7 +37,7 @@ const PartnersCard = ({ data }) => {
           <div className={styles.header}>
             <div className={styles.categoryInfo}>
               <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU1yMxBVI-74dtHiEy0qHBtwrXEaLyhN-PWQ&s"
+                src={restaurant.imageUrl}
                 alt=""
                 style={{ width: "10rem", height: "10rem" }}
               />

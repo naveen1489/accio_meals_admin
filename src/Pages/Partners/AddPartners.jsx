@@ -8,6 +8,7 @@ import axios from "axios";
 import { addPartners } from "../../api/partners/addPartners";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
+import imageCompression from "browser-image-compression"; // Import the library
 
 const GOOGLE_MAPS_API_URL = import.meta.env.VITE_APP_GOOGLE_MAPS_API_URL;
 const GOOGLE_API_KEY = import.meta.env.VITE_APP_GOOGLE_API_KEY; 
@@ -32,6 +33,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     country: "",
     latitude: null,
     longitude: null,
+    imageUrl: "", 
   });
 
   useEffect(() => {
@@ -127,6 +129,43 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     return postalCodeMatch ? postalCodeMatch[0] : "";
   };
 
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+  const handleImageUpload = async (file) => {
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const options = {
+      maxSizeMB: 1, // Compress to 1MB or less
+      maxWidthOrHeight: 1024, // Resize to a maximum of 1024px width/height
+      useWebWorker: true, // Use web workers for better performance
+    };
+  
+    try {
+      if (file.size > MAX_FILE_SIZE) {
+        showAlert("error", "File size exceeds the 5MB limit.");
+        return false; // Prevent upload
+      }
+  
+      const compressedFile = await imageCompression(file, options); // Compress the image
+      const reader = new FileReader();
+  
+      reader.onload = () => {
+        setFormData((prev) => ({ ...prev, imageUrl: reader.result }));
+        showAlert("success", "Image uploaded and compressed successfully!");
+      };
+  
+      reader.onerror = () => {
+        showAlert("error", "Failed to upload image. Please try again.");
+      };
+  
+      reader.readAsDataURL(compressedFile); // Read the compressed file
+    } catch (error) {
+      console.error("Image compression error:", error);
+      showAlert("error", "Failed to compress image. Please try again.");
+    }
+  
+    return false; // Prevent default upload behavior
+  };
+  
   const handleSave = async () => {
     if (!formData.latitude || !formData.longitude) {
       showAlert(
@@ -135,7 +174,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
       );
       return;
     }
-
+  
     const payload = {
       companyName: formData.companyName,
       nameTitle: formData.nameTitle,
@@ -152,8 +191,9 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
       country: formData.country,
       latitude: formData.latitude,
       longitude: formData.longitude,
+      imageUrl: formData.imageUrl,
     };
-
+  
     try {
       const response = await addPartners(payload);
       if (response && response.status == 200) {
@@ -165,7 +205,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
       }
     } catch (error) {
       console.error("Error in handleSave:", error);
-
+  
       if (error.response && error.response.status === 400) {
         showAlert("error", error.response.data.message || "Bad Request");
       } else {
@@ -176,6 +216,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
       }
     }
   };
+  
 
   return (
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>
@@ -278,14 +319,31 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
             </div>
           </div>
           <div className={styles.rightSection}>
-            <Upload className={styles.uploadBox}>
-              <div className={styles.uploadContent}>
-                <PiImageLight fontSize={"2.5rem"} />
-                <p>
-                  <MdOutlineModeEdit fontSize={"1rem"} /> Upload Restaurant
-                  Image
-                </p>
-              </div>
+            <Upload
+              className={styles.uploadBox}
+              beforeUpload={handleImageUpload} // Compress image before upload
+              showUploadList={false}
+            >
+              {formData.imageUrl ? (
+                <img
+                  src={formData.imageUrl}
+                  alt="Uploaded"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    borderRadius: "8px",
+                  }}
+                />
+              ) : (
+                <div className={styles.uploadContent}>
+                  <PiImageLight fontSize={"2.5rem"} />
+                  <p>
+                    <MdOutlineModeEdit fontSize={"1rem"} /> Upload Restaurant
+                    Image
+                  </p>
+                </div>
+              )}
             </Upload>
           </div>
         </div>
