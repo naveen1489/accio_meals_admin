@@ -5,15 +5,18 @@ import { FaRegUser } from "react-icons/fa";
 import tabLogo from "../../assets/Auth/logo.png";
 import { SidebarContext } from "../../Context/SidebarContext";
 import SidebarMenuBtn from "./sidebarMenuBtn";
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsBarChart } from "react-icons/bs";
 import { PiSquaresFour } from "react-icons/pi";
 import { FiLogOut } from "react-icons/fi";
 import { useAlert } from "../../Context/AlertContext";
+import { useData } from "../../Context/DataProvider";
 
 const SidePanel = () => {
   const {showAlert} = useAlert();
+  const {setIsLoggedIn} = useData();
+  
   const [activePage, setActivePage] = useState(() => {
     const pathname = window.location.pathname.split("/")[1];
     switch (pathname) {
@@ -48,6 +51,7 @@ const SidePanel = () => {
 
   const handleLogout = () => {
     showAlert("success", "Logout Successfully !");
+    setIsLoggedIn(false);
     localStorage.removeItem("adminName");
     localStorage.removeItem("token");
     navigate("/");

@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
   const { isLoggedIn } = useData();
   const {showAlert } = useAlert();
 
-  if (isLoggedIn === null) {
+  if (isLoggedIn === false) {
     return null; 
   }
   if (!isLoggedIn) {

@@ -13,6 +13,7 @@ export default function DataProvider({ children }) {
     return token ? true : false;
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoginChecking, setIsLoginChecking] = useState(true);
   const [userDetails, setUserDetails] = useState({});
   const hasCheckedLogin = useRef(false);
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ export default function DataProvider({ children }) {
     const token = localStorage.getItem("token");
     if (!token) {
       setIsLoggedIn(false);
+      navigate("/");
     }
   }, []);
 
@@ -54,6 +56,7 @@ export default function DataProvider({ children }) {
       setIsLoggedIn(false);
     } finally {
       setIsLoading(false);
+      setIsLoginChecking(false); 
     }
   };
 
@@ -62,28 +65,41 @@ export default function DataProvider({ children }) {
       if (!hasCheckedLogin.current) {
         hasCheckedLogin.current = true;
         await checkLogin();
-        if (
-          isLoggedIn &&
-          (location.pathname === "/" ||
-            location.pathname === "/login" ||
-            location.pathname === "/signup")
-        ) {
-          await handleDashboardData();
-          await handleGetAllPartnersData();
-          await handleGetAllCategoryData();
-          await handleGetMenuDetails();
-          navigate("/dashboard");
-        }
       }
     };
     verifyLogin();
-  }, [isLoggedIn, location.pathname]);
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (
+        !isLoginChecking && 
+        isLoggedIn &&
+        (location.pathname === "/" ||
+          location.pathname === "/login" ||
+          location.pathname === "/signup")
+      ) {
+        await handleDashboardData();
+        await handleGetAllPartnersData();
+        await handleGetAllCategoryData();
+        await handleGetMenuDetails();
+        navigate("/dashboard");
+      }
+    };
+    fetchData();
+  }, [isLoggedIn, isLoginChecking, location.pathname]);
 
   useEffect(() => {
     if (adminName) {
       localStorage.setItem("adminName", adminName);
     }
   }, [adminName]);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      navigate("/");
+    }
+  }, [isLoggedIn]);
 
   const handleDashboardData = async () => {
     try {
