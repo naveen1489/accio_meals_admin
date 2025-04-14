@@ -19,17 +19,17 @@ const HelpCards = ({ data, filter, searchText }) => {
     handleGetMenuDetails();
   }, []);
   useEffect(() => {
-    const SenderId = localStorage.getItem("SenderId");
+    const SenderId = localStorage.getItem("menuId");
     if (SenderId) {
       const filteredMenu = menuDetails.filter(
-        (menu) => menu.restaurantId == SenderId
+        (menu) => menu.id == SenderId
       );
   
       if (filteredMenu.length > 0) {
         setIsEditable(false);
         setSelectedmenu(filteredMenu[0]);
         setViewPopup(true);
-        localStorage.removeItem("SenderId");
+        localStorage.removeItem("menuId");
       }
     }
     

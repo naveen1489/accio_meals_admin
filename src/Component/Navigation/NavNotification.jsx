@@ -10,10 +10,10 @@ const NavNotification = () => {
       handleGetAllNotificationList();
   }, []);
 
-  const handleClick = (NotificationId,SenderId) => {
+  const handleClick = (NotificationId,menuId) => {
     const helpUrl = `/help`;
     updateNotification(NotificationId);
-    localStorage.setItem('SenderId', SenderId);
+    localStorage.setItem('menuId', menuId);
     window.location.href = helpUrl;
   };
   console.log(notificationData, "notificationData");
@@ -23,18 +23,30 @@ const NavNotification = () => {
         Notification
       </div>
       <div style={{ maxHeight: 300, overflowY: 'auto' }}>
-        {notificationData.map((item) => (
-          <div key={item.NotificationId} style={{ display: 'flex', padding: '12px 16px', borderBottom: '1px solid #f0f0f0' }} onClick={() => handleClick(item.NotificationId,item.SenderId)}>
-            <Avatar style={{ marginRight: 12 }}>
-              {item.Status.charAt(0).toUpperCase()}
-            </Avatar>
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: '600' }}>{item.NotificationType}</div>
-              <div style={{ fontSize: 13 }}>{item.NotificationMessage}</div>
-              <div style={{ fontSize: 12, color: '#999', marginTop: 4 }}></div>
+        {notificationData.map((item) => {
+          const metaData = typeof item.NotificationMetadata === "string"
+            ? JSON.parse(item.NotificationMetadata)
+            : item.NotificationMetadata || {};
+  
+          const menuId = metaData.menuId;
+  
+          return (
+            <div
+              key={item.NotificationId}
+              style={{ display: 'flex', padding: '12px 16px', borderBottom: '1px solid #f0f0f0',cursor: 'pointer', alignItems: 'center' }}
+              onClick={() => handleClick(item.NotificationId, menuId)}
+            >
+              <Avatar style={{ marginRight: 12 }}>
+                {item.Status?.charAt(0)?.toUpperCase()}
+              </Avatar>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontWeight: '600' }}>{item.NotificationType}</div>
+                <div style={{ fontSize: 13 }}>{item.NotificationMessage}</div>
+                <div style={{ fontSize: 12, color: '#999', marginTop: 4 }}></div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
