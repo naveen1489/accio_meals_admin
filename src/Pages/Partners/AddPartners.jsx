@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../Styles/AddPartners.module.css";
-import { Button, Input, Upload, Select } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
+import { Button, Input, Upload, Select, Spin } from "antd"; // Import Ant Design's Spin component
+import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 import { PiImageLight } from "react-icons/pi";
 import { MdOutlineModeEdit } from "react-icons/md";
 import axios from "axios";
@@ -9,6 +9,7 @@ import { addPartners } from "../../api/partners/addPartners";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
 import imageCompression from "browser-image-compression";
+import { validateField, validateForm } from "../../utils/validation"; 
 
 const GOOGLE_MAPS_API_URL = import.meta.env.VITE_APP_GOOGLE_MAPS_API_URL;
 const GOOGLE_API_KEY = import.meta.env.VITE_APP_GOOGLE_API_KEY; 
@@ -17,6 +18,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
   const { showAlert } = useAlert();
   const { Option } = Select;
   const { handleGetAllPartnersData } = useData();
+  const [errors, setErrors] = useState({}); 
   const [formData, setFormData] = useState({
     companyName: "",
     nameTitle: "Mr.",
@@ -35,6 +37,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     longitude: null,
     imageUrl: "", 
   });
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
@@ -66,7 +69,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
       name === "addressLine1" ? value : formData.addressLine1
     } ${name === "addressLine2" ? value : formData.addressLine2}`.trim();
 
-    console.log("Full Address:", fullAddress);
+    // console.log("Full Address:", fullAddress);
 
     if (!fullAddress || fullAddress.length < 5) {
       console.error("Invalid address provided.");
@@ -123,12 +126,20 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     }
   };
 
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const error = validateField(name, value); 
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
+
+  const isFormValid = validateForm(formData, errors);
+
   const extractPostalCode = (address) => {
     const postalCodeMatch = address.match(/\b\d{6}\b/);
     return postalCodeMatch ? postalCodeMatch[0] : "";
   };
 
-  const MAX_FILE_SIZE = 5 * 1024 * 1024; 
+  // const MAX_FILE_SIZE = 5 * 1024 * 1024; 
 
   const handleImageUpload = async (file) => {
     const MAX_FILE_SIZE = 5 * 1024 * 1024; 
@@ -166,6 +177,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
   };
   
   const handleSave = async () => {
+    if (!isFormValid) return; 
     if (!formData.latitude || !formData.longitude) {
       showAlert(
         "error",
@@ -174,6 +186,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
       return;
     }
   
+    setIsSaving(true); 
     const payload = {
       companyName: formData.companyName,
       nameTitle: formData.nameTitle,
@@ -213,6 +226,8 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
           error.response?.data?.message || "An unexpected error occurred"
         );
       }
+    } finally {
+      setIsSaving(false); 
     }
   };
   
@@ -234,7 +249,11 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                 className={styles.inputField}
                 value={formData.companyName}
                 onChange={handleChange}
+                onBlur={handleBlur} 
               />
+              {errors.companyName && (
+                <p className={styles.errorText}>Please provide a valid company name.</p>
+              )}
             </div>
 
             <div className={styles.inputGroup}>
@@ -255,8 +274,12 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                   className={styles.inputField}
                   value={formData.name}
                   onChange={handleChange}
+                  onBlur={handleBlur} 
                 />
               </div>
+              {errors.name && (
+                <p className={styles.errorText}>Please provide a valid person name.</p>
+              )}
             </div>
 
             <div className={styles.inputGroup}>
@@ -277,8 +300,13 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                   className={styles.inputField}
                   value={formData.contactNumber}
                   onChange={handleChange}
+                  onBlur={handleBlur} 
+                  type="number"
                 />
               </div>
+              {errors.contactNumber && (
+                <p className={styles.errorText}>Please provide a valid contact number.</p>
+              )}
             </div>
 
             <div className={styles.inputGroup}>
@@ -289,7 +317,12 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                 className={styles.inputField}
                 value={formData.emailId}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                type="email"
               />
+              {errors.emailId && (
+                <p className={styles.errorText}>Please provide a valid email ID.</p>
+              )}
             </div>
 
             <div className={styles.inputGroup}>
@@ -300,7 +333,11 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                 className={styles.inputField}
                 value={formData.addressLine1}
                 onChange={handleAddressChange}
+                onBlur={handleBlur} 
               />
+              {errors.addressLine1 && (
+                <p className={styles.errorText}>Please provide a valid address.</p>
+              )}
             </div>
 
             <div className={styles.inputGroup}>
@@ -351,8 +388,15 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
             type="primary"
             className={styles.saveButton}
             onClick={handleSave}
+            disabled={!isFormValid || isSaving}
           >
-            Save & Add Partner
+            {isSaving ? (
+              <>
+                Save & Add Partner <Spin indicator={<LoadingOutlined style={{ color: 'red' }} spin />} />
+              </>
+            ) : (
+              "Save & Add Partner"
+            )}
           </Button>
         </div>
       </div>
