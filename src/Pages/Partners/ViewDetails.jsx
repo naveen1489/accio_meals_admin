@@ -75,7 +75,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
       if (response.status === 200) {
         showAlert("success", response.data.message);
         handleGetAllPartnersData();
-        onClose();
+        onClose(response.data); 
       } else {
         showAlert("error", response.data.message);
       }

@@ -6,28 +6,32 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import ViewDetails from "./ViewDetails";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
 import { useData } from "../../Context/DataProvider";
+import { useNavigate } from "react-router-dom";
 
 const PartnersCard = ({ data }) => {
   const [viewPopup, setViewPopup] = useState(false);
+  const [editPopup, setEditPopup] = useState(false);
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
   const { restaurantData, handleGetAllPartnersData } = useData();
   const [selectedRestaurant, setSelectedRestaurant] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     handleGetAllPartnersData();
   }, []);
-
+ 
   const handleViewClick = (restaurant) => {
     setIsEditable(false);
     setSelectedRestaurant(restaurant);
     setViewPopup(true);
+    navigate(`/partners/view?id=${restaurant.id}`);
   };
 
   const handleEditClick = (restaurant) => {
     setSelectedRestaurant(restaurant);
     setIsEditable(true);
-    setViewPopup(true);
+    setEditPopup(true);
   };
 
   return (
@@ -117,13 +121,21 @@ const PartnersCard = ({ data }) => {
         </div>
       ))}
 
-      {viewPopup && (
+      {editPopup && (
         <ViewDetails
-          onClose={() => setViewPopup(false)}
+          onClose={() => setEditPopup(false)}
           restaurant={selectedRestaurant}
           isEditable={isEditable}
         />
       )}
+
+      {/* {viewPopup && (
+        <PartnerDetails
+          onClose={() => setViewPopup(false)}
+          restaurant={selectedRestaurant}
+        />
+      )} */}
+
       {openDeletePopup && (
         <ConformationPopup
           route={"partners"}

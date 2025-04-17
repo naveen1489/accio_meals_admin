@@ -19,3 +19,9 @@ export const deletePartner = async (partnerId) => {
     const response = await deleteRequest(`${BASE_URL}/api/restaurants/${partnerId}`);
     return response;
 };
+
+
+export const getPartnerById = async (partnerId) => {
+    const response = await getRequest(`${BASE_URL}/api/restaurants/${partnerId}`);
+    return response;
+}

@@ -2,16 +2,16 @@ import React from "react";
 import { HiOutlineUsers } from "react-icons/hi";
 import { LuBriefcaseBusiness } from "react-icons/lu";
 import styles from "../../Styles/StatsCard.module.css";
-import Graph from "../Dashboard/Graph";
 
 const RevenueData = () => {
   const statsData = [
-    { number: "89,935", text: "Total Revenue", icon: <HiOutlineUsers /> },
+    { number: "89,935", text: "Total Subscriber", icon: <HiOutlineUsers /> },
     {
       number: "23,283.5",
       text: "Revenue this month",
       icon: <LuBriefcaseBusiness />,
     },
+    { number: "89,935", text: "Total Revenue", icon: <HiOutlineUsers /> },
   ];
 
   return (
@@ -28,7 +28,7 @@ const RevenueData = () => {
         ))}
       </div>
 
-      <Graph/>
+      {/* <Graph/> */}
     </>
   );
 };

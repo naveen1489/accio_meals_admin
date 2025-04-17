@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../Styles/AddPartners.module.css";
-import { Button, Input, Upload, Select, Spin } from "antd"; // Import Ant Design's Spin component
+import { Button, Input, Upload, Select, Spin } from "antd"; 
 import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 import { PiImageLight } from "react-icons/pi";
 import { MdOutlineModeEdit } from "react-icons/md";

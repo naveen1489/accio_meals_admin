@@ -96,16 +96,17 @@
 
 .subscriber_statsContainer {
   display: flex;
-  justify-content: center;
-  align-items: start;
-  width: 30rem;
+  justify-content: start;
+  align-items: center;
+  /* width: 30rem; */
   gap: 2rem;
   margin-top: 2rem;
 }
 
 .subscriber_statsContainer > div {
   box-shadow: 0px 4px 4px 0px #00000040;
-  width: 10rem;
+  max-width: 12rem;
+  min-width: 10rem;
   border-radius: 0.7rem;
 }
 
