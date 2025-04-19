@@ -1,9 +1,13 @@
 export const validateField = (name, value) => {
   switch (name) {
     case "companyName":
-      return value.length >= 4 ? "" : "Company name must be at least 4 characters.";
+      if (value.length < 4) return "Company name must be at least 4 characters.";
+      if (value.length > 15) return "Company name must not exceed 12 characters.";
+      return "";
     case "name":
-      return value.length >= 4 ? "" : "Person name must be at least 4 characters.";
+      if (value.length < 4) return "Person name must be at least 4 characters.";
+      if (value.length > 15) return "Person name must not exceed 12 characters.";
+      return "";
     case "contactNumber":
       return /^\d{10}$/.test(value) ? "" : "Contact number must be exactly 10 digits.";
     case "emailId":

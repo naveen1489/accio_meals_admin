@@ -10,8 +10,12 @@ const LoginForm = () => {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
   const { showAlert } = useAlert();
-  const {setadminName, setIsLoggedIn} = useData();
+  const { setadminName, setIsLoggedIn } = useData();
 
+  useEffect(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("adminName");
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

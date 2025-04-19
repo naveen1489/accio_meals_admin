@@ -4,17 +4,18 @@ import styles from "../../Styles/ViewDetails.module.css";
 import { BiEdit } from "react-icons/bi";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import SidebarHeader from "../../Component/Navigation/SidebarHeader";
-import { Button, Input } from "antd";
+import { Button, Dropdown, Input, Menu } from "antd";
 import SubscriberTable from "./SubscriberTable";
 import RevenueData from "./RevenueData";
 import { getPartnerById } from "../../api/partners/getPartners";
 import ViewDetails from "./ViewDetails";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
+import { IoFilterSharp } from "react-icons/io5";
 
 const PartnerDetails = () => {
   const [activeTab, setActiveTab] = useState("subscribers");
   const location = useLocation();
-  const navigate = useNavigate();
+  const [selectedFilter, setSelectedFilter] = useState("all");
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get("id");
   const [data, setData] = useState([]);
@@ -41,7 +42,19 @@ const PartnerDetails = () => {
     setEditPopup(true);
   };
 
-  console.log("data", data);
+  const handleMenuClick = (e) => {
+    setSelectedFilter(e.key);
+  };
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      <Menu.Item key="all">All</Menu.Item>
+      <Menu.Item key="Active">Active</Menu.Item>
+      <Menu.Item key="Inactive">Inactive</Menu.Item>
+      <Menu.Item key="Pending">Pending</Menu.Item>
+      <Menu.Item key="Completed">Completed</Menu.Item>
+    </Menu>
+  );
 
   return (
     <div>
@@ -124,8 +137,19 @@ const PartnerDetails = () => {
             </div>
           </div>
 
-          <RevenueData />
-          <SubscriberTable />
+          <div className={styles.tabContainer}>
+            <RevenueData />
+            <div className={styles.filter} style={{ marginBottom: "3rem" }}>
+              <Dropdown overlay={menu} trigger={["click"]}>
+                <Button className={styles.category_button}>
+                  <IoFilterSharp />{" "}
+                  {selectedFilter.charAt(0).toUpperCase() +
+                    selectedFilter.slice(1)}
+                </Button>
+              </Dropdown>
+            </div>
+            <SubscriberTable filter={selectedFilter} />
+          </div>
         </div>
 
         {/* Edit Modal */}

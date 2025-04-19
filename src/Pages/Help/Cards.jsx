@@ -79,7 +79,6 @@ const HelpCards = ({ data, filter, searchText }) => {
       return nameMatch || companyNameMatch;
     });
 
-  console.log("Filtered Data:", filteredData);
   return (
     <>
       {filteredData?.length > 0 ? (

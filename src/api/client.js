@@ -12,4 +12,21 @@ client.interceptors.request.use((config) => {
   return config;
 });
 
+// response interceptor to handle token expiration
+client.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (
+      error.response &&
+      (error.response.data.message === "Token expired" ||
+        error.response.data.message === "Invalid token")
+    ) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("adminName");
+      window.location.href = "/";
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default client;

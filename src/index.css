@@ -84,3 +84,12 @@ input[type="number"]::-webkit-outer-spin-button {
 input[type="number"] {
   -moz-appearance: textfield; 
 }
+
+.subscriberTable .ant-table-thead > tr > th {
+  background-color: #F15A5C !important; 
+  color: white !important;
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 0.75rem;
+  text-align: left;
+}

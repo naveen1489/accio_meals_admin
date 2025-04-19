@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styles from "../../Styles/AddPartners.module.css";
-import { Button, Input, Upload, Select, Spin } from "antd"; 
+import { Button, Input, Upload, Select, Spin } from "antd";
 import { CloseOutlined, LoadingOutlined } from "@ant-design/icons";
 import { PiImageLight } from "react-icons/pi";
 import { MdOutlineModeEdit } from "react-icons/md";
@@ -9,16 +9,16 @@ import { addPartners } from "../../api/partners/addPartners";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
 import imageCompression from "browser-image-compression";
-import { validateField, validateForm } from "../../utils/validation"; 
+import { validateField, validateForm } from "../../utils/validation";
 
 const GOOGLE_MAPS_API_URL = import.meta.env.VITE_APP_GOOGLE_MAPS_API_URL;
-const GOOGLE_API_KEY = import.meta.env.VITE_APP_GOOGLE_API_KEY; 
+const GOOGLE_API_KEY = import.meta.env.VITE_APP_GOOGLE_API_KEY;
 
 const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
   const { showAlert } = useAlert();
   const { Option } = Select;
   const { handleGetAllPartnersData } = useData();
-  const [errors, setErrors] = useState({}); 
+  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     companyName: "",
     nameTitle: "Mr.",
@@ -35,7 +35,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     country: "",
     latitude: null,
     longitude: null,
-    imageUrl: "", 
+    imageUrl: "",
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -128,7 +128,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
-    const error = validateField(name, value); 
+    const error = validateField(name, value);
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
@@ -139,45 +139,45 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     return postalCodeMatch ? postalCodeMatch[0] : "";
   };
 
-  // const MAX_FILE_SIZE = 5 * 1024 * 1024; 
+  // const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
   const handleImageUpload = async (file) => {
-    const MAX_FILE_SIZE = 5 * 1024 * 1024; 
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
     const options = {
       maxSizeMB: 1,
-      maxWidthOrHeight: 1024, 
-      useWebWorker: true, 
+      maxWidthOrHeight: 1024,
+      useWebWorker: true,
     };
-  
+
     try {
       if (file.size > MAX_FILE_SIZE) {
         showAlert("error", "File size exceeds the 5MB limit.");
-        return false; 
+        return false;
       }
-  
-      const compressedFile = await imageCompression(file, options); 
+
+      const compressedFile = await imageCompression(file, options);
       const reader = new FileReader();
-  
+
       reader.onload = () => {
         setFormData((prev) => ({ ...prev, imageUrl: reader.result }));
         showAlert("success", "Image uploaded!");
       };
-  
+
       reader.onerror = () => {
         showAlert("error", "Failed to upload image. Please try again.");
       };
-  
+
       reader.readAsDataURL(compressedFile);
     } catch (error) {
       console.error("Image compression error:", error);
       showAlert("error", "Failed to compress image. Please try again.");
     }
-  
-    return false; 
+
+    return false;
   };
-  
+
   const handleSave = async () => {
-    if (!isFormValid) return; 
+    if (!isFormValid) return;
     if (!formData.latitude || !formData.longitude) {
       showAlert(
         "error",
@@ -185,8 +185,8 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
       );
       return;
     }
-  
-    setIsSaving(true); 
+
+    setIsSaving(true);
     const payload = {
       companyName: formData.companyName,
       nameTitle: formData.nameTitle,
@@ -205,7 +205,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
       longitude: formData.longitude,
       imageUrl: formData.imageUrl,
     };
-  
+
     try {
       const response = await addPartners(payload);
       if (response && response.status == 200) {
@@ -217,7 +217,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
       }
     } catch (error) {
       console.error("Error in handleSave:", error);
-  
+
       if (error.response && error.response.status === 400) {
         showAlert("error", error.response.data.message || "Bad Request");
       } else {
@@ -227,10 +227,9 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
         );
       }
     } finally {
-      setIsSaving(false); 
+      setIsSaving(false);
     }
   };
-  
 
   return (
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>
@@ -249,10 +248,10 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                 className={styles.inputField}
                 value={formData.companyName}
                 onChange={handleChange}
-                onBlur={handleBlur} 
+                onBlur={handleBlur}
               />
               {errors.companyName && (
-                <p className={styles.errorText}>Please provide a valid company name.</p>
+                <p className={styles.errorText}>{errors.companyName}</p>
               )}
             </div>
 
@@ -274,12 +273,10 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                   className={styles.inputField}
                   value={formData.name}
                   onChange={handleChange}
-                  onBlur={handleBlur} 
+                  onBlur={handleBlur}
                 />
               </div>
-              {errors.name && (
-                <p className={styles.errorText}>Please provide a valid person name.</p>
-              )}
+              {errors.name && <p className={styles.errorText}>{errors.name}</p>}
             </div>
 
             <div className={styles.inputGroup}>
@@ -300,12 +297,12 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                   className={styles.inputField}
                   value={formData.contactNumber}
                   onChange={handleChange}
-                  onBlur={handleBlur} 
+                  onBlur={handleBlur}
                   type="number"
                 />
               </div>
               {errors.contactNumber && (
-                <p className={styles.errorText}>Please provide a valid contact number.</p>
+                <p className={styles.errorText}>{errors.contactNumber}</p>
               )}
             </div>
 
@@ -321,7 +318,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                 type="email"
               />
               {errors.emailId && (
-                <p className={styles.errorText}>Please provide a valid email ID.</p>
+                <p className={styles.errorText}>{errors.emailId}</p>
               )}
             </div>
 
@@ -333,10 +330,10 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                 className={styles.inputField}
                 value={formData.addressLine1}
                 onChange={handleAddressChange}
-                onBlur={handleBlur} 
+                onBlur={handleBlur}
               />
               {errors.addressLine1 && (
-                <p className={styles.errorText}>Please provide a valid address.</p>
+                <p className={styles.errorText}>{errors.addressLine1}</p>
               )}
             </div>
 
@@ -357,7 +354,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
           <div className={styles.rightSection}>
             <Upload
               className={styles.uploadBox}
-              beforeUpload={handleImageUpload} 
+              beforeUpload={handleImageUpload}
               showUploadList={false}
             >
               {formData.imageUrl ? (
@@ -392,7 +389,10 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
           >
             {isSaving ? (
               <>
-                Save & Add Partner <Spin indicator={<LoadingOutlined style={{ color: 'red' }} spin />} />
+                Save & Add Partner{" "}
+                <Spin
+                  indicator={<LoadingOutlined style={{ color: "red" }} spin />}
+                />
               </>
             ) : (
               "Save & Add Partner"
