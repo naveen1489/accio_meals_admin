@@ -9,7 +9,7 @@ import { addPartners } from "../../api/partners/addPartners";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
 import imageCompression from "browser-image-compression";
-import { validateField, validateForm } from "../../utils/validation";
+import { validateField, validateForm } from "../../Utils/validation";
 
 const GOOGLE_MAPS_API_URL = import.meta.env.VITE_APP_GOOGLE_MAPS_API_URL;
 const GOOGLE_API_KEY = import.meta.env.VITE_APP_GOOGLE_API_KEY;
