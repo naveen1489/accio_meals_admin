@@ -6,7 +6,7 @@ import { useData } from "../../Context/DataProvider";
 import MenuDetails from "./MenuDetails";
 import { Button } from "antd";
 import { FiEye } from "react-icons/fi";
-import noDataFound from "../../assets/Auth/noDataFound.png";
+import noDataFound from "../../assets/Auth/noDatafound.png";
 
 const HelpCards = ({ data, filter, searchText }) => {
   const [viewPopup, setViewPopup] = useState(false);
