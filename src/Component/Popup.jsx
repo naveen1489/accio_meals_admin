@@ -1,7 +1,7 @@
 import React from "react";
 // import Button from "./Button";
 import { useAlert } from "../Context/AlertContext";
-import "../Styles/PopUp.css";
+import "../Styles/Popup.css";
 // import gif from "../assets/dashboard/popupgif.png";
 import { MdClose } from "react-icons/md";
 import { Button } from "antd";
