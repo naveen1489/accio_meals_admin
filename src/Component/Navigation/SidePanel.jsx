@@ -4,7 +4,7 @@ import { RiChat3Line } from "react-icons/ri";
 import { FaRegUser } from "react-icons/fa";
 import tabLogo from "../../assets/Auth/logo.png";
 import { SidebarContext } from "../../Context/SidebarContext";
-import SidebarMenuBtn from "./sidebarMenuBtn";
+import SidebarMenuBtn from "./SidebarMenuBtn";
 import { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { BsBarChart } from "react-icons/bs";
