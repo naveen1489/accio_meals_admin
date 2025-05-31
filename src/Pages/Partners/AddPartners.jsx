@@ -248,7 +248,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                 className={styles.inputField}
                 value={formData.companyName}
                 onChange={handleChange}
-                onBlur={handleBlur}
+                // onBlur={handleBlur}
               />
               {errors.companyName && (
                 <p className={styles.errorText}>{errors.companyName}</p>
@@ -273,7 +273,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                   className={styles.inputField}
                   value={formData.name}
                   onChange={handleChange}
-                  onBlur={handleBlur}
+                  // onBlur={handleBlur}
                 />
               </div>
               {errors.name && <p className={styles.errorText}>{errors.name}</p>}
