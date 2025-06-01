@@ -19,6 +19,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
   const { Option } = Select;
   const { handleGetAllPartnersData } = useData();
   const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({}); 
   const [formData, setFormData] = useState({
     companyName: "",
     nameTitle: "Mr.",
@@ -128,6 +129,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
+    setTouched((prev) => ({ ...prev, [name]: true }));
     const error = validateField(name, value);
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
@@ -296,12 +298,18 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                   placeholder="Number"
                   className={styles.inputField}
                   value={formData.contactNumber}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, "").slice(0, 10);
+                    setFormData((prev) => ({ ...prev, contactNumber: value }));
+                    if (value.length === 10) {
+                      setErrors((prev) => ({ ...prev, contactNumber: "" }));
+                    }
+                  }}
                   onBlur={handleBlur}
                   type="number"
                 />
               </div>
-              {errors.contactNumber && (
+              {touched.contactNumber && errors.contactNumber && (
                 <p className={styles.errorText}>{errors.contactNumber}</p>
               )}
             </div>
@@ -313,11 +321,17 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                 placeholder="Enter email id"
                 className={styles.inputField}
                 value={formData.emailId}
-                onChange={handleChange}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setFormData((prev) => ({ ...prev, emailId: value }));
+                  if (!validateField("emailId", value)) {
+                    setErrors((prev) => ({ ...prev, emailId: "" }));
+                  }
+                }}
                 onBlur={handleBlur}
                 type="email"
               />
-              {errors.emailId && (
+              {touched.emailId && errors.emailId && (
                 <p className={styles.errorText}>{errors.emailId}</p>
               )}
             </div>

@@ -87,7 +87,7 @@ const HelpCards = ({ data, filter, searchText }) => {
             <div className={styles.header}>
               <div className={styles.categoryInfo}>
                 <img
-                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU1yMxBVI-74dtHiEy0qHBtwrXEaLyhN-PWQ&s"
+                  src={menu?.restaurant?.imageUrl}
                   alt=""
                   style={{ width: "10rem", height: "10rem" }}
                 />

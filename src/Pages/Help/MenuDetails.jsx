@@ -16,6 +16,7 @@ const MenuDetails = ({ menu, onClose }) => {
   const { showAlert } = useAlert();
   const { handleGetMenuDetails } = useData();
 
+
   useEffect(() => {
     const uniqueDays = [...new Set(menu?.menuCategories.map((cat) => cat.day))];
     setDays(uniqueDays);
