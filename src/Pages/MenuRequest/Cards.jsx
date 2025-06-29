@@ -3,6 +3,7 @@ import styles from "../../Styles/Partners.module.css";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
 import { useData } from "../../Context/DataProvider";
+import MenuDetails from "./MenuDetails";
 import { Button } from "antd";
 import { FiEye } from "react-icons/fi";
 import noDataFound from "../../assets/Auth/noDatafound.png";
@@ -121,6 +122,10 @@ const HelpCards = ({ data, filter, searchText }) => {
               <div>
                 <span className={styles.request}>Request:</span>
                 <Button className={styles.newMenuBtn}>New Menu</Button>
+                <FiEye
+                  className={styles.icon}
+                  onClick={() => handleViewClick(menu)}
+                />
               </div>
             </div>
 
@@ -149,6 +154,13 @@ const HelpCards = ({ data, filter, searchText }) => {
         </div>
       )}
 
+      {viewPopup && (
+        <MenuDetails
+          onClose={() => setViewPopup(false)}
+          menu={selectedmenu}
+          isEditable={isEditable}
+        />
+      )}
       {openDeletePopup && (
         <ConformationPopup
           route={"help"}

@@ -88,7 +88,7 @@ const MenuDetails = ({ menu, onClose }) => {
     <div className={styles.modalOverlay}>
       <div className={styles.modalContainer}>
         <div className={styles.modalHeader}>
-          <h2 className={styles.heading}>Help Center</h2>
+          <h2 className={styles.heading}>New Menu</h2>
           <CloseOutlined className={styles.closeIcon} onClick={onClose} />
         </div>
 

@@ -10,13 +10,14 @@ import { useNavigate } from "react-router-dom";
 import { BsBarChart } from "react-icons/bs";
 import { PiSquaresFour } from "react-icons/pi";
 import { FiLogOut } from "react-icons/fi";
+import { MdOutlineRestaurantMenu } from "react-icons/md";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
 
 const SidePanel = () => {
-  const {showAlert} = useAlert();
-  const {setIsLoggedIn} = useData();
-  
+  const { showAlert } = useAlert();
+  const { setIsLoggedIn } = useData();
+
   const [activePage, setActivePage] = useState(() => {
     const pathname = window.location.pathname.split("/")[1];
     switch (pathname) {
@@ -24,6 +25,8 @@ const SidePanel = () => {
         return "partners";
       case "category":
         return "category";
+      case "menu":
+        return "menu";
       case "help":
         return "help";
       default:
@@ -56,7 +59,6 @@ const SidePanel = () => {
     localStorage.removeItem("token");
     navigate("/");
   };
-
 
   return (
     <>
@@ -124,6 +126,16 @@ const SidePanel = () => {
                   />
 
                   <SidebarMenuBtn
+                    page={"menu"}
+                    route={"/menu"}
+                    icon={<MdOutlineRestaurantMenu />}
+                    heading={"Menu Requests"}
+                    activePage={activePage}
+                    handleItemClick={handleItemClick}
+                    collapseSidebar={collapseSidebar}
+                  />
+
+                  {/* <SidebarMenuBtn
                     page={"help"}
                     route={"/help"}
                     icon={<RiChat3Line />}
@@ -131,7 +143,7 @@ const SidePanel = () => {
                     activePage={activePage}
                     handleItemClick={handleItemClick}
                     collapseSidebar={collapseSidebar}
-                  />
+                  /> */}
                 </ul>
               </div>
             </div>

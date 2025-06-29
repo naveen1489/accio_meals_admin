@@ -11,7 +11,7 @@ const NavNotification = () => {
   }, []);
 
   const handleClick = (NotificationId,menuId) => {
-    const helpUrl = `/help`;
+    const helpUrl = `/menu`;
     updateNotification(NotificationId);
     localStorage.setItem('menuId', menuId);
     window.location.href = helpUrl;

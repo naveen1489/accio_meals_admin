@@ -6,7 +6,7 @@ import { Button, Dropdown, Menu } from "antd";
 import { IoFilterSharp } from "react-icons/io5";
 import HelpCards from "./Cards";
 
-const Help = () => {
+const MenuRequest = () => {
   const [newCategory, setnewCategory] = useState(false);
   const [openPopup, setOpenpopup] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("all"); 
@@ -53,16 +53,9 @@ const Help = () => {
           <HelpCards filter={selectedFilter} searchText={searchText} /> 
         </div>
 
-        {newCategory && (
-          <MenuDetails
-            isOpen={newCategory}
-            onClose={() => setnewCategory(false)}
-            isPopupOpen={setOpenpopup}
-          />
-        )}
       </div>
     </SidebarHeader>
   );
 };
 
-export default Help;
+export default MenuRequest;
