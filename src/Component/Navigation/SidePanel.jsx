@@ -135,7 +135,7 @@ const SidePanel = () => {
                     collapseSidebar={collapseSidebar}
                   />
 
-                  {/* <SidebarMenuBtn
+                  <SidebarMenuBtn
                     page={"help"}
                     route={"/help"}
                     icon={<RiChat3Line />}
@@ -143,7 +143,7 @@ const SidePanel = () => {
                     activePage={activePage}
                     handleItemClick={handleItemClick}
                     collapseSidebar={collapseSidebar}
-                  /> */}
+                  /> 
                 </ul>
               </div>
             </div>

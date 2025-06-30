@@ -262,3 +262,15 @@
   width: 15rem;
   height: 15rem;
 }
+
+.categoryInfo > div:nth-child(1){
+  min-width: 3rem;
+  min-height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  color: #666;
+  font-weight: 500;
+}

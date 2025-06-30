@@ -8,3 +8,11 @@ export const getDashboardData = async () => {
   );
   return response;
 };
+
+
+export const getAdminMessage = async ()=>{
+  const response = await getRequest(
+    `${BASE_URL}/api/users/admin/messages`
+  );
+  return response;
+}

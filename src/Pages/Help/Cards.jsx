@@ -2,143 +2,131 @@ import React, { useEffect, useState } from "react";
 import styles from "../../Styles/Partners.module.css";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
-import { useData } from "../../Context/DataProvider";
 import { Button } from "antd";
-import { FiEye } from "react-icons/fi";
 import noDataFound from "../../assets/Auth/noDatafound.png";
+import { getAdminMessage } from "../../api/dashboard/getData";
 
 const HelpCards = ({ data, filter, searchText }) => {
-  const [viewPopup, setViewPopup] = useState(false);
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
-  const { menuDetails, handleGetMenuDetails } = useData();
   const [selectedmenu, setSelectedmenu] = useState(null);
-  const [isEditable, setIsEditable] = useState(false);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
-    handleGetMenuDetails();
-  }, []);
-  useEffect(() => {
-    const SenderId = localStorage.getItem("menuId");
-    if (SenderId) {
-      const filteredMenu = menuDetails.filter(
-        (menu) => menu.id == SenderId
-      );
-  
-      if (filteredMenu.length > 0) {
-        setIsEditable(false);
-        setSelectedmenu(filteredMenu[0]);
-        setViewPopup(true);
-        localStorage.removeItem("menuId");
+    const fetchMessages = async () => {
+      try {
+        const response = await getAdminMessage();
+        if (response && response.messages) {
+          setMessages(response.messages);
+        }
+      } catch (error) {
+        console.error("Error fetching admin messages:", error);
       }
-    }
-    
-  }, [menuDetails]);
-  //console.log("menuDetails", menuDetails);
-  const handleViewClick = (menu) => {
-    setIsEditable(false);
-    setSelectedmenu(menu);
-    setViewPopup(true);
-  };
+    };
+    fetchMessages();
+  }, []);
 
-  const getStatusStyles = (status) => {
+  const getRoleStyles = (userRole) => {
     return {
       background:
-        status === "Approved"
+        userRole === "restaurant"
           ? "#36973a2b"
-          : status === "Rejected"
-          ? "#f8d7da"
+          : userRole === "customer"
+          ? "#e3f2fd"
           : "#fff3cd",
       border:
-        status === "Approved"
+        userRole === "restaurant"
           ? "0.5px solid #36973a2b"
-          : status === "Rejected"
-          ? "0.5px solid #f8d7da"
+          : userRole === "customer"
+          ? "0.5px solid #e3f2fd"
           : "0.5px solid #fff3cd",
       mainBgColor:
-        status === "Approved"
+        userRole === "restaurant"
           ? "green"
-          : status === "Rejected"
-          ? "red"
+          : userRole === "customer"
+          ? "blue"
           : "#ffcc80",
     };
   };
 
-  const filteredData = (data?.length > 0 ? data : menuDetails)
-    ?.filter((menu) => {
+  const filteredData = (data?.length > 0 ? data : messages)
+    ?.filter((message) => {
       if (filter === "all") return true;
-      return menu.status === filter.charAt(0).toUpperCase() + filter.slice(1);
+      return message.userRole === filter;
     })
-    .filter((menu) => {
-      const nameMatch = menu.restaurant?.name
+    .filter((message) => {
+      const nameMatch = message.name
         ?.toLowerCase()
         .includes(searchText.toLowerCase());
-      const companyNameMatch = menu.restaurant?.companyName
+      const emailMatch = message.emailId
         ?.toLowerCase()
         .includes(searchText.toLowerCase());
-      return nameMatch || companyNameMatch;
+      const messageMatch = message.message
+        ?.toLowerCase()
+        .includes(searchText.toLowerCase());
+      return nameMatch || emailMatch || messageMatch;
     });
 
   return (
     <>
       {filteredData?.length > 0 ? (
-        filteredData.map((menu, index) => (
+        filteredData.map((message, index) => (
           <div key={index} className={styles.card}>
             <div className={styles.header}>
               <div className={styles.categoryInfo}>
-                <img
-                  src={menu?.restaurant?.imageUrl}
-                  alt=""
-                  style={{ width: "10rem", height: "10rem" }}
-                />
                 <div>
-                  <h2>{menu.restaurant?.companyName || "Comapany Name"}</h2>
-                  <h2>{menu.restaurant?.name || "Owner Name"}</h2>
+                  {message.name?.charAt(0)?.toUpperCase() || "U"}
+                </div>
+                <div>
+                  <h2>{message.name || "User Name"}</h2>
+                  <h2>{message.emailId || "Email not available"}</h2>
                 </div>
               </div>
               <div className={styles.status}>
                 <div
                   style={{
-                    background: getStatusStyles(menu.status).background,
-                    border: getStatusStyles(menu.status).border,
+                    background: getRoleStyles(message.userRole).background,
+                    border: getRoleStyles(message.userRole).border,
                   }}
                 >
                   <div
                     style={{
-                      background: getStatusStyles(menu.status).mainBgColor,
-                      border: getStatusStyles(menu.status).border,
+                      background: getRoleStyles(message.userRole).mainBgColor,
+                      border: getRoleStyles(message.userRole).border,
                     }}
                   ></div>
                 </div>
-                {menu.status === "Approved"
-                  ? "Approved"
-                  : menu.status === "Rejected"
-                  ? "Rejected"
-                  : "Pending"}
+                {message.userRole === "restaurant"
+                  ? "Restaurant"
+                  : message.userRole === "customer"
+                  ? "Customer"
+                  : message.userRole}
               </div>
             </div>
 
             <div className={styles.actions}>
               <div>
-                <span className={styles.request}>Request:</span>
-                <Button className={styles.newMenuBtn}>New Menu</Button>
+                <span className={styles.request}>User Role:</span>
+                <Button className={styles.newMenuBtn}>{message.userRole}</Button>
               </div>
             </div>
 
             <div className={styles.details}>
-              <h3>Personal Details</h3>
+              <h3>Message Details</h3>
               <div>
-                <p>Address</p> <p>:</p>
-                <p>{`${menu.restaurant?.addressLine1 || ""} ${
-                  menu.restaurant?.city || "Address not found"
-                } - ${menu.restaurant?.postalCode || "postalCode not found"}`}</p>
+                <p>Name</p> <p>:</p>
+                <p>{message.name || "Name not available"}</p>
               </div>
               <div>
                 <p>Email ID</p> <p>:</p>
-                <p>{menu.restaurant?.emailId || "Email not available"}</p>
+                <p>{message.emailId || "Email not available"}</p>
               </div>
               <div>
-                <p>Contact No</p> <p>:</p>
-                <p>{menu.restaurant?.contactNumber || "Contact not available"}</p>
+                <p>Message</p> <p>:</p>
+                <p>{message.message || "Message not available"}</p>
+              </div>
+              <div>
+                <p>Created At</p> <p>:</p>
+                <p>{new Date(message.createdAt).toLocaleString() || "Date not available"}</p>
               </div>
             </div>
           </div>
@@ -158,7 +146,7 @@ const HelpCards = ({ data, filter, searchText }) => {
           text={
             <>
               You are about to delete a{" "}
-              <span style={{ color: "#F15A5C" }}>Partner</span>
+              <span style={{ color: "#F15A5C" }}>Message</span>
             </>
           }
           leftBtn={true}
