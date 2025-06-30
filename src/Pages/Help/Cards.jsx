@@ -50,11 +50,13 @@ const HelpCards = ({ data, filter, searchText }) => {
 
   const filteredData = (data?.length > 0 ? data : messages)
     ?.filter((message) => {
-      if (filter === "all") return true;
-      return message.userRole === filter;
-    })
-    .filter((message) => {
       const nameMatch = message.name
+        ?.toLowerCase()
+        .includes(searchText.toLowerCase());
+      const userDetailsNameMatch = message?.userDetails?.name
+        ?.toLowerCase()
+        .includes(searchText.toLowerCase());
+      const companyNameMatch = message?.userDetails?.companyName
         ?.toLowerCase()
         .includes(searchText.toLowerCase());
       const emailMatch = message.emailId
@@ -63,7 +65,7 @@ const HelpCards = ({ data, filter, searchText }) => {
       const messageMatch = message.message
         ?.toLowerCase()
         .includes(searchText.toLowerCase());
-      return nameMatch || emailMatch || messageMatch;
+      return nameMatch || userDetailsNameMatch || companyNameMatch || emailMatch || messageMatch;
     });
 
   return (
@@ -74,11 +76,19 @@ const HelpCards = ({ data, filter, searchText }) => {
             <div className={styles.header}>
               <div className={styles.categoryInfo}>
                 <div>
-                  {message.name?.charAt(0)?.toUpperCase() || "U"}
+                  <img
+                    src={message?.userDetails?.profilePic}
+                    alt="profilepic"
+                  />
                 </div>
                 <div>
-                  <h2>{message.name || "User Name"}</h2>
-                  <h2>{message.emailId || "Email not available"}</h2>
+                  <h2>
+                    {message?.userDetails?.companyName ||
+                      message?.userDetails?.name}
+                  </h2>
+                  {message?.userRole == "restaurant" && (
+                    <h2>{message?.userDetails?.name || ""}</h2>
+                  )}
                 </div>
               </div>
               <div className={styles.status}>
@@ -103,30 +113,33 @@ const HelpCards = ({ data, filter, searchText }) => {
               </div>
             </div>
 
-            <div className={styles.actions}>
-              <div>
-                <span className={styles.request}>User Role:</span>
-                <Button className={styles.newMenuBtn}>{message.userRole}</Button>
-              </div>
-            </div>
-
             <div className={styles.details}>
-              <h3>Message Details</h3>
+              <h3>Details</h3>
+              <div>
+                <textarea
+                  value={message.message || "No message available"}
+                  readOnly
+                />
+              </div>
               <div>
                 <p>Name</p> <p>:</p>
-                <p>{message.name || "Name not available"}</p>
+                <p>{message?.userDetails?.name || "Name not available"}</p>
+              </div>
+              <div>
+                <p>Mobile</p> <p>:</p>
+                <p>{message?.userDetails?.mobile || ""}</p>
               </div>
               <div>
                 <p>Email ID</p> <p>:</p>
-                <p>{message.emailId || "Email not available"}</p>
-              </div>
-              <div>
-                <p>Message</p> <p>:</p>
-                <p>{message.message || "Message not available"}</p>
+                <p>{message?.userDetails?.email || "Email not available"}</p>
               </div>
               <div>
                 <p>Created At</p> <p>:</p>
-                <p>{new Date(message.createdAt).toLocaleString() || "Date not available"}</p>
+                <p>
+                  {message.createdAt 
+                    ? new Date(message.createdAt).toLocaleDateString('en-GB')
+                    : "Date not available"}
+                </p>
               </div>
             </div>
           </div>
