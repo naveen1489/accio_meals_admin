@@ -29,11 +29,11 @@ const AddCategory = ({ isOpen, onClose }) => {
     };
   }, [isOpen]);
 
-  const handleOverlayClick = (e) => {
-    if (e.target.classList.contains(styles.modalOverlay)) {
-      onClose();
-    }
-  };
+  // const handleOverlayClick = (e) => {
+  //   if (e.target.classList.contains(styles.modalOverlay)) {
+  //     onClose();
+  //   }
+  // };
 
   const handleAddItem = () => {
     if (!currentCategory || !currentItem) {
@@ -120,7 +120,9 @@ const AddCategory = ({ isOpen, onClose }) => {
   ];
 
   return (
-    <div className={styles.modalOverlay} onClick={handleOverlayClick}>
+    <div className={styles.modalOverlay} 
+    // onClick={handleOverlayClick}
+    >
       <div className={styles.modalContainer}>
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>Add Category</h2>

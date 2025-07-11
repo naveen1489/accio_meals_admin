@@ -19,7 +19,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
   const { Option } = Select;
   const { handleGetAllPartnersData } = useData();
   const [errors, setErrors] = useState({});
-  const [touched, setTouched] = useState({}); 
+  const [touched, setTouched] = useState({});
   const [formData, setFormData] = useState({
     companyName: "",
     nameTitle: "Mr.",
@@ -39,6 +39,10 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     imageUrl: "",
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  const [debounceTimeout, setDebounceTimeout] = useState(null);
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
@@ -47,11 +51,29 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     };
   }, [isOpen]);
 
-  const handleOverlayClick = (e) => {
-    if (e.target.classList.contains(styles.modalOverlay)) {
-      onClose();
-    }
-  };
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(`.${styles.suggestionsContainer}`) && 
+          !event.target.closest('input[name="addressLine1"]')) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      // Clear debounce timeout on cleanup
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+      }
+    };
+  }, [debounceTimeout]);
+
+  // const handleOverlayClick = (e) => {
+  //   if (e.target.classList.contains(styles.modalOverlay)) {
+  //     onClose();
+  //   }
+  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -62,68 +84,94 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleAddressChange = async (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-
-    const fullAddress = `${
-      name === "addressLine1" ? value : formData.addressLine1
-    } ${name === "addressLine2" ? value : formData.addressLine2}`.trim();
-
-    // console.log("Full Address:", fullAddress);
-
-    if (!fullAddress || fullAddress.length < 5) {
-      console.error("Invalid address provided.");
+  // Function to fetch address suggestions
+  const fetchAddressSuggestions = async (query) => {
+    if (!query || query.length < 3) {
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
       return;
     }
 
+    setIsLoadingSuggestions(true);
     try {
       const response = await axios.get(GOOGLE_MAPS_API_URL, {
         params: {
-          address: fullAddress,
+          address: query,
           key: GOOGLE_API_KEY,
+          components: 'country:IN', 
+          region: 'IN',
         },
       });
 
       if (response.data.status === "OK" && response.data.results.length > 0) {
-        const result = response.data.results[0];
-        const location = result.geometry.location;
-        const addressComponents = result.address_components;
-
-        let city = "",
-          state = "",
-          country = "",
-          postalCode = "";
-
-        addressComponents.forEach((component) => {
-          if (component.types.includes("locality")) city = component.long_name;
-          if (component.types.includes("administrative_area_level_1"))
-            state = component.long_name;
-          if (component.types.includes("country"))
-            country = component.long_name;
-          if (component.types.includes("postal_code"))
-            postalCode = component.long_name;
-        });
-
-        setFormData((prev) => ({
-          ...prev,
-          latitude: location.lat,
-          longitude: location.lng,
-          city,
-          state,
-          country,
-          postalCode,
+        const suggestions = response.data.results.slice(0, 5).map((result) => ({
+          description: result.formatted_address,
+          place_id: result.place_id,
+          location: result.geometry.location,
+          address_components: result.address_components,
         }));
+        setAddressSuggestions(suggestions);
+        setShowSuggestions(true);
       } else {
-        console.error("No results found for the given address.");
-        // showAlert("error", "Unable to fetch location. Please check the address.");
+        setAddressSuggestions([]);
+        setShowSuggestions(false);
       }
     } catch (error) {
-      console.error(
-        "Geocoding API Error:",
-        error.response?.data || error.message
-      );
-      showAlert("error", "Failed to fetch location. Please try again.");
+      console.error("Error fetching address suggestions:", error);
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
+    } finally {
+      setIsLoadingSuggestions(false);
+    }
+  };
+
+  // Function to handle address suggestion selection
+  const handleAddressSelection = (suggestion) => {
+    const addressComponents = suggestion.address_components;
+    let city = "", state = "", country = "", postalCode = "";
+
+    addressComponents.forEach((component) => {
+      if (component.types.includes("locality")) city = component.long_name;
+      if (component.types.includes("administrative_area_level_1"))
+        state = component.long_name;
+      if (component.types.includes("country"))
+        country = component.long_name;
+      if (component.types.includes("postal_code"))
+        postalCode = component.long_name;
+    });
+
+    setFormData((prev) => ({
+      ...prev,
+      addressLine1: suggestion.description,
+      latitude: suggestion.location.lat,
+      longitude: suggestion.location.lng,
+      city,
+      state,
+      country,
+      postalCode,
+    }));
+
+    setShowSuggestions(false);
+    setAddressSuggestions([]);
+  };
+
+  const handleAddressChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Fetch suggestions for addressLine1 with debounce
+    if (name === "addressLine1") {
+      // Clear previous timeout
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+      }
+
+      // Set new timeout
+      const newTimeout = setTimeout(() => {
+        fetchAddressSuggestions(value);
+      }, 300); 
+
+      setDebounceTimeout(newTimeout);
     }
   };
 
@@ -234,7 +282,9 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
   };
 
   return (
-    <div className={styles.modalOverlay} onClick={handleOverlayClick}>
+    <div className={styles.modalOverlay} 
+    // onClick={handleOverlayClick}
+    >
       <div className={styles.modalContainer}>
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>Add Partner</h2>
@@ -338,14 +388,40 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
 
             <div className={styles.inputGroup}>
               <label>Address</label>
-              <Input
-                name="addressLine1"
-                placeholder="address line"
-                className={styles.inputField}
-                value={formData.addressLine1}
-                onChange={handleAddressChange}
-                onBlur={handleBlur}
-              />
+              <div style={{ position: "relative" }}>
+                <Input
+                  name="addressLine1"
+                  placeholder="address line"
+                  className={styles.inputField}
+                  value={formData.addressLine1}
+                  onChange={handleAddressChange}
+                  onBlur={handleBlur}
+                  onFocus={() => {
+                    if (formData.addressLine1 && addressSuggestions.length > 0) {
+                      setShowSuggestions(true);
+                    }
+                  }}
+                />
+                {showSuggestions && (
+                  <div className={styles.suggestionsContainer}>
+                    {isLoadingSuggestions ? (
+                      <div className={styles.suggestionItem}>
+                        <Spin size="small" /> Loading suggestions...
+                      </div>
+                    ) : (
+                      addressSuggestions.map((suggestion, index) => (
+                        <div
+                          key={index}
+                          className={styles.suggestionItem}
+                          onClick={() => handleAddressSelection(suggestion)}
+                        >
+                          {suggestion.description}
+                        </div>
+                      ))
+                    )}
+                  </div>
+                )}
+              </div>
               {errors.addressLine1 && (
                 <p className={styles.errorText}>{errors.addressLine1}</p>
               )}
