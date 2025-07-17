@@ -16,14 +16,16 @@ const NavNotification = () => {
     localStorage.setItem('menuId', menuId);
     window.location.href = helpUrl;
   };
-  console.log(notificationData, "notificationData");
+
   const notificationList = (
     <div style={{ width: 300 }}>
       <div style={{ padding: '10px 16px', borderBottom: '1px solid #f0f0f0', fontWeight: '600' }}>
         Notification
       </div>
       <div style={{ maxHeight: 300, overflowY: 'auto' }}>
-        {notificationData.map((item) => {
+        {notificationData
+          .filter(item => item.Status === 'unread') 
+          .map((item) => {
           const metaData = typeof item.NotificationMetadata === "string"
             ? JSON.parse(item.NotificationMetadata)
             : item.NotificationMetadata || {};
@@ -47,6 +49,11 @@ const NavNotification = () => {
             </div>
           );
         })}
+        {notificationData.filter(item => item.Status === 'unread')?.length === 0 && (
+          <div style={{ padding: '20px', textAlign: 'center', color: '#999' }}>
+            No unread notifications
+          </div>
+        )}
       </div>
     </div>
   );
