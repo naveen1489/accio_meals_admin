@@ -171,7 +171,7 @@ const MenuDetails = ({ menu, onClose }) => {
                 />
               </div>
 
-              <div className={styles.formGroup}>
+              <div className={styles.formGroup} style={{paddingBottom:"1rem"}}>
                 <label>Add Comment</label>
                 <Input.TextArea
                   placeholder="Write your reviews here"
