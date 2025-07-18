@@ -55,6 +55,22 @@ const NavNotification = () => {
           </div>
         )}
       </div>
+      <div 
+        style={{ 
+          padding: '12px 16px', 
+          borderTop: '1px solid #f0f0f0', 
+          textAlign: 'center', 
+          cursor: 'pointer',
+          backgroundColor: '#fafafa',
+          fontWeight: '500',
+          color: '#1890ff'
+        }}
+        onClick={() => {
+          window.location.href = '/notifications';
+        }}
+      >
+        View All
+      </div>
     </div>
   );
 
@@ -64,7 +80,7 @@ const NavNotification = () => {
       title={null} 
       content={notificationList} 
       trigger="click"
-      overlayInnerStyle={{ padding: 0 }}
+      styles={{ body: { padding: 0 } }}
     >
       <div style={{ padding: '0 16px', cursor: 'pointer', display: 'flex', alignItems: 'center' }}>
         <Badge count={notificationCount.length}>

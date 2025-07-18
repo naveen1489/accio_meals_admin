@@ -8,6 +8,7 @@ import PartnerDetails from "./Pages/Partners/PartnerDetails";
 import ProtectedRoute from "./Component/ProtectedRoutes";
 import MenuRequest from "./Pages/MenuRequest/Help";
 import Help from "./Pages/Help/Help";
+import Allnotifications from "./Component/Allnotifications";
 
 function App() {
   return (
@@ -63,10 +64,10 @@ function App() {
           }
         />
         <Route
-          path="/dashboard"
+          path="/notifications"
           element={
             <ProtectedRoute>
-              <Dashboard />
+              <Allnotifications />
             </ProtectedRoute>
           }
         />
