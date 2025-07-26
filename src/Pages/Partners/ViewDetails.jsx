@@ -100,7 +100,7 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
             >
               {formData.imageUrl ? (
                 <img
-                  src={formData.imageUrl}
+                  src={`https://cdn.blinkdish.com/${formData.imageUrl}`}
                   alt="Restaurant"
                   style={{
                     objectFit: "cover",

@@ -8,13 +8,13 @@ import axios from "axios";
 import { addPartners } from "../../api/partners/addPartners";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
-import imageCompression from "browser-image-compression";
 import { validateField, validateForm } from "../../Utils/validation";
+import { uploadImage } from "../../api/Uploads/fileImg";
 
 const GOOGLE_MAPS_API_URL = import.meta.env.VITE_APP_GOOGLE_MAPS_API_URL;
 const GOOGLE_API_KEY = import.meta.env.VITE_APP_GOOGLE_API_KEY;
 
-const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
+const AddPartners = ({ isOpen, onClose }) => {
   const { showAlert } = useAlert();
   const { Option } = Select;
   const { handleGetAllPartnersData } = useData();
@@ -39,6 +39,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     imageUrl: "",
   });
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
@@ -53,8 +54,8 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (!event.target.closest(`.${styles.suggestionsContainer}`) && 
-          !event.target.closest('input[name="addressLine1"]')) {
+      if (!event.target.closest(`.${styles.suggestionsContainer}`) &&
+        !event.target.closest('input[name="addressLine1"]')) {
         setShowSuggestions(false);
       }
     };
@@ -62,18 +63,11 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      // Clear debounce timeout on cleanup
       if (debounceTimeout) {
         clearTimeout(debounceTimeout);
       }
     };
   }, [debounceTimeout]);
-
-  // const handleOverlayClick = (e) => {
-  //   if (e.target.classList.contains(styles.modalOverlay)) {
-  //     onClose();
-  //   }
-  // };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -98,7 +92,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
         params: {
           address: query,
           key: GOOGLE_API_KEY,
-          components: 'country:IN', 
+          components: 'country:IN',
           region: 'IN',
         },
       });
@@ -159,17 +153,13 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Fetch suggestions for addressLine1 with debounce
     if (name === "addressLine1") {
-      // Clear previous timeout
       if (debounceTimeout) {
         clearTimeout(debounceTimeout);
       }
-
-      // Set new timeout
       const newTimeout = setTimeout(() => {
         fetchAddressSuggestions(value);
-      }, 300); 
+      }, 300);
 
       setDebounceTimeout(newTimeout);
     }
@@ -184,45 +174,46 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
 
   const isFormValid = validateForm(formData, errors);
 
-  const extractPostalCode = (address) => {
-    const postalCodeMatch = address.match(/\b\d{6}\b/);
-    return postalCodeMatch ? postalCodeMatch[0] : "";
-  };
-
-  // const MAX_FILE_SIZE = 5 * 1024 * 1024;
-
-  const handleImageUpload = async (file) => {
+  const handleImageUpload = (file) => {
+    setIsUploadingImage(true);
     const MAX_FILE_SIZE = 5 * 1024 * 1024;
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1024,
-      useWebWorker: true,
-    };
-
-    try {
-      if (file.size > MAX_FILE_SIZE) {
-        showAlert("error", "File size exceeds the 5MB limit.");
-        return false;
-      }
-
-      const compressedFile = await imageCompression(file, options);
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        setFormData((prev) => ({ ...prev, imageUrl: reader.result }));
-        showAlert("success", "Image uploaded!");
-      };
-
-      reader.onerror = () => {
-        showAlert("error", "Failed to upload image. Please try again.");
-      };
-
-      reader.readAsDataURL(compressedFile);
-    } catch (error) {
-      console.error("Image compression error:", error);
-      showAlert("error", "Failed to compress image. Please try again.");
+    // File size validation
+    if (file.size > MAX_FILE_SIZE) {
+      showAlert("error", "File size exceeds the 5MB limit.");
+      return false;
     }
-
+    // File type validation
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      showAlert("error", "Please upload only image files (JPEG, PNG, GIF).");
+      return false;
+    }
+    const newFormData = new FormData();
+    newFormData.append("file", file);
+    uploadImage(newFormData)
+      .then((response) => {
+        if (response && response?.data?.file) {
+          setFormData((prev) => ({ ...prev, imageUrl: response.data.file }));
+          showAlert("success", "Image uploaded successfully!");
+        } else {
+          console.error("No image URL in response:", response);
+          showAlert("error", "Failed to upload image. Please try again.");
+        }
+      })
+      .catch((error) => {
+        console.error("Image upload error:", error);
+        if (error.response) {
+          const errorMessage = error.response.data?.message || "Server error occurred during upload.";
+          showAlert("error", errorMessage);
+        } else if (error.request) {
+          showAlert("error", "Network error. Please check your connection.");
+        } else {
+          showAlert("error", "Failed to upload image. Please try again.");
+        }
+      })
+      .finally(() => {
+        setIsUploadingImage(false);
+      });
     return false;
   };
 
@@ -282,7 +273,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
   };
 
   return (
-    <div className={styles.modalOverlay} 
+    <div className={styles.modalOverlay}
     // onClick={handleOverlayClick}
     >
       <div className={styles.modalContainer}>
@@ -300,7 +291,7 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                 className={styles.inputField}
                 value={formData.companyName}
                 onChange={handleChange}
-                // onBlur={handleBlur}
+              // onBlur={handleBlur}
               />
               {errors.companyName && (
                 <p className={styles.errorText}>{errors.companyName}</p>
@@ -325,7 +316,6 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                   className={styles.inputField}
                   value={formData.name}
                   onChange={handleChange}
-                  // onBlur={handleBlur}
                 />
               </div>
               {errors.name && <p className={styles.errorText}>{errors.name}</p>}
@@ -446,10 +436,11 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
               className={styles.uploadBox}
               beforeUpload={handleImageUpload}
               showUploadList={false}
+              action=""
             >
               {formData.imageUrl ? (
                 <img
-                  src={formData.imageUrl}
+                  src={`https://cdn.blinkdish.com/${formData.imageUrl}`}
                   alt="Uploaded"
                   style={{
                     width: "100%",
@@ -460,11 +451,16 @@ const AddPartners = ({ isOpen, onClose, isPopupOpen }) => {
                 />
               ) : (
                 <div className={styles.uploadContent}>
-                  <PiImageLight fontSize={"2.5rem"} />
-                  <p>
-                    <MdOutlineModeEdit fontSize={"1rem"} /> Upload Restaurant
-                    Image
-                  </p>
+                  {isUploadingImage ? (
+                    <Spin size="large" />
+                  ) : (
+                    <>
+                      <PiImageLight fontSize={"2.5rem"} />
+                      <p>
+                        <MdOutlineModeEdit fontSize={"1rem"} /> Upload Restaurant Image
+                      </p>
+                    </>
+                  )}
                 </div>
               )}
             </Upload>

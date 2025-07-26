@@ -67,7 +67,10 @@ const PartnerDetails = () => {
             <div className={styles.card}>
               <div className={styles.header}>
                 <div className={styles.user_info}>
-                  <img src={data.imageUrl} alt="Partner" />
+                  <img
+                    src={`https://cdn.blinkdish.com/${data.imageUrl}`}
+                    alt="Partner"
+                  />
                 </div>
 
                 <div>

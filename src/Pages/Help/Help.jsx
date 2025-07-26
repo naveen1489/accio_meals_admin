@@ -9,7 +9,6 @@ const Help = () => {
   const [openPopup, setOpenpopup] = useState(false);
   const [searchText, setSearchText] = useState("");
 
-
   return (
     <SidebarHeader
       headingText={"Help Center"}

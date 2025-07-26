@@ -41,7 +41,7 @@ const PartnersCard = ({ data }) => {
           <div className={styles.header}>
             <div className={styles.categoryInfo}>
               <img
-                src={restaurant.imageUrl}
+                src={`https://cdn.blinkdish.com/${restaurant.imageUrl}`}
                 alt=""
                 style={{ width: "10rem", height: "10rem" }}
               />
