@@ -87,7 +87,7 @@ const HelpCards = ({ data, filter, searchText }) => {
             <div className={styles.header}>
               <div className={styles.categoryInfo}>
                 <img
-                  src={menu?.restaurant?.imageUrl}
+                  src={`https://cdn.blinkdish.com/${menu?.restaurant?.imageUrl}`}
                   alt=""
                   style={{ width: "10rem", height: "10rem" }}
                 />

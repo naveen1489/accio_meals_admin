@@ -77,7 +77,7 @@ const HelpCards = ({ data, filter, searchText }) => {
               <div className={styles.categoryInfo}>
                 <div>
                   <img
-                    src={message?.userDetails?.profilePic}
+                    src={`https://cdn.blinkdish.com/${message?.userDetails?.profilePic}`}
                     alt="profilepic"
                   />
                 </div>
