@@ -28,33 +28,45 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleImageUpload = async (file) => {
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 1024,
-      useWebWorker: true,
-    };
-
-    try {
-      const compressedFile = await imageCompression(file, options);
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        setFormData((prev) => ({ ...prev, imageUrl: reader.result }));
-        showAlert("success", "Image uploaded!");
-      };
-
-      reader.onerror = () => {
-        showAlert("error", "Failed to upload image. Please try again.");
-      };
-
-      reader.readAsDataURL(compressedFile);
-    } catch (error) {
-      console.error("Image compression error:", error);
-      showAlert("error", "Failed to compress image. Please try again.");
+  const handleImageUpload = (file) => {
+    const MAX_FILE_SIZE = 5 * 1024 * 1024;
+    // File size validation
+    if (file.size > MAX_FILE_SIZE) {
+      showAlert("error", "File size exceeds the 5MB limit.");
+      return false;
     }
-
-    return false; 
+    // File type validation
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+    if (!allowedTypes.includes(file.type)) {
+      showAlert("error", "Please upload only image files (JPEG, PNG, GIF).");
+      return false;
+    }
+    const newFormData = new FormData();
+    newFormData.append("file", file);
+    import("../../api/Uploads/fileImg").then(({ uploadImage }) => {
+      uploadImage(newFormData)
+        .then((response) => {
+          if (response && response?.data?.file) {
+            setFormData((prev) => ({ ...prev, imageUrl: response.data.file }));
+            showAlert("success", "Image uploaded successfully!");
+          } else {
+            console.error("No image URL in response:", response);
+            showAlert("error", "Failed to upload image. Please try again.");
+          }
+        })
+        .catch((error) => {
+          console.error("Image upload error:", error);
+          if (error.response) {
+            const errorMessage = error.response.data?.message || "Server error occurred during upload.";
+            showAlert("error", errorMessage);
+          } else if (error.request) {
+            showAlert("error", "Network error. Please check your connection.");
+          } else {
+            showAlert("error", "Failed to upload image. Please try again.");
+          }
+        });
+    });
+    return false;
   };
 
   const handleSaveChanges = async () => {
