@@ -79,6 +79,7 @@ const HelpCards = ({ data, filter, searchText }) => {
       return nameMatch || companyNameMatch;
     });
 
+    
   return (
     <>
       {filteredData?.length > 0 ? (
@@ -87,8 +88,8 @@ const HelpCards = ({ data, filter, searchText }) => {
             <div className={styles.header}>
               <div className={styles.categoryInfo}>
                 <img
-                  src={`https://cdn.blinkdish.com/${menu?.restaurant?.imageUrl}`}
-                  alt=""
+                  src={`https://cdn.blinkdish.com/${menu.restaurant?.imageUrl}`}
+                  alt="menu image"
                   style={{ width: "10rem", height: "10rem" }}
                 />
                 <div>

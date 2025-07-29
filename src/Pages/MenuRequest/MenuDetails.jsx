@@ -138,10 +138,7 @@ const MenuDetails = ({ menu, onClose }) => {
                 <label>Uploaded Image</label>
                 <div className={styles.imageContainer}>
                   <img
-                    src={
-                      menu?.imageUrl ||
-                      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRU1yMxBVI-74dtHiEy0qHBtwrXEaLyhN-PWQ&s"
-                    }
+                    src={`https://cdn.blinkdish.com/${menu?.imageUrl}`}
                     alt="Menu Item"
                     className={styles.uploadedImage}
                   />
