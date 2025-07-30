@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "../../Styles/Help.module.css";
-import { Input, Button, Upload, Table } from "antd";
+import { Input, Button, Table } from "antd";
 import { CloseOutlined, CheckOutlined } from "@ant-design/icons";
-import { PiImageLight } from "react-icons/pi";
 import { RxCross2 } from "react-icons/rx";
 import { reviewMenuDetails } from "../../api/menu/getMenuDetails";
 import { useAlert } from "../../Context/AlertContext";
@@ -75,7 +74,6 @@ const MenuDetails = ({ menu, onClose }) => {
 
     const response = await reviewMenuDetails(payload);
     if (response.status == 200) {
-      // console.log("Response:", response);
       showAlert("success", response.data.message);
       handleGetMenuDetails();
       onClose();

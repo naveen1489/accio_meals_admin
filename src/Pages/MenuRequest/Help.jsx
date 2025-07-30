@@ -7,8 +7,6 @@ import { IoFilterSharp } from "react-icons/io5";
 import HelpCards from "./Cards";
 
 const MenuRequest = () => {
-  const [newCategory, setnewCategory] = useState(false);
-  const [openPopup, setOpenpopup] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("all"); 
   const [searchText, setSearchText] = useState("");
 

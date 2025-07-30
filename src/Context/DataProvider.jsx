@@ -27,6 +27,8 @@ export default function DataProvider({ children }) {
   const [notificationData, setNotificationData] = useState([]);
   const [notificationCount, setNotificationCount] = useState([]);
   const [dashboardData, setDashboardData] = useState([]);
+  const [totalMenus, setTotalMenus] = useState(0);
+  const [currentMenuPage, setCurrentMenuPage] = useState(1);
 
 
   useEffect(() => {
@@ -141,16 +143,25 @@ export default function DataProvider({ children }) {
     }
   };
 
-  const handleGetMenuDetails = async () => {
+  const handleGetMenuDetails = async (page = 1, limit = 10) => {
     try {
-      const response = await getallMenuDetails();
+      const response = await getallMenuDetails(page, limit);
       if (response && Array.isArray(response.menus)) {
         setmenuDetails([...response.menus]);
+        setTotalMenus(response.totalMenus || response.total || 0);
+        setCurrentMenuPage(response.currentPage || page);
+        return response;
       } else {
+        setTotalMenus(0);
+        setCurrentMenuPage(page);
         console.log("Unexpected response format", response);
+        return { menus: [], total: 0 };
       }
     } catch (error) {
+      setTotalMenus(0);
+      setCurrentMenuPage(page);
       console.log("Error fetching menu details", error);
+      return { menus: [], total: 0 };
     }
   };
 
@@ -197,6 +208,9 @@ export default function DataProvider({ children }) {
         handleDashboardData,
         dashboardData,
         setDashboardData,
+        totalMenus,
+        currentMenuPage,
+        setCurrentMenuPage,
       }}
     >
       {children}

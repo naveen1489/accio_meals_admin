@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { EditOutlined } from "@ant-design/icons";
+import { Spin } from "antd";
 import styles from "../../Styles/AddPartners.module.css";
 import { CloseOutlined } from "@ant-design/icons";
 import { Button, Input, message, Upload } from "antd";
@@ -23,12 +25,14 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
     }`,
     imageUrl: restaurant.imageUrl || "",
   });
+  const [imgUploading, setImgUploading] = useState(false);
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleImageUpload = (file) => {
+    setImgUploading(true);
     const MAX_FILE_SIZE = 5 * 1024 * 1024;
     // File size validation
     if (file.size > MAX_FILE_SIZE) {
@@ -64,6 +68,9 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
           } else {
             showAlert("error", "Failed to upload image. Please try again.");
           }
+        })
+        .finally(() => {
+          setImgUploading(false);
         });
     });
     return false;
@@ -104,24 +111,77 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
         </div>
 
         <div className={styles.modal_info}>
-          <div>
+          <div style={{ position: "relative", width: "120px", margin: "0 auto" }}>
             <Upload
               beforeUpload={handleImageUpload}
               showUploadList={false}
               className={styles.uploadBox}
             >
               {formData.imageUrl ? (
-                <img
-                  src={`https://cdn.blinkdish.com/${formData.imageUrl}`}
-                  alt="Restaurant"
-                  style={{
-                    objectFit: "cover",
-                    borderRadius: "8px",
-                  }}
-                />
+                <>
+                  <img
+                    src={`https://cdn.blinkdish.com/${formData.imageUrl}`}
+                    alt="Restaurant"
+                    style={{
+                      objectFit: "cover",
+                      borderRadius: "8px",
+                      width: "120px",
+                      height: "120px"
+                    }}
+                  />
+                  {isEditable && !imgUploading && (
+                    <span style={{
+                      position: "absolute",
+                      top: "8px",
+                      left: "88px",
+                      background: "#fff",
+                      borderRadius: "50%",
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                      padding: "6px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                      <EditOutlined style={{ fontSize: "20px", color: "#333" }} />
+                    </span>
+                  )}
+                  {imgUploading && (
+                    <span style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      background: "rgba(255,255,255,0.7)",
+                      borderRadius: "50%",
+                      padding: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                      <Spin size="large" />
+                    </span>
+                  )}
+                </>
               ) : (
                 <div className={styles.uploadContent}>
                   <p>Click to upload image</p>
+                  {imgUploading && (
+                    <span style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      background: "rgba(255,255,255,0.7)",
+                      borderRadius: "50%",
+                      padding: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                      <Spin size="large" />
+                    </span>
+                  )}
                 </div>
               )}
             </Upload>

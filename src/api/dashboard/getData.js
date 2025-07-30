@@ -10,9 +10,9 @@ export const getDashboardData = async () => {
 };
 
 
-export const getAdminMessage = async ()=>{
+export const getAdminMessage = async (page = 1, limit = 10) => {
   const response = await getRequest(
-    `${BASE_URL}/api/users/admin/messages`
+    `${BASE_URL}/api/users/admin/messages?page=${page}&limit=${limit}`
   );
   return response;
 }

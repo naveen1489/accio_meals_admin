@@ -1,4 +1,4 @@
-import { deleteRequest, getRequest, postRequest, putRequest } from '../requestMethods';
+import {getRequest, postRequest } from '../requestMethods';
 
 const BASE_URL = import.meta.env.VITE_APP_HOST_URL;
 

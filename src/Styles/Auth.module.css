@@ -22,7 +22,6 @@
   font-family: Inter, sans-serif;
   color: var(--pri-black);
   width: 30rem;
-  /* border: 2px solid yellow; */
   margin-bottom: 10rem;
 }
 
@@ -37,7 +36,6 @@
   flex-direction: column;
   justify-content: flex-start;
   gap: 1rem;
-  /* border: 2px solid purple; */
 }
 
 .inputGroup {
@@ -93,8 +91,3 @@
   color: #000000;
   font-weight: 400;
 }
-
-/* .inputField::placeholder {
-  color: #151515;
-  font-weight: 500;
-} */

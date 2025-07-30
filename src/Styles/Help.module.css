@@ -60,13 +60,9 @@
 
 .cards_details {
   width: 100%;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
-  padding-left: 2rem;
   max-width: 80%;
   margin: auto;
-  margin-top: 4rem;
 }
 
 .card {
@@ -95,7 +91,6 @@
   justify-content: start;
   align-items: center;
   width: 20rem;
-  /* height: 7.5rem; */
   border-radius: 0.7306rem;
   border: 0.0606rem solid #eaeaea;
   padding: 0rem 0.9738rem;
@@ -141,7 +136,6 @@
   flex-direction: column;
   justify-content: center;
   align-items: start;
-  /* gap: 0.3rem; */
 }
 
 .status {
@@ -235,12 +229,10 @@
 
 .modalContent {
   display: flex;
-  /* gap: 2rem; */
   margin-top: 1.5rem;
 }
 
 .leftSection {
-  /* gap: 1rem; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -453,7 +445,6 @@
   gap: 0.5rem;
   margin: 1rem 0;
   max-width: 27rem;
-  /* overflow: scroll; */
 }
 
 .dayButton {

@@ -4,20 +4,23 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
 import { useData } from "../../Context/DataProvider";
 import MenuDetails from "./MenuDetails";
-import { Button } from "antd";
+import { Button, Spin, Pagination } from "antd";
 import { FiEye } from "react-icons/fi";
 import noDataFound from "../../assets/Auth/noDatafound.png";
 
 const HelpCards = ({ data, filter, searchText }) => {
   const [viewPopup, setViewPopup] = useState(false);
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
-  const { menuDetails, handleGetMenuDetails } = useData();
+  const { menuDetails, handleGetMenuDetails, totalMenus, currentMenuPage, setCurrentMenuPage } = useData();
   const [selectedmenu, setSelectedmenu] = useState(null);
   const [isEditable, setIsEditable] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    handleGetMenuDetails();
-  }, []);
+    setLoading(true);
+    handleGetMenuDetails(currentMenuPage, 10)
+      .finally(() => setLoading(false));
+  }, [currentMenuPage]);
   useEffect(() => {
     const SenderId = localStorage.getItem("menuId");
     if (SenderId) {
@@ -81,80 +84,96 @@ const HelpCards = ({ data, filter, searchText }) => {
 
     
   return (
-    <>
-      {filteredData?.length > 0 ? (
-        filteredData.map((menu, index) => (
-          <div key={index} className={styles.card}>
-            <div className={styles.header}>
-              <div className={styles.categoryInfo}>
-                <img
-                  src={`https://cdn.blinkdish.com/${menu.restaurant?.imageUrl}`}
-                  alt="menu image"
-                  style={{ width: "10rem", height: "10rem" }}
-                />
-                <div>
-                  <h2>{menu.restaurant?.companyName || "Comapany Name"}</h2>
-                  <h2>{menu.restaurant?.name || "Owner Name"}</h2>
-                </div>
-              </div>
-              <div className={styles.status}>
-                <div
-                  style={{
-                    background: getStatusStyles(menu.status).background,
-                    border: getStatusStyles(menu.status).border,
-                  }}
-                >
-                  <div
-                    style={{
-                      background: getStatusStyles(menu.status).mainBgColor,
-                      border: getStatusStyles(menu.status).border,
-                    }}
-                  ></div>
-                </div>
-                {menu.status === "Approved"
-                  ? "Approved"
-                  : menu.status === "Rejected"
-                  ? "Rejected"
-                  : "Pending"}
-              </div>
-            </div>
-
-            <div className={styles.actions}>
-              <div>
-                <span className={styles.request}>Request:</span>
-                <Button className={styles.newMenuBtn}>New Menu</Button>
-                <FiEye
-                  className={styles.icon}
-                  onClick={() => handleViewClick(menu)}
-                />
-              </div>
-            </div>
-
-            <div className={styles.details}>
-              <h3>Personal Details</h3>
-              <div>
-                <p>Address</p> <p>:</p>
-                <p>{`${menu.restaurant?.addressLine1 || ""} ${
-                  menu.restaurant?.city || "Address not found"
-                } - ${menu.restaurant?.postalCode || "postalCode not found"}`}</p>
-              </div>
-              <div>
-                <p>Email ID</p> <p>:</p>
-                <p>{menu.restaurant?.emailId || "Email not available"}</p>
-              </div>
-              <div>
-                <p>Contact No</p> <p>:</p>
-                <p>{menu.restaurant?.contactNumber || "Contact not available"}</p>
-              </div>
-            </div>
+    <div className={styles.cardsWrapper}>
+      <div className={styles.cardsContainer}>
+        {loading ? (
+          <div className={styles.spinnerContainer}>
+            <Spin size="large" />
           </div>
-        ))
-      ) : (
-        <div className={styles.noData}>
-          <img src={noDataFound} alt="no data found" />
-        </div>
-      )}
+        ) : filteredData?.length > 0 ? (
+          <>
+            {filteredData.map((menu, index) => (
+              <div key={index} className={styles.card}>
+                <div className={styles.header}>
+                  <div className={styles.categoryInfo}>
+                    <img
+                      src={`https://cdn.blinkdish.com/${menu.restaurant?.imageUrl}`}
+                      alt="menu image"
+                      style={{ width: "10rem", height: "10rem" }}
+                    />
+                    <div>
+                      <h2>{menu.restaurant?.companyName || "Comapany Name"}</h2>
+                      <h2>{menu.restaurant?.name || "Owner Name"}</h2>
+                    </div>
+                  </div>
+                  <div className={styles.status}>
+                    <div
+                      style={{
+                        background: getStatusStyles(menu.status).background,
+                        border: getStatusStyles(menu.status).border,
+                      }}
+                    >
+                      <div
+                        style={{
+                          background: getStatusStyles(menu.status).mainBgColor,
+                          border: getStatusStyles(menu.status).border,
+                        }}
+                      ></div>
+                    </div>
+                    {menu.status === "Approved"
+                      ? "Approved"
+                      : menu.status === "Rejected"
+                      ? "Rejected"
+                      : "Pending"}
+                  </div>
+                </div>
 
+                <div className={styles.actions}>
+                  <div>
+                    <span className={styles.request}>Request:</span>
+                    <Button className={styles.newMenuBtn}>New Menu</Button>
+                    <FiEye
+                      className={styles.icon}
+                      onClick={() => handleViewClick(menu)}
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.details}>
+                  <h3>Personal Details</h3>
+                  <div>
+                    <p>Address</p> <p>:</p>
+                    <p>{`${menu.restaurant?.addressLine1 || ""} ${
+                      menu.restaurant?.city || "Address not found"
+                    } - ${menu.restaurant?.postalCode || "postalCode not found"}`}</p>
+                  </div>
+                  <div>
+                    <p>Email ID</p> <p>:</p>
+                    <p>{menu.restaurant?.emailId || "Email not available"}</p>
+                  </div>
+                  <div>
+                    <p>Contact No</p> <p>:</p>
+                    <p>{menu.restaurant?.contactNumber || "Contact not available"}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </>
+        ) : (
+          <div className={styles.noData}>
+            <img src={noDataFound} alt="no data found" />
+          </div>
+        )}
+      </div>
+      <div className={styles.paginationContainer}>
+        <Pagination
+          current={currentMenuPage}
+          pageSize={10}
+          total={totalMenus}
+          onChange={p => setCurrentMenuPage(p)}
+          showSizeChanger={false}
+        />
+      </div>
       {viewPopup && (
         <MenuDetails
           onClose={() => setViewPopup(false)}
@@ -178,7 +197,7 @@ const HelpCards = ({ data, filter, searchText }) => {
           rightBtn={true}
         />
       )}
-    </>
+    </div>
   );
 };
 
