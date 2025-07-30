@@ -45,7 +45,11 @@ const PartnersCard = ({ data }) => {
           <div className={styles.spinnerContainer}>
             <Spin size="large" />
           </div>
-        ) : (data?.length > 0 ? data : restaurantData)?.length > 0 ? (
+        ) : data?.length === 0 ? (
+          <div className={styles.noData}>
+            <img src={noDataFound} alt="no data found" />
+          </div>
+        ) : (
           (data?.length > 0 ? data : restaurantData).map((restaurant, index) => (
             <div key={index} className={styles.card}>
               <div className={styles.header}>
@@ -129,10 +133,6 @@ const PartnersCard = ({ data }) => {
               </div>
             </div>
           ))
-        ) : (
-          <div className={styles.noData}>
-            <img src={noDataFound} alt="no data found" />
-          </div>
         )}
       </div>
 

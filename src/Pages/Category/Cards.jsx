@@ -47,7 +47,11 @@ const CategoryCard = ({ data }) => {
           <div className={styles.spinnerContainer}>
             <Spin size="large" />
           </div>
-        ) : categories?.length > 0 ? (
+        ) : data?.length === 0 ? (
+          <div className={styles.noData}>
+            <img src={noDataFound} alt="no data found" />
+          </div>
+        ) : (
           categories.map((category, index) => (
             <div className={styles.card} key={index}>
               <div>
@@ -122,10 +126,6 @@ const CategoryCard = ({ data }) => {
               </div>
             </div>
           ))
-        ) : (
-          <div className={styles.noData}>
-            <img src={noDataFound} alt="no data found" />
-          </div>
         )}
       </div>
       {/* {openViewPopup && <ViewDetails onClose={() => setopenViewpopup(false)} />} */}

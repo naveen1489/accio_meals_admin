@@ -105,6 +105,20 @@
   object-fit: cover;
 }
 
+.noData {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 60rem;
+  height: 100%;
+}
+
+.noData>img {
+  width: 15rem;
+  height: 15rem;
+}
+
 .categoryInfo {
   display: flex;
   align-items: center;

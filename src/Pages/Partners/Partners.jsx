@@ -23,10 +23,10 @@ const Partners = () => {
   // Filter restaurantData based on searchData
   const filteredData = restaurantData.filter((item) => {
     return (
-      item.name.toLowerCase().includes(searchData) ||
-      item.companyName.toLowerCase().includes(searchData) ||
-      item.emailId.toLowerCase().includes(searchData) ||
-      item.contactNumber.toLowerCase().includes(searchData)
+      (item.name?.toLowerCase() || "").includes(searchData) ||
+      (item.companyName?.toLowerCase() || "").includes(searchData) ||
+      (item.emailId?.toLowerCase() || "").includes(searchData) ||
+      (item.contactNumber?.toLowerCase() || "").includes(searchData)
     );
   });
 
