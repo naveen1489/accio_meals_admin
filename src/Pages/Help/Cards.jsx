@@ -6,6 +6,7 @@ import noDataFound from "../../assets/Auth/noDatafound.png";
 import { getAdminMessage } from "../../api/dashboard/getData";
 import { Spin } from "antd";
 import { Pagination } from "antd";
+import { FALLBACK_IMAGE_URL } from "../../api/Uploads/fileImg";
 
 const HelpCards = ({ data, filter, searchText }) => {
   const [openDeletePopup, setOpenDeletePopup] = useState(false);
@@ -91,7 +92,7 @@ const HelpCards = ({ data, filter, searchText }) => {
                   <div className={styles.categoryInfo}>
                     <div>
                       <img
-                        src={`https://cdn.blinkdish.com/${message?.userDetails?.profilePic}`}
+                        src={message?.userDetails?.profilePic ? `https://cdn.blinkdish.com/${message?.userDetails?.profilePic}` : FALLBACK_IMAGE_URL}
                         alt="profilepic"
                       />
                     </div>

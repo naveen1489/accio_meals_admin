@@ -9,6 +9,7 @@ import ViewDetails from "./ViewDetails";
 import ConformationPopup from "../../Component/Popup/ConformationPopup";
 import { useData } from "../../Context/DataProvider";
 import { useNavigate } from "react-router-dom";
+import { FALLBACK_IMAGE_URL } from "../../api/Uploads/fileImg";
 
 const PartnersCard = ({ data }) => {
   const [viewPopup, setViewPopup] = useState(false);
@@ -55,7 +56,7 @@ const PartnersCard = ({ data }) => {
               <div className={styles.header}>
                 <div className={styles.categoryInfo}>
                   <img
-                    src={`https://cdn.blinkdish.com/${restaurant.imageUrl}`}
+                    src={restaurant.imageUrl ? `https://cdn.blinkdish.com/${restaurant.imageUrl}` : FALLBACK_IMAGE_URL}
                     alt=""
                     style={{ width: "10rem", height: "10rem" }}
                   />

@@ -6,6 +6,7 @@ import { RxCross2 } from "react-icons/rx";
 import { reviewMenuDetails } from "../../api/menu/getMenuDetails";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
+import { FALLBACK_IMAGE_URL } from "../../api/Uploads/fileImg";
 
 const MenuDetails = ({ menu, onClose }) => {
   const [itemCategories, setItemCategories] = useState([]);
@@ -136,7 +137,7 @@ const MenuDetails = ({ menu, onClose }) => {
                 <label>Uploaded Image</label>
                 <div className={styles.imageContainer}>
                   <img
-                    src={`https://cdn.blinkdish.com/${menu?.imageUrl}`}
+                    src={menu?.imageUrl ? `https://cdn.blinkdish.com/${menu?.imageUrl}` : FALLBACK_IMAGE_URL}
                     alt="Menu Item"
                     className={styles.uploadedImage}
                   />

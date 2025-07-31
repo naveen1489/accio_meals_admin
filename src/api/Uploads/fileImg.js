@@ -13,3 +13,4 @@ export const uploadImage = async (formData) => {
   }
 };
 
+export const FALLBACK_IMAGE_URL = "https://cdn.blinkdish.com/1753807869706_ad638acf-4a8d-4d69-81e5-c805d265941d.png";

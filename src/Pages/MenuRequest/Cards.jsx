@@ -7,6 +7,7 @@ import MenuDetails from "./MenuDetails";
 import { Button, Spin, Pagination } from "antd";
 import { FiEye } from "react-icons/fi";
 import noDataFound from "../../assets/Auth/noDatafound.png";
+import { FALLBACK_IMAGE_URL } from "../../api/Uploads/fileImg";
 
 const HelpCards = ({ data, filter, searchText }) => {
   const [viewPopup, setViewPopup] = useState(false);
@@ -97,7 +98,7 @@ const HelpCards = ({ data, filter, searchText }) => {
                 <div className={styles.header}>
                   <div className={styles.categoryInfo}>
                     <img
-                      src={`https://cdn.blinkdish.com/${menu.restaurant?.imageUrl}`}
+                      src={menu.restaurant?.imageUrl ? `https://cdn.blinkdish.com/${menu.restaurant?.imageUrl}` : FALLBACK_IMAGE_URL}
                       alt="menu image"
                       style={{ width: "10rem", height: "10rem" }}
                     />
