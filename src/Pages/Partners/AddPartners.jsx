@@ -38,6 +38,7 @@ const AddPartners = ({ isOpen, onClose }) => {
     longitude: null,
     imageUrl: "",
   });
+  const isFormValid = validateForm(formData, errors);
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [addressSuggestions, setAddressSuggestions] = useState([]);
@@ -172,7 +173,6 @@ const AddPartners = ({ isOpen, onClose }) => {
     setErrors((prev) => ({ ...prev, [name]: error }));
   };
 
-  const isFormValid = validateForm(formData, errors);
 
   const handleImageUpload = (file) => {
     setIsUploadingImage(true);

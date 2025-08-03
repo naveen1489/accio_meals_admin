@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { EditOutlined } from "@ant-design/icons";
 import { Spin } from "antd";
 import styles from "../../Styles/AddPartners.module.css";
@@ -7,7 +7,11 @@ import { Button, Input, message, Upload } from "antd";
 import { editPartners } from "../../api/partners/getPartners";
 import { useAlert } from "../../Context/AlertContext";
 import { useData } from "../../Context/DataProvider";
-import imageCompression from "browser-image-compression";
+import { FALLBACK_IMAGE_URL } from "../../api/Uploads/fileImg";
+import axios from "axios";
+
+const GOOGLE_MAPS_API_URL = import.meta.env.VITE_APP_GOOGLE_MAPS_API_URL;
+const GOOGLE_API_KEY = import.meta.env.VITE_APP_GOOGLE_API_KEY;
 
 const ViewDetails = ({ onClose, restaurant, isEditable }) => {
   const { showAlert } = useAlert();
@@ -24,8 +28,161 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
       restaurant.postalCode || ""
     }`,
     imageUrl: restaurant.imageUrl || "",
+    // Store parsed address components
+    addressLine1: restaurant.addressLine1 || "",
+    city: restaurant.city || "",
+    state: restaurant.state || "",
+    postalCode: restaurant.postalCode || "",
+    country: restaurant.country || "",
   });
   const [imgUploading, setImgUploading] = useState(false);
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
+  const [debounceTimeout, setDebounceTimeout] = useState(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (!event.target.closest(`.${styles.suggestionsContainer}`) &&
+        !event.target.closest('input[name="address"]')) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+      }
+    };
+  }, [debounceTimeout]);
+
+  // Function to fetch address suggestions
+  const fetchAddressSuggestions = async (query) => {
+    if (!query || query.length < 3) {
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    setIsLoadingSuggestions(true);
+    try {
+      const response = await axios.get(GOOGLE_MAPS_API_URL, {
+        params: {
+          address: query,
+          key: GOOGLE_API_KEY,
+          components: 'country:IN',
+          region: 'IN',
+        },
+      });
+
+      if (response.data.status === "OK" && response.data.results.length > 0) {
+        const suggestions = response.data.results.slice(0, 5).map((result) => ({
+          description: result.formatted_address,
+          place_id: result.place_id,
+          location: result.geometry.location,
+          address_components: result.address_components,
+        }));
+        setAddressSuggestions(suggestions);
+        setShowSuggestions(true);
+      } else {
+        setAddressSuggestions([]);
+        setShowSuggestions(false);
+      }
+    } catch (error) {
+      console.error("Error fetching address suggestions:", error);
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
+    } finally {
+      setIsLoadingSuggestions(false);
+    }
+  };
+
+  // Function to handle address suggestion selection
+  const handleAddressSelection = (suggestion) => {
+    const addressComponents = suggestion.address_components;
+    let streetNumber = "", route = "", sublocality = "", sublocalityLevel2 = "", locality = "", 
+        city = "", state = "", country = "", postalCode = "";
+
+    // Parse address components with priority handling
+    addressComponents.forEach((component) => {
+      const types = component.types;
+      
+      // Street number (building number)
+      if (types.includes("street_number")) {
+        streetNumber = component.long_name;
+      }
+      
+      // Route (street name)
+      if (types.includes("route")) {
+        route = component.long_name;
+      }
+      
+      if (types.includes("sublocality_level_2")) {
+        sublocalityLevel2 = component.long_name;
+      }
+      
+      if (types.includes("sublocality") || types.includes("sublocality_level_1")) {
+        sublocality = component.long_name;
+      }
+      
+      if (types.includes("locality")) {
+        locality = component.long_name;
+      }
+      
+      if (types.includes("administrative_area_level_2") && !locality) {
+        city = component.long_name;
+      }
+      
+      if (types.includes("administrative_area_level_1")) {
+        state = component.long_name;
+      }
+      
+      // Country
+      if (types.includes("country")) {
+        country = component.long_name;
+      }
+      
+      // Postal code
+      if (types.includes("postal_code")) {
+        postalCode = component.long_name;
+      }
+    });
+
+    // Determine the best city value
+    const finalCity = locality || city;
+    
+    // Create a comprehensive address line from all street/area components
+    const addressParts = [streetNumber, route, sublocalityLevel2, sublocality].filter(Boolean);
+    const cleanAddressLine1 = addressParts.length > 0 ? addressParts.join(", ") : suggestion.description.split(",")[0];
+    
+    setFormData((prev) => ({
+      ...prev,
+      address: suggestion.description,
+      addressLine1: cleanAddressLine1,
+      city: finalCity,
+      state: state,
+      postalCode: postalCode,
+      country: country,
+    }));
+
+    setShowSuggestions(false);
+    setAddressSuggestions([]);
+  };
+
+  const handleAddressChange = (value) => {
+    handleInputChange("address", value);
+
+    if (debounceTimeout) {
+      clearTimeout(debounceTimeout);
+    }
+    const newTimeout = setTimeout(() => {
+      fetchAddressSuggestions(value);
+    }, 300);
+
+    setDebounceTimeout(newTimeout);
+  };
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -83,10 +240,11 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
         name: formData.name,
         contactNumber: formData.contactNumber,
         emailId: formData.emailId,
-        addressLine1: formData.address.split(",")[0].trim(),
-        city:
-          formData.address.split(",")[1]?.trim().split("-")[0]?.trim() || "",
-        postalCode: formData.address.split("-")[1]?.trim() || "",
+        addressLine1: formData.addressLine1 || formData.address.split(",")[0].trim(),
+        city: formData.city || formData.address.split(",")[1]?.trim().split("-")[0]?.trim() || "",
+        state: formData.state || "",
+        postalCode: formData.postalCode || formData.address.split("-")[1]?.trim() || "",
+        country: formData.country || "India",
         imageUrl: formData.imageUrl,
       };
 
@@ -165,7 +323,24 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
                 </>
               ) : (
                 <div className={styles.uploadContent}>
-                  <p>Click to upload image</p>
+                  <img src={FALLBACK_IMAGE_URL} alt="default image" />
+                  {isEditable && !imgUploading && (
+                    <span style={{
+                      position: "absolute",
+                      top: "8px",
+                      left: "88px",
+                      background: "#fff",
+                      borderRadius: "50%",
+                      boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                      padding: "6px",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}>
+                      <EditOutlined style={{ fontSize: "20px", color: "#333" }} />
+                    </span>
+                  )}
                   {imgUploading && (
                     <span style={{
                       position: "absolute",
@@ -235,12 +410,39 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
           </div>
           <div className={styles.inputGroup}>
             <label>Address</label>
-            <Input
-              value={formData.address}
-              className={styles.inputField}
-              readOnly={!isEditable}
-              onChange={(e) => handleInputChange("address", e.target.value)}
-            />
+            <div style={{ position: "relative" }}>
+              <Input
+                name="address"
+                value={formData.address}
+                className={styles.inputField}
+                readOnly={!isEditable}
+                onChange={(e) => handleAddressChange(e.target.value)}
+                onFocus={() => {
+                  if (formData.address && addressSuggestions.length > 0) {
+                    setShowSuggestions(true);
+                  }
+                }}
+              />
+              {showSuggestions && isEditable && (
+                <div className={styles.suggestionsContainer}>
+                  {isLoadingSuggestions ? (
+                    <div className={styles.suggestionItem}>
+                      <Spin size="small" /> Loading suggestions...
+                    </div>
+                  ) : (
+                    addressSuggestions.map((suggestion, index) => (
+                      <div
+                        key={index}
+                        className={styles.suggestionItem}
+                        onClick={() => handleAddressSelection(suggestion)}
+                      >
+                        {suggestion.description}
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

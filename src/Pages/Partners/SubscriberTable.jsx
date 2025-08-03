@@ -23,14 +23,6 @@ const columns = [
     dataIndex: "status",
     key: "status",
   },
-  {
-    title: "ACTION",
-    dataIndex: "action",
-    key: "action",
-    render: (text) => (
-      <span style={{ color: "black", fontWeight: "bold" }}>{text}</span>
-    ),
-  },
 ];
 
 const data = [

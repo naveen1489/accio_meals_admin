@@ -65,7 +65,7 @@ const PartnersCard = ({ data }) => {
                     <h2>{restaurant.name || "Contact Person Name"}</h2>
 
                     <div className={styles.subscriber}>
-                      <h1>{restaurant.subscriberCount || "0"}</h1>
+                      <h1>{restaurant?.activeSubscribersCount || "0"}</h1>
                       <span>Subscriber</span>
                     </div>
                   </div>

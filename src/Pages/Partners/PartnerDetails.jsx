@@ -55,7 +55,7 @@ const PartnerDetails = () => {
       <Menu.Item key="Completed">Completed</Menu.Item>
     </Menu>
   );
-
+console.log('data', data);
   return (
     <div>
       <SidebarHeader
@@ -94,7 +94,7 @@ const PartnerDetails = () => {
                     />
                   </div>
                   <div>
-                    <span>{data.subscriber || 0}</span>
+                    <span>{data?.activeSubscribersCount || 0}</span>
                     <span>Subscriber</span>
                   </div>
                 </div>
