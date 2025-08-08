@@ -241,10 +241,13 @@ const ViewDetails = ({ onClose, restaurant, isEditable }) => {
         contactNumber: formData.contactNumber,
         emailId: formData.emailId,
         addressLine1: formData.addressLine1 || formData.address.split(",")[0].trim(),
+        addressLine2: formData.addressLine2 || "",
         city: formData.city || formData.address.split(",")[1]?.trim().split("-")[0]?.trim() || "",
         state: formData.state || "",
         postalCode: formData.postalCode || formData.address.split("-")[1]?.trim() || "",
         country: formData.country || "India",
+        latitude: formData.latitude || restaurant.latitude || "",
+        longitude: formData.longitude || restaurant.longitude || "",
         imageUrl: formData.imageUrl,
       };
 
