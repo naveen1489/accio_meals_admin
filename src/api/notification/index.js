@@ -18,5 +18,6 @@ export const updateNotification = async (notificationId) => {
       `${BASE_URL}/api/notifications/${notificationId}/read`,
       notificationId
     );
+    console.log('response', response);
     return response;
 };
