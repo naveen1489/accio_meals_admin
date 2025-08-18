@@ -4,9 +4,11 @@ import { BellOutlined, EyeOutlined } from '@ant-design/icons';
 import { useData } from "../Context/DataProvider";
 import { updateNotification } from "../api/notification/index";
 import SidebarHeader from './Navigation/SidebarHeader';
+import { useAlert } from '../Context/AlertContext';
 
 const Allnotifications = () => {
   const { notificationData, handleGetAllNotificationList } = useData();
+  const { showAlert } = useAlert();
   const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [pagination, setPagination] = useState({
@@ -23,10 +25,10 @@ const Allnotifications = () => {
   }, []);
 
   useEffect(() => {
-    const processedNotifications = Array.isArray(notificationData) 
-      ? notificationData 
+    const processedNotifications = Array.isArray(notificationData)
+      ? notificationData
       : (notificationData?.notifications || []);
-    
+
     setNotifications(processedNotifications);
     setPagination(prev => ({
       ...prev,
@@ -42,16 +44,26 @@ const Allnotifications = () => {
     });
   };
 
-  const handleNotificationClick = (NotificationId, menuId, status) => {
-    // Only call updateNotification API if the notification is unread
+  const handleNotificationClick = async (NotificationId, menuId, status) => {
     if (status === 'unread') {
-      updateNotification(NotificationId);
-    }
-    
-    // Always redirect to menu page if menuId exists
-    if (menuId) {
-      localStorage.setItem('menuId', menuId);
-      window.location.href = '/menu';
+      try {
+        const response = await updateNotification(NotificationId);
+        if (response && response.status === 200 && response.data === true) {
+          if (menuId) {
+            localStorage.setItem('menuId', menuId);
+            window.location.href = '/menu';
+          }
+        } else {
+          showAlert("error", "Faild to view notification");
+        }
+      } catch (error) {
+        console.error('Failed to update notification:', error);
+      }
+    } else {
+      if (menuId) {
+        localStorage.setItem('menuId', menuId);
+        window.location.href = '/menu';
+      }
     }
   };
 
@@ -112,7 +124,7 @@ const Allnotifications = () => {
         const metaData = typeof record.NotificationMetadata === "string"
           ? JSON.parse(record.NotificationMetadata)
           : record.NotificationMetadata || {};
-        
+
         const menuId = metaData.menuId;
 
         return (
@@ -155,14 +167,14 @@ const Allnotifications = () => {
           }}
           onChange={handleTableChange}
           scroll={{ x: 800 }}
-          rowClassName={(record) => 
+          rowClassName={(record) =>
             record.Status === 'unread' ? 'unread-notification' : ''
           }
           locale={{
             emptyText: 'No notifications available'
           }}
         />
-        
+
         <style>
           {`
             .unread-notification {
