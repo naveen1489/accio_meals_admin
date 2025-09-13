@@ -29,7 +29,7 @@ const EditCategory = ({ isOpen, onClose, category }) => {
         items: cat.items.map((item) => item.itemName).flatMap((i) => i.split(",")),
       }));
       setItemCategories(parsedItemCategories);
-      setCurrentCategory(parsedItemCategories[0]?.itemCategoryName || ""); // Set default value
+      setCurrentCategory(parsedItemCategories[0]?.itemCategoryName || ""); 
     }
   }, [category]);
 
@@ -194,13 +194,11 @@ const EditCategory = ({ isOpen, onClose, category }) => {
                     value={currentCategory}
                     onChange={(value) => setCurrentCategory(value)}
                   >
-                    <Select.Option value="Main Sabji">Main Sabji</Select.Option>
+                    <Select.Option value="Sabji">Sabji</Select.Option>
                     <Select.Option value="Dal">Dal</Select.Option>
                     <Select.Option value="Rice">Rice</Select.Option>
-                    <Select.Option value="Roti">Roti</Select.Option>
-                    <Select.Option value="Papad">Papad</Select.Option>
-                    <Select.Option value="Dahi">Dahi</Select.Option>
-                    <Select.Option value="Achar">Achar</Select.Option>
+                    <Select.Option value="Bread">Bread</Select.Option>
+                    <Select.Option value="Condiments">Condiments</Select.Option>
                   </Select>
                 </div>
                 <div className={styles.inputGroup}>

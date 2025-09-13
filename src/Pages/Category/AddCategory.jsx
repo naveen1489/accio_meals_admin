@@ -12,7 +12,7 @@ const AddCategory = ({ isOpen, onClose }) => {
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("active");
   const [itemCategories, setItemCategories] = useState([]);
-  const [currentCategory, setCurrentCategory] = useState("");
+  const [currentCategory, setCurrentCategory] = useState("Select");
   const [currentItem, setCurrentItem] = useState("");
   const { showAlert } = useAlert();
   const { handleGetAllCategoryData } = useData();
@@ -30,7 +30,7 @@ const AddCategory = ({ isOpen, onClose }) => {
   }, [isOpen]);
 
   const handleAddItem = () => {
-    if (!currentCategory || !currentItem) {
+    if (!currentCategory || currentCategory === "Select" || !currentItem) {
       message.error("Please select a category and enter an item.");
       return;
     }
@@ -175,13 +175,12 @@ const AddCategory = ({ isOpen, onClose }) => {
                     value={currentCategory}
                     onChange={(value) => setCurrentCategory(value)}
                   >
-                    <Select.Option value="Main Sabji">Main Sabji</Select.Option>
+                    <Select.Option value="Select">Select</Select.Option>
+                    <Select.Option value="Sabji">Sabji</Select.Option>
                     <Select.Option value="Dal">Dal</Select.Option>
                     <Select.Option value="Rice">Rice</Select.Option>
-                    <Select.Option value="Roti">Roti</Select.Option>
-                    <Select.Option value="Papad">Papad</Select.Option>
-                    <Select.Option value="Dahi">Dahi</Select.Option>
-                    <Select.Option value="Achar">Achar</Select.Option>
+                    <Select.Option value="Bread">Bread</Select.Option>
+                    <Select.Option value="Condiments">Condiments</Select.Option>
                   </Select>
                 </div>
                 <div className={styles.inputGroup}>
