@@ -181,6 +181,11 @@ const AddCategory = ({ isOpen, onClose }) => {
                     <Select.Option value="Rice">Rice</Select.Option>
                     <Select.Option value="Bread">Bread</Select.Option>
                     <Select.Option value="Condiments">Condiments</Select.Option>
+                    <Select.Option value="North Indian Breakfasts">North Indian Breakfasts</Select.Option>
+                    <Select.Option value="South Indian Breakfasts">South Indian Breakfasts</Select.Option>
+                    <Select.Option value="West Indian Breakfasts">West Indian Breakfasts</Select.Option>
+                    <Select.Option value="East Indian Breakfasts">East Indian Breakfasts</Select.Option>
+                    <Select.Option value="Common All-India Modern Breakfasts">Common All-India / Modern Breakfasts</Select.Option>
                   </Select>
                 </div>
                 <div className={styles.inputGroup}>
