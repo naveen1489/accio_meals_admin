@@ -98,11 +98,10 @@ const HelpCards = ({ data, filter, searchText }) => {
                     </div>
                     <div>
                       <h2>
-                        {message?.userDetails?.companyName ||
-                          message?.userDetails?.name}
+                        {message?.name || message?.userDetails?.companyName || message?.userDetails?.name || "User"}
                       </h2>
                       {message?.userRole == "restaurant" && (
-                        <h2>{message?.userDetails?.name || ""}</h2>
+                        <h2>{message?.name || message?.userDetails?.name || ""}</h2>
                       )}
                     </div>
                   </div>
@@ -138,15 +137,11 @@ const HelpCards = ({ data, filter, searchText }) => {
                   </div>
                   <div>
                     <p>Name</p> <p>:</p>
-                    <p>{message?.userDetails?.name || "Name not available"}</p>
-                  </div>
-                  <div>
-                    <p>Mobile</p> <p>:</p>
-                    <p>{message?.userDetails?.mobile || ""}</p>
+                    <p>{message?.name || message?.userDetails?.name || "Name not available"}</p>
                   </div>
                   <div>
                     <p>Email ID</p> <p>:</p>
-                    <p>{message?.userDetails?.email || "Email not available"}</p>
+                    <p>{message?.emailId || message?.userDetails?.email || "Email not available"}</p>
                   </div>
                   <div>
                     <p>Created At</p> <p>:</p>
