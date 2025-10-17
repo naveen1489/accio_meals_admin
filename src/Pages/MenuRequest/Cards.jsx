@@ -131,23 +131,12 @@ const HelpCards = ({ data, filter, searchText }) => {
 
                 <div className={styles.actions}>
                   <div>
-                    {menu.status === "Approved" ? (
-                      <>
-                        <span className={styles.request}>Request Granted:</span>
-                        <Button className={styles.newMenuBtn}>
-                          {menu?.menuName || "Menu"}
-                        </Button>
-                      </>
-                    ) : (
-                      <>
                         <span className={styles.request}>Request:</span>
-                        <Button className={styles.newMenuBtn}>New Menu</Button>
+                        <Button className={styles.newMenuBtn}>{menu?.status === "Approved" ? menu?.menuName : "New Menu"}</Button>
                         <FiEye
                           className={styles.icon}
                           onClick={() => handleViewClick(menu)}
                         />
-                      </>
-                    )}
                   </div>
                 </div>
 
