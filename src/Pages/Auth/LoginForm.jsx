@@ -29,7 +29,7 @@ const LoginForm = () => {
         showAlert("success", response.data.message);
         nav("/dashboard");
       } else {
-        showAlert("error", response.data.message || "Login failed");
+        showAlert("error", "Invalid admin credentials.");
       }
     } catch (error) {
       console.error("Error: ", error);

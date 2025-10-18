@@ -260,12 +260,9 @@ const AddPartners = ({ isOpen, onClose }) => {
       console.error("Error in handleSave:", error);
 
       if (error.response && error.response.status === 400) {
-        showAlert("error", error.response.data.message || "Bad Request");
+        showAlert("error", "Failed to add new restaurant. Please check required fields.");
       } else {
-        showAlert(
-          "error",
-          error.response?.data?.message || "An unexpected error occurred"
-        );
+         showAlert("error", "Failed to add new restaurant. Please check required fields.");
       }
     } finally {
       setIsSaving(false);
